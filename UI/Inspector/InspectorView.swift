@@ -18,17 +18,28 @@ public struct InspectorView: View {
     @Binding var contrast: Double
     @Binding var saturation: Double
     @Binding var autoLevel: Bool
+    @Binding var filmProfile: FilmProfile
     @Binding var sharpen: Double
     @Binding var blur: Double
+    @Binding var watermarkText: String
+    @Binding var watermarkFontSize: Int
+    @Binding var watermarkOpacity: Double
+    @Binding var watermarkPosition: WatermarkPosition
     @Binding var stripMetadata: Bool
     @Binding var targetFormat: String
     @Binding var quality: Int
+    @Binding var isCropping: Bool
 
+    let histogramData: HistogramData?
     let originalWidth: Int?
     let originalHeight: Int?
     let isProcessing: Bool
+    let onOptimizeTargetSize: (Int) -> Void
     let onReset: () -> Void
     let onExport: () -> Void
+
+    @State private var targetSizeKB: Int = 500
+    @State private var isOptimizingSize: Bool = false
 
     private let supportedFormats = ["WEBP", "JPEG", "PNG", "TIFF", "AVIF", "HEIC"]
 
@@ -43,14 +54,22 @@ public struct InspectorView: View {
         contrast: Binding<Double>,
         saturation: Binding<Double>,
         autoLevel: Binding<Bool>,
+        filmProfile: Binding<FilmProfile>,
         sharpen: Binding<Double>,
         blur: Binding<Double>,
+        watermarkText: Binding<String>,
+        watermarkFontSize: Binding<Int>,
+        watermarkOpacity: Binding<Double>,
+        watermarkPosition: Binding<WatermarkPosition>,
         stripMetadata: Binding<Bool>,
         targetFormat: Binding<String>,
         quality: Binding<Int>,
+        isCropping: Binding<Bool>,
+        histogramData: HistogramData? = nil,
         originalWidth: Int? = nil,
         originalHeight: Int? = nil,
         isProcessing: Bool,
+        onOptimizeTargetSize: @escaping (Int) -> Void = { _ in },
         onReset: @escaping () -> Void,
         onExport: @escaping () -> Void
     ) {
@@ -64,14 +83,22 @@ public struct InspectorView: View {
         self._contrast = contrast
         self._saturation = saturation
         self._autoLevel = autoLevel
+        self._filmProfile = filmProfile
         self._sharpen = sharpen
         self._blur = blur
+        self._watermarkText = watermarkText
+        self._watermarkFontSize = watermarkFontSize
+        self._watermarkOpacity = watermarkOpacity
+        self._watermarkPosition = watermarkPosition
         self._stripMetadata = stripMetadata
         self._targetFormat = targetFormat
         self._quality = quality
+        self._isCropping = isCropping
+        self.histogramData = histogramData
         self.originalWidth = originalWidth
         self.originalHeight = originalHeight
         self.isProcessing = isProcessing
+        self.onOptimizeTargetSize = onOptimizeTargetSize
         self.onReset = onReset
         self.onExport = onExport
     }
@@ -80,22 +107,30 @@ public struct InspectorView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
                 // Live Status Indicator Banner
-                if self.isProcessing {
-                    HStack(spacing: 6) {
-                        ProgressView()
-                            .scaleEffect(0.65)
-                            .frame(width: 14, height: 14)
-                        Text("Live Rendering...")
-                            .font(.caption2.bold())
-                            .foregroundStyle(.tint)
-                        Spacer()
+                Group {
+                    if self.isProcessing {
+                        HStack(spacing: 6) {
+                            ProgressView()
+                                .scaleEffect(0.65)
+                                .frame(width: 14, height: 14)
+                            Text("Live Rendering...")
+                                .font(.caption2.bold())
+                                .foregroundStyle(.tint)
+                            Spacer()
+                        }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
+                        .transition(.opacity.combined(with: .move(edge: .top)))
                     }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 4)
-                    .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
                 }
+                .animation(.easeInOut(duration: 0.15), value: self.isProcessing)
 
-                // MARK: - Dimensions Group
+                // MARK: - Feature 1: Live Histogram
+                HistogramView(data: self.histogramData)
+                    .padding(.bottom, 2)
+
+                // MARK: - Dimensions & Crop (Feature 2)
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
                         Grid(alignment: .leading, horizontalSpacing: 8, verticalSpacing: 8) {
@@ -132,7 +167,18 @@ public struct InspectorView: View {
 
                         Toggle("Maintain Aspect Ratio", isOn: self.$maintainAspectRatio)
                             .font(.subheadline)
-                            .padding(.top, 2)
+
+                        // Interactive Crop Button
+                        Button(action: { self.isCropping.toggle() }) {
+                            HStack {
+                                Image(systemName: self.isCropping ? "xmark.circle" : "crop")
+                                Text(self.isCropping ? "Exit Crop Mode" : "Interactive Crop Tool...")
+                            }
+                            .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(self.isCropping ? .orange : .accentColor)
+                        .controlSize(.small)
 
                         // Quick Scale Presets
                         if let origW = self.originalWidth, let origH = self.originalHeight, origW > 0, origH > 0 {
@@ -147,83 +193,89 @@ public struct InspectorView: View {
                                     .frame(maxWidth: .infinity)
                                 }
                             }
-                            .padding(.top, 4)
+                            .padding(.top, 2)
                         }
                     }
                     .padding(8)
                 } label: {
-                    Label("Dimensions", systemImage: "arrow.up.left.and.arrow.down.right")
+                    Label("Dimensions & Crop", systemImage: "arrow.up.left.and.arrow.down.right")
                         .font(.headline)
                 }
 
-                // MARK: - Orientation & Geometry
+                // MARK: - Geometry & Orientation
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
-                        HStack(spacing: 8) {
-                            Button(action: { self.rotateBy(-90) }) {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "rotate.left")
-                                    Text("90° Left")
-                                }
-                                .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.bordered)
-                            .controlSize(.small)
-
-                            Button(action: { self.rotateBy(90) }) {
-                                HStack(spacing: 4) {
-                                    Text("90° Right")
-                                    Image(systemName: "rotate.right")
-                                }
-                                .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.bordered)
-                            .controlSize(.small)
+                        HStack {
+                            Text("Angle")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text("\(Int(self.rotationDegrees))°")
+                                .font(.caption.monospacedDigit())
+                                .foregroundStyle(.secondary)
                         }
 
-                        HStack(spacing: 8) {
+                        Slider(value: self.$rotationDegrees, in: -180...180, step: 1)
+
+                        HStack(spacing: 6) {
+                            Button(action: { self.rotateBy(-90) }) {
+                                Label("90° Left", systemImage: "rotate.left")
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                            .frame(maxWidth: .infinity)
+
+                            Button(action: { self.rotateBy(90) }) {
+                                Label("90° Right", systemImage: "rotate.right")
+                            }
+                            .buttonStyle(.bordered)
+                            .controlSize(.small)
+                            .frame(maxWidth: .infinity)
+                        }
+
+                        HStack(spacing: 6) {
                             Toggle(isOn: self.$flipHorizontal) {
-                                Label("Flip Horizontal", systemImage: "arrow.left.and.right.righttriangle.left.righttriangle.right")
+                                Label("Flip H", systemImage: "arrow.left.and.right.righttriangle.left.righttriangle.right")
                                     .font(.caption)
                             }
                             .toggleStyle(.button)
-                            .controlSize(.small)
                             .frame(maxWidth: .infinity)
 
                             Toggle(isOn: self.$flipVertical) {
-                                Label("Flip Vertical", systemImage: "arrow.up.and.down.righttriangle.up.righttriangle.down")
+                                Label("Flip V", systemImage: "arrow.up.and.down.righttriangle.up.righttriangle.down")
                                     .font(.caption)
                             }
                             .toggleStyle(.button)
-                            .controlSize(.small)
                             .frame(maxWidth: .infinity)
-                        }
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text("Angle")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Spacer()
-                                Text("\(Int(self.rotationDegrees))°")
-                                    .font(.caption.monospacedDigit())
-                                    .bold()
-                            }
-
-                            Slider(value: self.$rotationDegrees, in: -180...180, step: 1.0)
                         }
                     }
                     .padding(8)
                 } label: {
-                    Label("Orientation", systemImage: "rotate.right")
+                    Label("Orientation", systemImage: "rotate.3d")
                         .font(.headline)
                 }
 
-                // MARK: - Color & Tone
+                // MARK: - Feature 4: Color, Tone & Film Simulation
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
-                        Toggle("Auto Level (Histogram)", isOn: self.$autoLevel)
-                            .font(.subheadline)
+                        // Film Simulation Profile Picker
+                        HStack {
+                            Text("Film Look")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Picker("Film Look", selection: self.$filmProfile) {
+                                ForEach(FilmProfile.allCases) { profile in
+                                    Label(profile.rawValue, systemImage: profile.iconName)
+                                        .tag(profile)
+                                }
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.menu)
+                            .frame(minWidth: 120)
+                        }
+
+                        Divider()
 
                         // Brightness
                         VStack(alignment: .leading, spacing: 2) {
@@ -263,14 +315,17 @@ public struct InspectorView: View {
                             }
                             Slider(value: self.$saturation, in: -100...100, step: 1)
                         }
+
+                        Toggle("Auto Level (Histogram Balance)", isOn: self.$autoLevel)
+                            .font(.caption)
                     }
                     .padding(8)
                 } label: {
-                    Label("Color & Tone", systemImage: "slider.horizontal.2.square")
+                    Label("Color & Film Grade", systemImage: "slider.horizontal.2.square")
                         .font(.headline)
                 }
 
-                // MARK: - Sharpness & Blur
+                // MARK: - Focal & Clarity
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
                         VStack(alignment: .leading, spacing: 2) {
@@ -303,7 +358,60 @@ public struct InspectorView: View {
                         .font(.headline)
                 }
 
-                // MARK: - Format & Compression
+                // MARK: - Feature 7: Watermark & Text Stamp
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 10) {
+                        TextField("Watermark text (optional)", text: self.$watermarkText)
+                            .textFieldStyle(.roundedBorder)
+
+                        if !self.watermarkText.isEmpty {
+                            HStack {
+                                Text("Size")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(self.watermarkFontSize) },
+                                        set: { self.watermarkFontSize = Int($0) }
+                                    ),
+                                    in: 12...80,
+                                    step: 2
+                                )
+                                Text("\(self.watermarkFontSize)pt")
+                                    .font(.caption.monospacedDigit())
+                            }
+
+                            HStack {
+                                Text("Opacity")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Slider(value: self.$watermarkOpacity, in: 0.1...1.0, step: 0.05)
+                                Text("\(Int(self.watermarkOpacity * 100))%")
+                                    .font(.caption.monospacedDigit())
+                            }
+
+                            HStack {
+                                Text("Position")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Picker("Position", selection: self.$watermarkPosition) {
+                                    ForEach(WatermarkPosition.allCases) { pos in
+                                        Text(pos.rawValue).tag(pos)
+                                    }
+                                }
+                                .labelsHidden()
+                                .pickerStyle(.menu)
+                            }
+                        }
+                    }
+                    .padding(8)
+                } label: {
+                    Label("Watermark & Stamp", systemImage: "text.bubble")
+                        .font(.headline)
+                }
+
+                // MARK: - Format & Feature 3: Target Size Optimizer
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
@@ -341,6 +449,32 @@ public struct InspectorView: View {
                                     in: 1...100,
                                     step: 1
                                 )
+
+                                // Target Size Optimizer Row
+                                HStack(spacing: 6) {
+                                    Text("Target:")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                    TextField("KB", value: self.$targetSizeKB, format: .number)
+                                        .textFieldStyle(.roundedBorder)
+                                        .frame(width: 60)
+                                        .controlSize(.mini)
+                                    Text("KB")
+                                        .font(.caption2)
+                                        .foregroundStyle(.tertiary)
+
+                                    Spacer()
+
+                                    Button("Optimize Quality") {
+                                        self.isOptimizingSize = true
+                                        self.onOptimizeTargetSize(self.targetSizeKB * 1024)
+                                        self.isOptimizingSize = false
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .controlSize(.mini)
+                                    .help("Calculates best compression quality to match target file size budget")
+                                }
+                                .padding(.top, 4)
                             }
                         }
 

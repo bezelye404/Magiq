@@ -16,11 +16,19 @@ ImageMagick's feature surface reachable, not a stripped-down subset.
   ImageMagick distribution for guaranteed feature parity, plus a directly linked
   `libMagickWand` path for fast, low-RAM thumbnails/previews/batch processing.
   See `ARCHITECTURE.md` for the full rationale.
+- **Real-Time Live Preview & GPU Motion** — debounced, task-cancellable live preview with fluid HIG opacity content transitions and non-blocking asynchronous status indicators.
+- **Interactive Crop & Straighten** — aspect ratio presets (1:1, 4:5, 16:9, 3:2, Free), rule-of-thirds grid, and drag handles.
+- **Live RGB & Luminance Histogram** — real-time 256-bin channel scopes with shadow and highlight clipping warnings.
+- **Interactive Pixel Loupe** — circular magnifying glass with crosshair and coordinate readout.
+- **Cinematic & Analog Film Simulation** — built-in recipes including Kodak Portra, Fuji Velvia, Tri-X Noir, and Vintage 70s.
+- **Target File Size Optimizer ("Export Sizer")** — binary search engine to achieve target file size budgets (e.g. max 500 KB).
+- **Watermark & Text Annotation** — typography stamps with 9-point gravity alignment and opacity control.
+- **Customizable Keyboard Shortcuts** — persistent, user-configurable macOS shortcut bindings with a dedicated Settings UI and one-click default resets.
+- **Zero-Network Privacy & One-Click Reset** — verified local-only sandbox operation, metadata stripping, and security-scoped bookmark purging.
 - **Batch queue + folder watch** — point it at a folder, apply a preset, walk away.
 - **Undo/redo history + preset profiles** — non-destructive editing, reusable operation
   chains for repeated workflows.
-- **Quick Look extension** — preview ImageMagick-supported formats straight from Finder.
-- **Zero network access, zero telemetry** — see `PRIVACY.md`.
+- **Finder & Quick Action Headless Automation** — command-line headless runner (`--convert`) for macOS Shortcuts and Finder Quick Actions.
 
 ## Requirements
 

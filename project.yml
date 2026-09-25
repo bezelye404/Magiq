@@ -62,6 +62,7 @@ targets:
       - path: Tests/MagickCLITests
       - path: Tests/MagickCoreTests
       - path: Tests/PresetsTests
+      - path: Tests/FeaturesTests
     dependencies:
       - target: Magiq
     settings:

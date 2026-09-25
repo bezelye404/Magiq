@@ -10,9 +10,11 @@ import SwiftUI
 @main
 struct MagiqApp: App {
     @StateObject private var appState = AppState()
+    @ObservedObject private var shortcuts = KeyboardShortcutManager.shared
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
     init() {
+        HeadlessRunner.runIfHeadless()
         WandSession.shared.ensureInitialized()
     }
 
@@ -43,17 +45,26 @@ struct MagiqApp: App {
                 Button("Single Document Mode") {
                     self.appState.navigationMode = .singleImage
                 }
-                .keyboardShortcut("1", modifiers: .command)
+                .keyboardShortcut(
+                    self.shortcuts.shortcut(for: .singleDocumentMode).keyEquivalent,
+                    modifiers: self.shortcuts.shortcut(for: .singleDocumentMode).eventModifiers
+                )
 
                 Button("Batch Queue Mode") {
                     self.appState.navigationMode = .batchQueue
                 }
-                .keyboardShortcut("2", modifiers: .command)
+                .keyboardShortcut(
+                    self.shortcuts.shortcut(for: .batchQueueMode).keyEquivalent,
+                    modifiers: self.shortcuts.shortcut(for: .batchQueueMode).eventModifiers
+                )
 
                 Button("Presets Mode") {
                     self.appState.navigationMode = .presets
                 }
-                .keyboardShortcut("3", modifiers: .command)
+                .keyboardShortcut(
+                    self.shortcuts.shortcut(for: .presetsMode).keyEquivalent,
+                    modifiers: self.shortcuts.shortcut(for: .presetsMode).eventModifiers
+                )
             }
 
             CommandMenu("View") {

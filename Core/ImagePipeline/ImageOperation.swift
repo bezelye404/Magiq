@@ -259,6 +259,79 @@ public struct StripMetadataOperation: ImageOperation, Equatable {
     }
 }
 
+// MARK: - Watermark & Text Annotation
+
+public enum WatermarkPosition: String, CaseIterable, Identifiable, Codable, Sendable {
+    case topLeft = "Top Left"
+    case topCenter = "Top Center"
+    case topRight = "Top Right"
+    case center = "Center"
+    case bottomLeft = "Bottom Left"
+    case bottomCenter = "Bottom Center"
+    case bottomRight = "Bottom Right"
+
+    public var id: String { self.rawValue }
+
+    public var cliGravity: String {
+        switch self {
+        case .topLeft: return "NorthWest"
+        case .topCenter: return "North"
+        case .topRight: return "NorthEast"
+        case .center: return "Center"
+        case .bottomLeft: return "SouthWest"
+        case .bottomCenter: return "South"
+        case .bottomRight: return "SouthEast"
+        }
+    }
+}
+
+public struct WatermarkOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Watermark" }
+    public var text: String
+    public var fontSize: Int
+    public var opacity: Double
+    public var position: WatermarkPosition
+    public var color: String
+
+    public init(
+        id: UUID = UUID(),
+        text: String = "",
+        fontSize: Int = 28,
+        opacity: Double = 0.7,
+        position: WatermarkPosition = .bottomRight,
+        color: String = "white"
+    ) {
+        self.id = id
+        self.text = text
+        self.fontSize = max(8, min(120, fontSize))
+        self.opacity = max(0.05, min(1.0, opacity))
+        self.position = position
+        self.color = color
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.text.isEmpty else { return }
+        try wand.annotate(
+            text: self.text,
+            fontSize: Double(self.fontSize),
+            color: self.color,
+            opacity: self.opacity,
+            position: self.position
+        )
+    }
+
+    public var cliArguments: [String] {
+        guard !self.text.isEmpty else { return [] }
+        return [
+            "-gravity", self.position.cliGravity,
+            "-pointsize", "\(self.fontSize)",
+            "-fill", self.color,
+            "-annotate", "+20+20", self.text
+        ]
+    }
+}
+
 // MARK: - PipelineOperation Enum (For Presets & History Serialization)
 
 public enum PipelineOperation: ImageOperation, Equatable {
@@ -271,6 +344,8 @@ public enum PipelineOperation: ImageOperation, Equatable {
     case sharpenBlur(SharpenBlurOperation)
     case stripMetadata(StripMetadataOperation)
     case formatConvert(FormatConvertOperation)
+    case watermark(WatermarkOperation)
+    case colorGrade(ColorGradeOperation)
 
     public var id: UUID {
         switch self {
@@ -283,6 +358,8 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .sharpenBlur(let op): return op.id
         case .stripMetadata(let op): return op.id
         case .formatConvert(let op): return op.id
+        case .watermark(let op): return op.id
+        case .colorGrade(let op): return op.id
         }
     }
 
@@ -297,6 +374,8 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .sharpenBlur(let op): return op.name
         case .stripMetadata(let op): return op.name
         case .formatConvert(let op): return op.name
+        case .watermark(let op): return op.name
+        case .colorGrade(let op): return op.name
         }
     }
 
@@ -311,6 +390,8 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .sharpenBlur(let op): try op.apply(to: wand)
         case .stripMetadata(let op): try op.apply(to: wand)
         case .formatConvert(let op): try op.apply(to: wand)
+        case .watermark(let op): try op.apply(to: wand)
+        case .colorGrade(let op): try op.apply(to: wand)
         }
     }
 
@@ -325,6 +406,8 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .sharpenBlur(let op): return op.cliArguments
         case .stripMetadata(let op): return op.cliArguments
         case .formatConvert(let op): return op.cliArguments
+        case .watermark(let op): return op.cliArguments
+        case .colorGrade(let op): return op.cliArguments
         }
     }
 }

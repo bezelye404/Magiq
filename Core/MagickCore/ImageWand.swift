@@ -206,6 +206,41 @@ public final class ImageWand: Identifiable {
         try self.verifyStatus(status, operation: "MagickStripImage")
     }
 
+    public func annotate(
+        text: String,
+        fontSize: Double = 28.0,
+        color: String = "white",
+        opacity: Double = 0.7,
+        position: WatermarkPosition = .bottomRight
+    ) throws {
+        guard !text.isEmpty else { return }
+
+        guard let drawingWand = NewDrawingWand() else {
+            throw MagickError.wandAllocationFailed
+        }
+        defer { DestroyDrawingWand(drawingWand) }
+
+        let pixelWand = try PixelWandWrapper(color: color)
+        PixelSetAlpha(pixelWand.pointer, opacity)
+        DrawSetFillColor(drawingWand, pixelWand.pointer)
+        DrawSetFontSize(drawingWand, fontSize)
+
+        let gravity: GravityType
+        switch position {
+        case .topLeft: gravity = NorthWestGravity
+        case .topCenter: gravity = NorthGravity
+        case .topRight: gravity = NorthEastGravity
+        case .center: gravity = CenterGravity
+        case .bottomLeft: gravity = SouthWestGravity
+        case .bottomCenter: gravity = SouthGravity
+        case .bottomRight: gravity = SouthEastGravity
+        }
+        DrawSetGravity(drawingWand, gravity)
+
+        let status = MagickAnnotateImage(self.pointer, drawingWand, 20.0, 20.0, 0.0, text)
+        try self.verifyStatus(status, operation: "MagickAnnotateImage")
+    }
+
     public func clone() throws -> ImageWand {
         guard let clonedPtr = CloneMagickWand(self.pointer) else {
             throw MagickError.wandAllocationFailed

@@ -24,6 +24,14 @@ public final class SingleDocumentViewModel: ObservableObject {
     @Published public var isRendering: Bool = false
     @Published public var errorMessage: String?
     @Published public var showInspector: Bool = true
+    @Published public var histogramData: HistogramData?
+
+    // MARK: - Crop & Loupe States
+    @Published public var isCropping: Bool = false
+    @Published public var cropOperation: CropOperation? = nil {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var isLoupeActive: Bool = false
 
     // MARK: - Transformation Parameters
     @Published public var resizeWidth: Int = 1920 {
@@ -42,6 +50,8 @@ public final class SingleDocumentViewModel: ObservableObject {
     @Published public var flipVertical: Bool = false {
         didSet { self.onParameterChanged() }
     }
+
+    // MARK: - Color, Tone & Film Simulation
     @Published public var brightness: Double = 0.0 {
         didSet { self.onParameterChanged() }
     }
@@ -54,12 +64,36 @@ public final class SingleDocumentViewModel: ObservableObject {
     @Published public var autoLevel: Bool = false {
         didSet { self.onParameterChanged() }
     }
+    @Published public var filmProfile: FilmProfile = .none {
+        didSet { self.onParameterChanged() }
+    }
+
+    // MARK: - Sharpness & Blur
     @Published public var sharpen: Double = 0.0 {
         didSet { self.onParameterChanged() }
     }
     @Published public var blur: Double = 0.0 {
         didSet { self.onParameterChanged() }
     }
+
+    // MARK: - Watermark & Text Annotation
+    @Published public var watermarkText: String = "" {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var watermarkFontSize: Int = 28 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var watermarkOpacity: Double = 0.7 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var watermarkPosition: WatermarkPosition = .bottomRight {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var watermarkColor: String = "white" {
+        didSet { self.onParameterChanged() }
+    }
+
+    // MARK: - Export Settings
     @Published public var stripMetadata: Bool = false {
         didSet { self.onParameterChanged() }
     }
@@ -85,7 +119,7 @@ public final class SingleDocumentViewModel: ObservableObject {
         self.scheduleHistoryRecord()
     }
 
-    /// Cancels any in-flight render task and debounces by 45ms to protect RAM from slider flooding.
+    /// Cancels in-flight render tasks and debounces by 45ms to protect RAM from slider thrashing.
     public func scheduleLivePreview() {
         guard let url = self.currentImageURL else { return }
 
@@ -113,6 +147,7 @@ public final class SingleDocumentViewModel: ObservableObject {
 
                 guard !Task.isCancelled else { return }
                 self.previewImage = rendered
+                self.histogramData = HistogramData.calculate(from: rendered)
             } catch {
                 if !Task.isCancelled {
                     self.errorMessage = error.localizedDescription
@@ -147,6 +182,8 @@ public final class SingleDocumentViewModel: ObservableObject {
                 self.metadata = meta
 
                 self.isBatchUpdating = true
+                self.cropOperation = nil
+                self.isCropping = false
                 self.resizeWidth = meta.width
                 self.resizeHeight = meta.height
                 self.rotationDegrees = 0.0
@@ -156,8 +193,10 @@ public final class SingleDocumentViewModel: ObservableObject {
                 self.contrast = 0.0
                 self.saturation = 0.0
                 self.autoLevel = false
+                self.filmProfile = .none
                 self.sharpen = 0.0
                 self.blur = 0.0
+                self.watermarkText = ""
                 self.stripMetadata = false
                 self.quality = 85
                 self.isBatchUpdating = false
@@ -170,11 +209,51 @@ public final class SingleDocumentViewModel: ObservableObject {
                 )
                 self.originalPreviewImage = basePreview
                 self.previewImage = basePreview
+                self.histogramData = HistogramData.calculate(from: basePreview)
 
                 self.history.reset(initialOperations: self.buildPipelineOperations())
             } catch {
                 self.errorMessage = error.localizedDescription
             }
+        }
+    }
+
+    // MARK: - Crop Actions
+
+    public func applyCrop(normalizedRect: CGRect) {
+        guard let meta = self.metadata else { return }
+
+        let pxX = Int(normalizedRect.minX * CGFloat(meta.width))
+        let pxY = Int(normalizedRect.minY * CGFloat(meta.height))
+        let pxW = max(10, Int(normalizedRect.width * CGFloat(meta.width)))
+        let pxH = max(10, Int(normalizedRect.height * CGFloat(meta.height)))
+
+        self.cropOperation = CropOperation(x: pxX, y: pxY, width: pxW, height: pxH)
+        self.isCropping = false
+        self.resizeWidth = pxW
+        self.resizeHeight = pxH
+        self.history.push(stepName: "Crop (\(pxW)x\(pxH))", operations: self.buildPipelineOperations())
+    }
+
+    // MARK: - Target Size Optimization
+
+    public func optimizeToTargetSize(targetBytes: Int) async {
+        guard let url = self.currentImageURL else { return }
+
+        self.isRendering = true
+        defer { self.isRendering = false }
+
+        do {
+            let ops = self.buildPipelineOperations().map { $0 }
+            let result = try await TargetSizeOptimizer.findOptimalQuality(
+                for: url,
+                format: self.targetFormat,
+                targetSizeBytes: targetBytes,
+                operations: ops
+            )
+            self.quality = result.optimalQuality
+        } catch {
+            self.errorMessage = "Optimization failed: \(error.localizedDescription)"
         }
     }
 
@@ -193,6 +272,7 @@ public final class SingleDocumentViewModel: ObservableObject {
     public func applyPipelineOperations(_ operations: [PipelineOperation]) {
         self.isBatchUpdating = true
 
+        self.cropOperation = nil
         self.rotationDegrees = 0.0
         self.flipHorizontal = false
         self.flipVertical = false
@@ -200,12 +280,18 @@ public final class SingleDocumentViewModel: ObservableObject {
         self.contrast = 0.0
         self.saturation = 0.0
         self.autoLevel = false
+        self.filmProfile = .none
         self.sharpen = 0.0
         self.blur = 0.0
+        self.watermarkText = ""
         self.stripMetadata = false
 
         for op in operations {
             switch op {
+            case .crop(let crop):
+                self.cropOperation = crop
+                self.resizeWidth = crop.width
+                self.resizeHeight = crop.height
             case .resize(let resize):
                 self.resizeWidth = resize.width
                 self.resizeHeight = resize.height
@@ -221,16 +307,22 @@ public final class SingleDocumentViewModel: ObservableObject {
                 self.saturation = col.saturation
             case .autoLevel(let auto):
                 self.autoLevel = auto.enabled
+            case .colorGrade(let grade):
+                self.filmProfile = grade.profile
             case .sharpenBlur(let sharp):
                 self.sharpen = sharp.sharpen
                 self.blur = sharp.blur
+            case .watermark(let wm):
+                self.watermarkText = wm.text
+                self.watermarkFontSize = wm.fontSize
+                self.watermarkOpacity = wm.opacity
+                self.watermarkPosition = wm.position
+                self.watermarkColor = wm.color
             case .stripMetadata(let strip):
                 self.stripMetadata = strip.enabled
             case .formatConvert(let fmt):
                 self.targetFormat = fmt.format
                 self.quality = fmt.quality
-            case .crop:
-                break
             }
         }
 
@@ -248,6 +340,8 @@ public final class SingleDocumentViewModel: ObservableObject {
 
     public func resetParameters() {
         self.isBatchUpdating = true
+        self.cropOperation = nil
+        self.isCropping = false
         if let meta = self.metadata {
             self.resizeWidth = meta.width
             self.resizeHeight = meta.height
@@ -259,8 +353,10 @@ public final class SingleDocumentViewModel: ObservableObject {
         self.contrast = 0.0
         self.saturation = 0.0
         self.autoLevel = false
+        self.filmProfile = .none
         self.sharpen = 0.0
         self.blur = 0.0
+        self.watermarkText = ""
         self.stripMetadata = false
         self.quality = 85
         self.isBatchUpdating = false
@@ -274,6 +370,12 @@ public final class SingleDocumentViewModel: ObservableObject {
     public func buildPipelineOperations() -> [PipelineOperation] {
         var ops: [PipelineOperation] = []
 
+        // 1. Crop (applied first on raw canvas)
+        if let crop = self.cropOperation {
+            ops.append(.crop(crop))
+        }
+
+        // 2. Resize
         if self.resizeWidth > 0 && self.resizeHeight > 0 {
             if let meta = self.metadata {
                 if meta.width != self.resizeWidth || meta.height != self.resizeHeight {
@@ -292,6 +394,7 @@ public final class SingleDocumentViewModel: ObservableObject {
             }
         }
 
+        // 3. Flip & Flop
         if self.flipHorizontal || self.flipVertical {
             ops.append(.flipFlop(FlipFlopOperation(
                 horizontal: self.flipHorizontal,
@@ -299,10 +402,17 @@ public final class SingleDocumentViewModel: ObservableObject {
             )))
         }
 
+        // 4. Rotate
         if self.rotationDegrees != 0.0 {
             ops.append(.rotate(RotateOperation(degrees: self.rotationDegrees)))
         }
 
+        // 5. Film Simulation Profile
+        if self.filmProfile != .none {
+            ops.append(.colorGrade(ColorGradeOperation(profile: self.filmProfile)))
+        }
+
+        // 6. Color & Tone Adjustments
         if self.brightness != 0.0 || self.contrast != 0.0 || self.saturation != 0.0 {
             ops.append(.colorAdjust(ColorAdjustOperation(
                 brightness: self.brightness,
@@ -311,10 +421,12 @@ public final class SingleDocumentViewModel: ObservableObject {
             )))
         }
 
+        // 7. Auto Level
         if self.autoLevel {
             ops.append(.autoLevel(AutoLevelOperation(enabled: true)))
         }
 
+        // 8. Sharpen & Blur
         if self.sharpen > 0.0 || self.blur > 0.0 {
             ops.append(.sharpenBlur(SharpenBlurOperation(
                 sharpen: self.sharpen,
@@ -322,11 +434,25 @@ public final class SingleDocumentViewModel: ObservableObject {
             )))
         }
 
+        // 9. Watermark
+        if !self.watermarkText.isEmpty {
+            ops.append(.watermark(WatermarkOperation(
+                text: self.watermarkText,
+                fontSize: self.watermarkFontSize,
+                opacity: self.watermarkOpacity,
+                position: self.watermarkPosition,
+                color: self.watermarkColor
+            )))
+        }
+
+        // 10. Strip Metadata
         if self.stripMetadata {
             ops.append(.stripMetadata(StripMetadataOperation(enabled: true)))
         }
 
+        // 11. Format & Quality
         ops.append(.formatConvert(FormatConvertOperation(format: self.targetFormat, quality: self.quality)))
+
         return ops
     }
 }

@@ -11,6 +11,7 @@ import UniformTypeIdentifiers
 
 public struct SingleDocumentView: View {
     @ObservedObject public var viewModel: SingleDocumentViewModel
+    @ObservedObject private var shortcuts = KeyboardShortcutManager.shared
 
     public init(viewModel: SingleDocumentViewModel = SingleDocumentViewModel()) {
         self.viewModel = viewModel
@@ -21,7 +22,12 @@ public struct SingleDocumentView: View {
             image: self.viewModel.previewImage,
             originalImage: self.viewModel.originalPreviewImage,
             metadata: self.viewModel.metadata,
-            isLoading: self.viewModel.isRendering
+            isLoading: self.viewModel.isRendering,
+            isCropping: self.$viewModel.isCropping,
+            isLoupeActive: self.$viewModel.isLoupeActive,
+            onApplyCrop: { rect in
+                self.viewModel.applyCrop(normalizedRect: rect)
+            }
         )
         .frame(minWidth: 150, maxWidth: .infinity, minHeight: 150, maxHeight: .infinity)
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
@@ -39,42 +45,73 @@ public struct SingleDocumentView: View {
                 contrast: self.$viewModel.contrast,
                 saturation: self.$viewModel.saturation,
                 autoLevel: self.$viewModel.autoLevel,
+                filmProfile: self.$viewModel.filmProfile,
                 sharpen: self.$viewModel.sharpen,
                 blur: self.$viewModel.blur,
+                watermarkText: self.$viewModel.watermarkText,
+                watermarkFontSize: self.$viewModel.watermarkFontSize,
+                watermarkOpacity: self.$viewModel.watermarkOpacity,
+                watermarkPosition: self.$viewModel.watermarkPosition,
                 stripMetadata: self.$viewModel.stripMetadata,
                 targetFormat: self.$viewModel.targetFormat,
                 quality: self.$viewModel.quality,
+                isCropping: self.$viewModel.isCropping,
+                histogramData: self.viewModel.histogramData,
                 originalWidth: self.viewModel.metadata?.width,
                 originalHeight: self.viewModel.metadata?.height,
                 isProcessing: self.viewModel.isRendering,
+                onOptimizeTargetSize: { bytes in
+                    Task { await self.viewModel.optimizeToTargetSize(targetBytes: bytes) }
+                },
                 onReset: { self.viewModel.resetParameters() },
                 onExport: self.presentExportPanel
             )
-            .inspectorColumnWidth(min: 280, ideal: 300, max: 350)
+            .inspectorColumnWidth(min: 280, ideal: 310, max: 360)
         }
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
+                // Open Image
                 Button(action: self.presentOpenPanel) {
                     Label("Open Image", systemImage: "square.and.arrow.down")
                 }
-                .keyboardShortcut("o", modifiers: .command)
-                .help("Open an image file (⌘O)")
+                .keyboardShortcut(
+                    self.shortcuts.shortcut(for: .openImage).keyEquivalent,
+                    modifiers: self.shortcuts.shortcut(for: .openImage).eventModifiers
+                )
+                .help("Open an image file (\(self.shortcuts.shortcut(for: .openImage).displayString))")
+
+                // Export Image
+                Button(action: self.presentExportPanel) {
+                    Label("Export Image", systemImage: "square.and.arrow.up")
+                }
+                .keyboardShortcut(
+                    self.shortcuts.shortcut(for: .exportImage).keyEquivalent,
+                    modifiers: self.shortcuts.shortcut(for: .exportImage).eventModifiers
+                )
+                .disabled(self.viewModel.currentImageURL == nil)
+                .help("Export processed image (\(self.shortcuts.shortcut(for: .exportImage).displayString))")
 
                 // Undo
                 Button(action: { self.viewModel.performUndo() }) {
                     Label("Undo", systemImage: "arrow.uturn.backward")
                 }
-                .keyboardShortcut("z", modifiers: .command)
+                .keyboardShortcut(
+                    self.shortcuts.shortcut(for: .undo).keyEquivalent,
+                    modifiers: self.shortcuts.shortcut(for: .undo).eventModifiers
+                )
                 .disabled(!self.viewModel.history.canUndo)
-                .help("Undo last edit (⌘Z)")
+                .help("Undo last edit (\(self.shortcuts.shortcut(for: .undo).displayString))")
 
                 // Redo
                 Button(action: { self.viewModel.performRedo() }) {
                     Label("Redo", systemImage: "arrow.uturn.forward")
                 }
-                .keyboardShortcut("z", modifiers: [.command, .shift])
+                .keyboardShortcut(
+                    self.shortcuts.shortcut(for: .redo).keyEquivalent,
+                    modifiers: self.shortcuts.shortcut(for: .redo).eventModifiers
+                )
                 .disabled(!self.viewModel.history.canRedo)
-                .help("Redo last edit (⇧⌘Z)")
+                .help("Redo last edit (\(self.shortcuts.shortcut(for: .redo).displayString))")
 
                 // Presets Menu
                 Menu {
@@ -92,8 +129,11 @@ public struct SingleDocumentView: View {
                 Button(action: { self.viewModel.showInspector.toggle() }) {
                     Label("Toggle Inspector", systemImage: "sidebar.trailing")
                 }
-                .keyboardShortcut("i", modifiers: [.command, .option])
-                .help("Show or hide inspector (⌥⌘I)")
+                .keyboardShortcut(
+                    self.shortcuts.shortcut(for: .toggleInspector).keyEquivalent,
+                    modifiers: self.shortcuts.shortcut(for: .toggleInspector).eventModifiers
+                )
+                .help("Show or hide inspector (\(self.shortcuts.shortcut(for: .toggleInspector).displayString))")
             }
         }
         .alert(
