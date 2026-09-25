@@ -233,32 +233,34 @@ public final class ImageWand: Identifiable {
     public func makeNSImage() -> NSImage? {
         guard self.width > 0, self.height > 0 else { return nil }
 
-        guard let tempWand = CloneMagickWand(self.pointer) else { return nil }
-        defer { DestroyMagickWand(tempWand) }
+        return autoreleasepool {
+            guard let tempWand = CloneMagickWand(self.pointer) else { return nil }
+            defer { DestroyMagickWand(tempWand) }
 
-        // Attempt TIFF export first (native macOS bitmap format, preserving full color and alpha)
-        MagickSetImageFormat(tempWand, "TIFF")
-        var blobLength: size_t = 0
-        if let blob = MagickGetImageBlob(tempWand, &blobLength), blobLength > 0 {
-            defer { MagickRelinquishMemory(blob) }
-            let data = Data(bytes: blob, count: blobLength)
-            if let image = NSImage(data: data) {
-                return image
+            // Attempt TIFF export first (native macOS bitmap format, preserving full color and alpha)
+            MagickSetImageFormat(tempWand, "TIFF")
+            var blobLength: size_t = 0
+            if let blob = MagickGetImageBlob(tempWand, &blobLength), blobLength > 0 {
+                defer { MagickRelinquishMemory(blob) }
+                let data = Data(bytes: blob, count: blobLength)
+                if let image = NSImage(data: data) {
+                    return image
+                }
             }
-        }
 
-        // Fallback to PNG
-        MagickSetImageFormat(tempWand, "PNG")
-        blobLength = 0
-        if let blob = MagickGetImageBlob(tempWand, &blobLength), blobLength > 0 {
-            defer { MagickRelinquishMemory(blob) }
-            let data = Data(bytes: blob, count: blobLength)
-            if let image = NSImage(data: data) {
-                return image
+            // Fallback to PNG
+            MagickSetImageFormat(tempWand, "PNG")
+            blobLength = 0
+            if let blob = MagickGetImageBlob(tempWand, &blobLength), blobLength > 0 {
+                defer { MagickRelinquishMemory(blob) }
+                let data = Data(bytes: blob, count: blobLength)
+                if let image = NSImage(data: data) {
+                    return image
+                }
             }
-        }
 
-        return nil
+            return nil
+        }
     }
 
     // MARK: - Error Checking

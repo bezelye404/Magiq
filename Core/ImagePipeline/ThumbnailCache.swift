@@ -15,7 +15,19 @@ public final class ThumbnailCache: @unchecked Sendable {
 
     public init(maxMemoryBytes: Int = 100 * 1024 * 1024) {
         self.cache.totalCostLimit = maxMemoryBytes
-        self.cache.countLimit = 500
+        self.cache.countLimit = 300
+
+        NotificationCenter.default.addObserver(
+            forName: NSApplication.didResignActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.removeAll()
+        }
+    }
+
+    public func updateCostLimit(megabytes: Int) {
+        self.cache.totalCostLimit = max(10, megabytes) * 1024 * 1024
     }
 
     public func image(for url: URL, geometry: MagickGeometry) -> NSImage? {

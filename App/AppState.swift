@@ -11,6 +11,7 @@ import SwiftUI
 @MainActor
 public final class AppState: ObservableObject {
     @Published public var navigationMode: NavigationMode = .singleImage
+    public let documentViewModel = SingleDocumentViewModel()
 
     public init() {}
 }

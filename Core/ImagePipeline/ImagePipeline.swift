@@ -35,25 +35,31 @@ public final class ImagePipeline: Sendable {
         }
 
         return try await Task.detached(priority: .userInitiated) {
-            let wand = try ImageWand()
-            try wand.readThumbnail(from: url, maxBounds: bounds)
+            try Task.checkCancellation()
 
-            for op in operations {
-                try op.apply(to: wand)
+            return try autoreleasepool {
+                let wand = try ImageWand()
+                try wand.readThumbnail(from: url, maxBounds: bounds)
+
+                for op in operations {
+                    try Task.checkCancellation()
+                    try op.apply(to: wand)
+                }
+
+                try Task.checkCancellation()
+                guard let rendered = wand.makeNSImage() else {
+                    throw MagickError.operationFailed(
+                        operation: "makeNSImage",
+                        reason: "Failed to render preview bitmap from wand"
+                    )
+                }
+
+                if operations.isEmpty {
+                    self.cache.insert(rendered, for: url, geometry: bounds)
+                }
+
+                return rendered
             }
-
-            guard let rendered = wand.makeNSImage() else {
-                throw MagickError.operationFailed(
-                    operation: "makeNSImage",
-                    reason: "Failed to render preview bitmap from wand"
-                )
-            }
-
-            if operations.isEmpty {
-                self.cache.insert(rendered, for: url, geometry: bounds)
-            }
-
-            return rendered
         }.value
     }
 

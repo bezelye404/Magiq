@@ -57,7 +57,11 @@ targets:
     type: bundle.unit-test
     platform: macOS
     sources:
-      - path: Tests
+      - path: Tests/BatchQueueTests
+      - path: Tests/HistoryTests
+      - path: Tests/MagickCLITests
+      - path: Tests/MagickCoreTests
+      - path: Tests/PresetsTests
     dependencies:
       - target: Magiq
     settings:

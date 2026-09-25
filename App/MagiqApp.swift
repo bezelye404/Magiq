@@ -24,7 +24,7 @@ struct MagiqApp: App {
             } detail: {
                 switch self.appState.navigationMode {
                 case .singleImage:
-                    SingleDocumentView()
+                    SingleDocumentView(viewModel: self.appState.documentViewModel)
                 case .batchQueue:
                     BatchQueueView()
                 case .presets:

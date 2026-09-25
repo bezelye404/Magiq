@@ -27,7 +27,6 @@ public struct InspectorView: View {
     let originalWidth: Int?
     let originalHeight: Int?
     let isProcessing: Bool
-    let onApply: () -> Void
     let onReset: () -> Void
     let onExport: () -> Void
 
@@ -52,7 +51,6 @@ public struct InspectorView: View {
         originalWidth: Int? = nil,
         originalHeight: Int? = nil,
         isProcessing: Bool,
-        onApply: @escaping () -> Void,
         onReset: @escaping () -> Void,
         onExport: @escaping () -> Void
     ) {
@@ -74,7 +72,6 @@ public struct InspectorView: View {
         self.originalWidth = originalWidth
         self.originalHeight = originalHeight
         self.isProcessing = isProcessing
-        self.onApply = onApply
         self.onReset = onReset
         self.onExport = onExport
     }
@@ -82,6 +79,22 @@ public struct InspectorView: View {
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
+                // Live Status Indicator Banner
+                if self.isProcessing {
+                    HStack(spacing: 6) {
+                        ProgressView()
+                            .scaleEffect(0.65)
+                            .frame(width: 14, height: 14)
+                        Text("Live Rendering...")
+                            .font(.caption2.bold())
+                            .foregroundStyle(.tint)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
+                }
+
                 // MARK: - Dimensions Group
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
@@ -350,17 +363,6 @@ public struct InspectorView: View {
 
                 // MARK: - Action Buttons
                 VStack(spacing: 8) {
-                    Button(action: self.onApply) {
-                        HStack {
-                            Image(systemName: "arrow.triangle.2.circlepath")
-                            Text("Update Preview")
-                        }
-                        .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.regular)
-                    .disabled(self.isProcessing)
-
                     Button(action: self.onExport) {
                         HStack {
                             Image(systemName: "square.and.arrow.up")
@@ -368,7 +370,7 @@ public struct InspectorView: View {
                         }
                         .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.borderedProminent)
                     .controlSize(.regular)
 
                     Button(action: self.onReset) {
@@ -382,10 +384,12 @@ public struct InspectorView: View {
                     .buttonStyle(.plain)
                     .padding(.top, 4)
                 }
-                .padding(.top, 4)
+                .padding(.top, 6)
             }
-            .padding(14)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 16)
         }
+        .safeAreaPadding(.top, 8)
     }
 
     // MARK: - Actions
