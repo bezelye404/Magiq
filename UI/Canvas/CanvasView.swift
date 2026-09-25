@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - CanvasView
 
-/// Interactive canvas for viewing images with zoom, pan, and drop support.
+/// Interactive canvas for viewing images with zoom, pan, and drag-and-drop support.
 public struct CanvasView: View {
     let image: NSImage?
     let isLoading: Bool
@@ -26,14 +26,17 @@ public struct CanvasView: View {
     public var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Background subtle checkerboard or dark/light canvas
-                Color(nsColor: .windowBackgroundColor)
+                // Neutral canvas viewport background
+                Rectangle()
+                    .fill(Color(nsColor: .controlBackgroundColor).opacity(0.4))
                     .ignoresSafeArea()
 
                 if let image = self.image {
+                    // Image rendering inside canvas with subtle drop shadow
                     Image(nsImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
+                        .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 4)
                         .scaleEffect(self.zoomScale)
                         .offset(self.panOffset)
                         .gesture(
@@ -56,57 +59,40 @@ public struct CanvasView: View {
                         )
                         .animation(.interactiveSpring(), value: self.zoomScale)
                 } else if !self.isLoading {
-                    // Placeholder when no image is loaded
+                    // Elegant empty drop state card
                     VStack(spacing: DesignTokens.spacingMedium) {
                         Image(systemName: "photo.badge.plus")
-                            .font(.system(size: 48, weight: .light))
-                            .foregroundStyle(.secondary)
+                            .font(.system(size: 42, weight: .light))
+                            .foregroundStyle(.tint)
 
-                        Text("Drop an image here or open from toolbar")
-                            .font(.headline)
-                            .foregroundStyle(.secondary)
+                        VStack(spacing: 4) {
+                            Text("No Image Selected")
+                                .font(.headline)
+                                .foregroundColor(.primary)
+
+                            Text("Drop an image file here or open from toolbar")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
                     }
+                    .padding(32)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(.ultraThinMaterial)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .strokeBorder(Color.primary.opacity(0.1), lineWidth: 1)
+                            )
+                    )
                 }
 
                 if self.isLoading {
                     ProgressView()
-                        .scaleEffect(1.5)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(.ultraThinMaterial.opacity(0.6))
-                }
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .automatic) {
-                    Button(action: self.zoomOut) {
-                        Label("Zoom Out", systemImage: "minus.magnifyingglass")
-                    }
-                    .keyboardShortcut("-", modifiers: .command)
-
-                    Button(action: self.resetZoom) {
-                        Label("Actual Size", systemImage: "1.magnifyingglass")
-                    }
-                    .keyboardShortcut("0", modifiers: .command)
-
-                    Button(action: self.zoomIn) {
-                        Label("Zoom In", systemImage: "plus.magnifyingglass")
-                    }
-                    .keyboardShortcut("+", modifiers: .command)
+                        .scaleEffect(1.2)
+                        .padding(24)
+                        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
                 }
             }
         }
-    }
-
-    private func zoomIn() {
-        self.zoomScale = min(5.0, self.zoomScale * 1.25)
-    }
-
-    private func zoomOut() {
-        self.zoomScale = max(0.1, self.zoomScale * 0.8)
-    }
-
-    private func resetZoom() {
-        self.zoomScale = 1.0
-        self.panOffset = .zero
-        self.lastDragPosition = .zero
     }
 }

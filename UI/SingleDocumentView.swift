@@ -11,12 +11,13 @@ import UniformTypeIdentifiers
 
 // MARK: - SingleDocumentView
 
-/// Single image editing view with interactive canvas, inspector controls, and export flow.
+/// Single image editing view with interactive canvas, native macOS inspector drawer, and export flow.
 public struct SingleDocumentView: View {
     @State private var currentImageURL: URL?
     @State private var previewImage: NSImage?
     @State private var isLoading: Bool = false
     @State private var errorMessage: String?
+    @State private var showInspector: Bool = true
 
     // Inspector Operation States
     @State private var resizeWidth: Int = 1920
@@ -29,45 +30,49 @@ public struct SingleDocumentView: View {
     public init() {}
 
     public var body: some View {
-        HSplitView {
-            // Main Canvas Area
-            CanvasView(image: self.previewImage, isLoading: self.isLoading)
-                .frame(minWidth: 400, maxWidth: .infinity, minHeight: 300, maxHeight: .infinity)
-                .onDrop(of: [.fileURL], isTargeted: nil) { providers in
-                    self.handleDrop(providers: providers)
-                }
-
-            // Trailing Inspector
-            InspectorView(
-                resizeWidth: self.$resizeWidth,
-                resizeHeight: self.$resizeHeight,
-                maintainAspectRatio: self.$maintainAspectRatio,
-                rotationDegrees: self.$rotationDegrees,
-                targetFormat: self.$targetFormat,
-                quality: self.$quality,
-                isProcessing: self.isLoading,
-                onApply: { Task { await self.updatePreview() } },
-                onReset: self.resetParameters,
-                onExport: self.presentExportPanel
-            )
-        }
-        .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button(action: self.presentOpenPanel) {
-                    Label("Open Image", systemImage: "square.and.arrow.down")
-                }
-                .keyboardShortcut("o", modifiers: .command)
+        CanvasView(image: self.previewImage, isLoading: self.isLoading)
+            .frame(minWidth: 480, maxWidth: .infinity, minHeight: 360, maxHeight: .infinity)
+            .onDrop(of: [.fileURL], isTargeted: nil) { providers in
+                self.handleDrop(providers: providers)
             }
-        }
-        .alert(
-            "Error",
-            isPresented: Binding(
-                get: { self.errorMessage != nil },
-                set: { if !$0 { self.errorMessage = nil } }
-            ),
-            actions: { Button("OK", role: .cancel) {} },
-            message: { Text(self.errorMessage ?? "An unknown error occurred.") }
-        )
+            .inspector(isPresented: self.$showInspector) {
+                InspectorView(
+                    resizeWidth: self.$resizeWidth,
+                    resizeHeight: self.$resizeHeight,
+                    maintainAspectRatio: self.$maintainAspectRatio,
+                    rotationDegrees: self.$rotationDegrees,
+                    targetFormat: self.$targetFormat,
+                    quality: self.$quality,
+                    isProcessing: self.isLoading,
+                    onApply: { Task { await self.updatePreview() } },
+                    onReset: self.resetParameters,
+                    onExport: self.presentExportPanel
+                )
+            }
+            .toolbar {
+                ToolbarItemGroup(placement: .primaryAction) {
+                    Button(action: self.presentOpenPanel) {
+                        Label("Open Image", systemImage: "square.and.arrow.down")
+                    }
+                    .keyboardShortcut("o", modifiers: .command)
+                    .help("Open an image file (⌘O)")
+
+                    Button(action: { self.showInspector.toggle() }) {
+                        Label("Toggle Inspector", systemImage: "sidebar.trailing")
+                    }
+                    .keyboardShortcut("i", modifiers: [.command, .option])
+                    .help("Show or hide inspector (⌥⌘I)")
+                }
+            }
+            .alert(
+                "Error",
+                isPresented: Binding(
+                    get: { self.errorMessage != nil },
+                    set: { if !$0 { self.errorMessage = nil } }
+                ),
+                actions: { Button("OK", role: .cancel) {} },
+                message: { Text(self.errorMessage ?? "An unknown error occurred.") }
+            )
     }
 
     // MARK: - Image Operations

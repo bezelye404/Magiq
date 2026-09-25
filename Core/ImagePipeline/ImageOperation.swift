@@ -26,7 +26,7 @@ public protocol ImageOperation: Codable, Sendable {
 /// Resizes an image to specified dimensions.
 public struct ResizeOperation: ImageOperation, Equatable {
     public let id: UUID
-    public let name = "Resize"
+    public var name: String { "Resize" }
     public var width: Int
     public var height: Int
     public var maintainAspectRatio: Bool
@@ -61,7 +61,7 @@ public struct ResizeOperation: ImageOperation, Equatable {
 /// Rotates an image by a degree angle.
 public struct RotateOperation: ImageOperation, Equatable {
     public let id: UUID
-    public let name = "Rotate"
+    public var name: String { "Rotate" }
     public var degrees: Double
 
     public init(id: UUID = UUID(), degrees: Double) {
@@ -82,7 +82,7 @@ public struct RotateOperation: ImageOperation, Equatable {
 /// Crops an image to a bounding box.
 public struct CropOperation: ImageOperation, Equatable {
     public let id: UUID
-    public let name = "Crop"
+    public var name: String { "Crop" }
     public var x: Int
     public var y: Int
     public var width: Int
@@ -109,7 +109,7 @@ public struct CropOperation: ImageOperation, Equatable {
 /// Converts the output format and compression quality.
 public struct FormatConvertOperation: ImageOperation, Equatable {
     public let id: UUID
-    public let name = "Format & Quality"
+    public var name: String { "Format & Quality" }
     public var format: String
     public var quality: Int
 

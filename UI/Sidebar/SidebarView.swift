@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - NavigationMode
 
-public enum NavigationMode: String, CaseIterable, Identifiable {
+public enum NavigationMode: String, CaseIterable, Identifiable, Hashable {
     case singleImage = "Single Image"
     case batchQueue = "Batch Queue"
     case presets = "Presets"
@@ -27,7 +27,9 @@ public enum NavigationMode: String, CaseIterable, Identifiable {
 
 // MARK: - SidebarView
 
-/// Primary sidebar for navigating between Single Image, Batch Queue, and Presets modes.
+/// Primary sidebar for navigating between modes in NavigationSplitView.
+///
+/// Adheres to macOS HIG navigation list styling, avoiding NavigationLink indentation offsets.
 public struct SidebarView: View {
     @Binding var selectedMode: NavigationMode
 
@@ -36,12 +38,13 @@ public struct SidebarView: View {
     }
 
     public var body: some View {
-        List(NavigationMode.allCases, selection: self.$selectedMode) { mode in
-            NavigationLink(value: mode) {
-                Label(mode.rawValue, systemImage: mode.iconName)
-            }
+        List(NavigationMode.allCases, id: \.self, selection: self.$selectedMode) { mode in
+            Label(mode.rawValue, systemImage: mode.iconName)
+                .tag(mode)
+                .padding(.vertical, 3)
         }
         .listStyle(.sidebar)
-        .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 250)
+        .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: 280)
+        .safeAreaPadding(.top, 4)
     }
 }

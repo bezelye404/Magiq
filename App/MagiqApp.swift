@@ -19,6 +19,7 @@ struct MagiqApp: App {
     }
 
     var body: some Scene {
+        // Primary Application Window
         WindowGroup {
             NavigationSplitView {
                 SidebarView(selectedMode: self.$appState.navigationMode)
@@ -33,10 +34,15 @@ struct MagiqApp: App {
                 }
             }
             .navigationTitle("Magiq")
-            .frame(minWidth: 800, minHeight: 500)
+            .frame(minWidth: 850, minHeight: 520)
             .adaptiveMaterial()
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
+
+        // Native Settings Window (Command + ,)
+        Settings {
+            SettingsView()
+        }
     }
 }
