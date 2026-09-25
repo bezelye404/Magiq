@@ -2,16 +2,11 @@
 //  InspectorView.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import SwiftUI
 
 // MARK: - InspectorView
 
-/// Trailing inspector panel for configuring transform operations and format settings.
-///
-/// Designed to fit natively inside macOS `.inspector(isPresented:)` container.
 public struct InspectorView: View {
     @Binding var resizeWidth: Int
     @Binding var resizeHeight: Int
@@ -53,16 +48,14 @@ public struct InspectorView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                // Dimensions Section
+            VStack(alignment: .leading, spacing: 16) {
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
-                        Grid(alignment: .leading, horizontalSpacing: 10, verticalSpacing: 8) {
+                        Grid(alignment: .leading, horizontalSpacing: 8, verticalSpacing: 8) {
                             GridRow {
                                 Text("Width")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
-                                    .frame(width: 50, alignment: .leading)
 
                                 TextField("Width", value: self.$resizeWidth, format: .number.grouping(.never))
                                     .textFieldStyle(.roundedBorder)
@@ -77,7 +70,6 @@ public struct InspectorView: View {
                                 Text("Height")
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
-                                    .frame(width: 50, alignment: .leading)
 
                                 TextField("Height", value: self.$resizeHeight, format: .number.grouping(.never))
                                     .textFieldStyle(.roundedBorder)
@@ -99,12 +91,11 @@ public struct InspectorView: View {
                         .font(.headline)
                 }
 
-                // Rotation Section
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 10) {
                         HStack(spacing: 8) {
                             Button(action: { self.rotateBy(-90) }) {
-                                HStack {
+                                HStack(spacing: 4) {
                                     Image(systemName: "rotate.left")
                                     Text("90° Left")
                                 }
@@ -114,7 +105,7 @@ public struct InspectorView: View {
                             .controlSize(.small)
 
                             Button(action: { self.rotateBy(90) }) {
-                                HStack {
+                                HStack(spacing: 4) {
                                     Text("90° Right")
                                     Image(systemName: "rotate.right")
                                 }
@@ -144,9 +135,8 @@ public struct InspectorView: View {
                         .font(.headline)
                 }
 
-                // Format & Compression Section
                 GroupBox {
-                    VStack(alignment: .leading, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 10) {
                         HStack {
                             Text("Format")
                                 .font(.subheadline)
@@ -159,7 +149,7 @@ public struct InspectorView: View {
                             }
                             .labelsHidden()
                             .pickerStyle(.menu)
-                            .frame(width: 100)
+                            .frame(minWidth: 90)
                         }
 
                         if self.targetFormat != "PNG" {
@@ -191,8 +181,7 @@ public struct InspectorView: View {
                         .font(.headline)
                 }
 
-                // Action Buttons Section
-                VStack(spacing: 10) {
+                VStack(spacing: 8) {
                     Button(action: self.onApply) {
                         HStack {
                             Image(systemName: "arrow.triangle.2.circlepath")
@@ -204,29 +193,34 @@ public struct InspectorView: View {
                     .controlSize(.regular)
                     .disabled(self.isProcessing)
 
-                    HStack(spacing: 8) {
-                        Button("Reset", action: self.onReset)
-                            .buttonStyle(.bordered)
-                            .controlSize(.regular)
-                            .frame(maxWidth: .infinity)
-
-                        Button(action: self.onExport) {
-                            HStack {
-                                Image(systemName: "square.and.arrow.up")
-                                Text("Export...")
-                            }
-                            .frame(maxWidth: .infinity)
+                    Button(action: self.onExport) {
+                        HStack {
+                            Image(systemName: "square.and.arrow.up")
+                            Text("Export Image...")
                         }
-                        .buttonStyle(.bordered)
-                        .controlSize(.regular)
+                        .frame(maxWidth: .infinity)
                     }
+                    .buttonStyle(.bordered)
+                    .controlSize(.regular)
+
+                    Button(action: self.onReset) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.counterclockwise")
+                            Text("Reset Parameters")
+                        }
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 4)
                 }
-                .padding(.top, 4)
+                .padding(.top, 6)
             }
-            .padding(16)
+            .padding(14)
         }
-        .frame(minWidth: 260, idealWidth: 280, maxWidth: 320)
     }
+
+    // MARK: - Actions
 
     private func rotateBy(_ degrees: Double) {
         let newAngle = (self.rotationDegrees + degrees).truncatingRemainder(dividingBy: 360)

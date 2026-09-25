@@ -2,8 +2,6 @@
 //  MagiqApp.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import SwiftUI
 
@@ -12,17 +10,17 @@ import SwiftUI
 @main
 struct MagiqApp: App {
     @StateObject private var appState = AppState()
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
     init() {
-        // Initialize the global ImageMagick Wand environment
         WandSession.shared.ensureInitialized()
     }
 
     var body: some Scene {
-        // Primary Application Window
         WindowGroup {
-            NavigationSplitView {
+            NavigationSplitView(columnVisibility: self.$columnVisibility) {
                 SidebarView(selectedMode: self.$appState.navigationMode)
+                    .navigationSplitViewColumnWidth(min: 190, ideal: 220, max: 260)
             } detail: {
                 switch self.appState.navigationMode {
                 case .singleImage:
@@ -33,14 +31,14 @@ struct MagiqApp: App {
                     PresetsView()
                 }
             }
+            .navigationSplitViewStyle(.balanced)
             .navigationTitle("Magiq")
-            .frame(minWidth: 850, minHeight: 520)
+            .frame(minWidth: 780, minHeight: 480)
             .adaptiveMaterial()
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
 
-        // Native Settings Window (Command + ,)
         Settings {
             SettingsView()
         }

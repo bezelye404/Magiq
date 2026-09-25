@@ -2,8 +2,6 @@
 //  MagickCoreTests.swift
 //  MagiqTests
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import XCTest
 @testable import Magiq
@@ -31,6 +29,5 @@ final class MagickCoreTests: XCTestCase {
     func testImageWandLifecycleAndCanvasCreation() throws {
         let wand = try ImageWand()
         XCTAssertNotNil(wand.pointer)
-        // Wand deinit test verifies no crashes or exceptions occur
     }
 }

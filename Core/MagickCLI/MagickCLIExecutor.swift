@@ -2,29 +2,23 @@
 //  MagickCLIExecutor.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import Foundation
 
 // MARK: - MagickCLIExecutor
 
-/// Executes ImageMagick operations via the bundled CLI binary using `Process`.
+/// Executes ImageMagick operations via the bundled CLI binary using Process.
 ///
-/// **Architecture Justification (CLI Path):**
-/// The CLI path is used for:
-/// 1. One-off final exports to disk.
-/// 2. Advanced delegate formats (e.g., Ghostscript PDF/PS, Raw camera profiles).
-/// 3. Complex multi-stage commands or script files where full CLI coverage is required.
-///
-/// **Security Policy (AGENTS.md non-negotiable #6):**
-/// Only argument arrays are used (`Process.arguments = [String]`). Never `/bin/sh -c` or shell strings.
+/// **CLI Path Rationale:**
+/// Used for one-off final exports, advanced delegate formats (PDF, RAW), and complex
+/// operations where full CLI parity is needed. Uses argument arrays exclusively.
 public final class MagickCLIExecutor: Sendable {
     public static let shared = MagickCLIExecutor()
 
     private init() {}
 
-    /// Resolves the filesystem path to the bundled or fallback `magick` executable.
+    // MARK: - Path Resolution
+
     public func resolveExecutablePath() -> String {
         let bundle = Bundle.main
         if let resourcePath = bundle.resourcePath {
@@ -34,17 +28,14 @@ public final class MagickCLIExecutor: Sendable {
             }
         }
 
-        // Local development repository fallback
         let localBin = "\(FileManager.default.currentDirectoryPath)/Resources/ImageMagickDistribution/bin/magick"
         if FileManager.default.isExecutableFile(atPath: localBin) {
             return localBin
         }
 
-        // System Homebrew fallback
         return "/opt/homebrew/bin/magick"
     }
 
-    /// Resolves the directory housing ImageMagick resources.
     public func resolveDistributionPath() -> String {
         let bundle = Bundle.main
         if let resourcePath = bundle.resourcePath {
@@ -56,12 +47,8 @@ public final class MagickCLIExecutor: Sendable {
         return "\(FileManager.default.currentDirectoryPath)/Resources/ImageMagickDistribution"
     }
 
-    /// Executes `magick` with the given argument array asynchronously.
-    ///
-    /// - Parameters:
-    ///   - arguments: The array of command-line arguments (excluding the executable name).
-    ///   - environment: Optional extra environment variables to merge.
-    /// - Returns: A `MagickCLIResult` containing exit code, stdout, and stderr.
+    // MARK: - Process Execution
+
     public func execute(
         arguments: [String],
         environment: [String: String] = [:]
@@ -76,7 +63,6 @@ public final class MagickCLIExecutor: Sendable {
         process.executableURL = URL(fileURLWithPath: executablePath)
         process.arguments = arguments
 
-        // Scoped environment pointing to bundled libraries and modules
         var processEnv = ProcessInfo.processInfo.environment
         processEnv["MAGICK_HOME"] = distPath
         processEnv["MAGICK_CONFIGURE_PATH"] = "\(distPath)/etc/ImageMagick-7"
@@ -129,7 +115,6 @@ public final class MagickCLIExecutor: Sendable {
                 }
             }
         } onCancel: {
-            // Cancel background process immediately if parent Swift Task is cancelled
             if process.isRunning {
                 process.terminate()
             }

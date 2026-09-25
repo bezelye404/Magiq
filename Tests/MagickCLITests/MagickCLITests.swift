@@ -2,8 +2,6 @@
 //  MagickCLITests.swift
 //  MagiqTests
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import XCTest
 @testable import Magiq

@@ -2,8 +2,6 @@
 //  SingleDocumentView.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import AppKit
 import SwiftUI
@@ -11,7 +9,6 @@ import UniformTypeIdentifiers
 
 // MARK: - SingleDocumentView
 
-/// Single image editing view with interactive canvas, native macOS inspector drawer, and export flow.
 public struct SingleDocumentView: View {
     @State private var currentImageURL: URL?
     @State private var previewImage: NSImage?
@@ -19,7 +16,6 @@ public struct SingleDocumentView: View {
     @State private var errorMessage: String?
     @State private var showInspector: Bool = true
 
-    // Inspector Operation States
     @State private var resizeWidth: Int = 1920
     @State private var resizeHeight: Int = 1080
     @State private var maintainAspectRatio: Bool = true
@@ -31,7 +27,7 @@ public struct SingleDocumentView: View {
 
     public var body: some View {
         CanvasView(image: self.previewImage, isLoading: self.isLoading)
-            .frame(minWidth: 480, maxWidth: .infinity, minHeight: 360, maxHeight: .infinity)
+            .frame(minWidth: 150, maxWidth: .infinity, minHeight: 150, maxHeight: .infinity)
             .onDrop(of: [.fileURL], isTargeted: nil) { providers in
                 self.handleDrop(providers: providers)
             }
@@ -48,6 +44,7 @@ public struct SingleDocumentView: View {
                     onReset: self.resetParameters,
                     onExport: self.presentExportPanel
                 )
+                .inspectorColumnWidth(min: 270, ideal: 290, max: 340)
             }
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -75,9 +72,8 @@ public struct SingleDocumentView: View {
             )
     }
 
-    // MARK: - Image Operations
+    // MARK: - Operations & Live Preview
 
-    /// Updates live preview via the fast Linked Path.
     private func updatePreview() async {
         guard let url = self.currentImageURL else { return }
 
@@ -101,7 +97,6 @@ public struct SingleDocumentView: View {
 
             ops.append(FormatConvertOperation(format: self.targetFormat, quality: self.quality))
 
-            // Linked path: renders in RAM with bounded geometry
             let rendered = try await ImagePipeline.shared.generatePreview(
                 from: url,
                 boundedTo: MagickGeometry(width: 1200, height: 1200),
@@ -119,7 +114,7 @@ public struct SingleDocumentView: View {
         Task { await self.updatePreview() }
     }
 
-    // MARK: - Open & Export Panels
+    // MARK: - File Panels
 
     private func presentOpenPanel() {
         let panel = NSOpenPanel()
@@ -159,7 +154,6 @@ public struct SingleDocumentView: View {
                     }
                     ops.append(FormatConvertOperation(format: self.targetFormat, quality: self.quality))
 
-                    // CLI path: exports cleanly to destination URL
                     _ = try await ImagePipeline.shared.export(
                         from: sourceURL,
                         to: destinationURL,
@@ -171,6 +165,8 @@ public struct SingleDocumentView: View {
             }
         }
     }
+
+    // MARK: - Drag & Drop
 
     private func handleDrop(providers: [NSItemProvider]) -> Bool {
         guard let provider = providers.first else { return false }

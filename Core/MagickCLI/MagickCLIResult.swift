@@ -2,14 +2,11 @@
 //  MagickCLIResult.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import Foundation
 
 // MARK: - MagickCLIResult
 
-/// Encapsulates the execution output and termination status of an ImageMagick CLI process.
 public struct MagickCLIResult: Equatable, Sendable {
     public let exitCode: Int32
     public let stdout: String

@@ -2,14 +2,9 @@
 //  BatchQueueView.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import SwiftUI
 
-// MARK: - BatchQueueView
-
-/// Displays the batch processing queue and folder watch status.
 public struct BatchQueueView: View {
     public init() {}
 

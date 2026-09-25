@@ -2,14 +2,11 @@
 //  SettingsView.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import SwiftUI
 
 // MARK: - SettingsView
 
-/// Dedicated Preferences / Settings window conforming to macOS HIG standards.
 public struct SettingsView: View {
     @ObservedObject private var settings = UserSettings.shared
     @State private var cachePurgedBanner: Bool = false

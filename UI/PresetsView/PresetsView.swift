@@ -2,14 +2,9 @@
 //  PresetsView.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import SwiftUI
 
-// MARK: - PresetsView
-
-/// Displays and manages reusable image processing presets.
 public struct PresetsView: View {
     public init() {}
 

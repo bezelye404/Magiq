@@ -2,8 +2,6 @@
 //  SidebarView.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import SwiftUI
 
@@ -27,9 +25,6 @@ public enum NavigationMode: String, CaseIterable, Identifiable, Hashable {
 
 // MARK: - SidebarView
 
-/// Primary sidebar for navigating between modes in NavigationSplitView.
-///
-/// Adheres to macOS HIG navigation list styling, avoiding NavigationLink indentation offsets.
 public struct SidebarView: View {
     @Binding var selectedMode: NavigationMode
 

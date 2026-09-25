@@ -2,28 +2,20 @@
 //  ImageOperation.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import Foundation
 
 // MARK: - ImageOperation Protocol
 
-/// Defines an operation that can be executed either via the Linked Path (`ImageWand`) or CLI Path.
 public protocol ImageOperation: Codable, Sendable {
     var id: UUID { get }
     var name: String { get }
-
-    /// Applies this operation directly in memory using the linked `ImageWand` (Linked Path).
     func apply(to wand: ImageWand) throws
-
-    /// Generates CLI arguments representing this operation (CLI Path).
     var cliArguments: [String] { get }
 }
 
 // MARK: - Concrete Operations
 
-/// Resizes an image to specified dimensions.
 public struct ResizeOperation: ImageOperation, Equatable {
     public let id: UUID
     public var name: String { "Resize" }
@@ -39,7 +31,6 @@ public struct ResizeOperation: ImageOperation, Equatable {
     }
 
     public func apply(to wand: ImageWand) throws {
-        // Linked path: fast in-memory Lanczos downscale
         let targetGeom: MagickGeometry
         if self.maintainAspectRatio {
             targetGeom = wand.geometry.aspectFit(within: MagickGeometry(width: self.width, height: self.height))
@@ -58,7 +49,6 @@ public struct ResizeOperation: ImageOperation, Equatable {
     }
 }
 
-/// Rotates an image by a degree angle.
 public struct RotateOperation: ImageOperation, Equatable {
     public let id: UUID
     public var name: String { "Rotate" }
@@ -70,7 +60,6 @@ public struct RotateOperation: ImageOperation, Equatable {
     }
 
     public func apply(to wand: ImageWand) throws {
-        // Linked path: in-memory rotation
         try wand.rotate(degrees: self.degrees)
     }
 
@@ -79,7 +68,6 @@ public struct RotateOperation: ImageOperation, Equatable {
     }
 }
 
-/// Crops an image to a bounding box.
 public struct CropOperation: ImageOperation, Equatable {
     public let id: UUID
     public var name: String { "Crop" }
@@ -97,7 +85,6 @@ public struct CropOperation: ImageOperation, Equatable {
     }
 
     public func apply(to wand: ImageWand) throws {
-        // Linked path: in-memory crop
         try wand.crop(x: self.x, y: self.y, width: self.width, height: self.height)
     }
 
@@ -106,7 +93,6 @@ public struct CropOperation: ImageOperation, Equatable {
     }
 }
 
-/// Converts the output format and compression quality.
 public struct FormatConvertOperation: ImageOperation, Equatable {
     public let id: UUID
     public var name: String { "Format & Quality" }
@@ -120,7 +106,6 @@ public struct FormatConvertOperation: ImageOperation, Equatable {
     }
 
     public func apply(to wand: ImageWand) throws {
-        // Linked path: update wand format and quality settings
         try wand.setFormat(self.format)
         try wand.setCompressionQuality(self.quality)
     }

@@ -2,14 +2,11 @@
 //  MagickError.swift
 //  Magiq
 //
-//  Created for Magiq - Native macOS ImageMagick GUI.
-//
 
 import Foundation
 
 // MARK: - MagickError
 
-/// Represents typed errors emitted by the ImageMagick Core/Wand C API or CLI processes.
 public enum MagickError: LocalizedError, Equatable {
     case wandAllocationFailed
     case imageReadFailed(reason: String)
