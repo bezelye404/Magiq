@@ -1,0 +1,4 @@
+module MagickWandBridge [system] {
+    header "MagickWandBridge.h"
+    export *
+}

@@ -1,0 +1,66 @@
+name: Magiq
+options:
+  bundleIdPrefix: com.magiq
+  deploymentTarget:
+    macOS: "15.0"
+  xcodeVersion: "16.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+    GENERATE_INFOPLIST_FILE: YES
+    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.1.0"
+    SWIFT_OBJC_BRIDGING_HEADER: "Core/MagickCore/include/MagickWandBridge.h"
+    HEADER_SEARCH_PATHS:
+      - "$(SRCROOT)/Core/MagickCore/include"
+      - "/opt/homebrew/include/ImageMagick-7"
+    LIBRARY_SEARCH_PATHS:
+      - "$(SRCROOT)/Resources/ImageMagickDistribution/lib"
+      - "/opt/homebrew/lib"
+    OTHER_LDFLAGS:
+      - "-lMagickWand-7.Q16HDRI"
+      - "-lMagickCore-7.Q16HDRI"
+    OTHER_CFLAGS:
+      - "-DMAGICKCORE_HDRI_ENABLE=1"
+      - "-DMAGICKCORE_QUANTUM_DEPTH=16"
+    LD_RUNPATH_SEARCH_PATHS:
+      - "@executable_path/../Frameworks"
+      - "@loader_path/../Frameworks"
+      - "$(SRCROOT)/Resources/ImageMagickDistribution/lib"
+      - "/opt/homebrew/lib"
+
+targets:
+  Magiq:
+    type: application
+    platform: macOS
+    sources:
+      - path: App
+      - path: Core
+      - path: Features
+      - path: UI
+      - path: Resources/ImageMagickDistribution
+        buildPhase: resources
+    entitlements:
+      path: App/Entitlements/Magiq.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.magiq.app
+        CODE_SIGN_ENTITLEMENTS: App/Entitlements/Magiq.entitlements
+        ENABLE_HARDENED_RUNTIME: YES
+        CODE_SIGN_STYLE: Automatic
+        INFOPLIST_KEY_CFBundleDisplayName: Magiq
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright © 2026 Magiq. All rights reserved."
+
+  MagiqTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests
+    dependencies:
+      - target: Magiq
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.magiq.appTests
+        GENERATE_INFOPLIST_FILE: YES

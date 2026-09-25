@@ -1,0 +1,1334 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0175EC29432AEC474E885F64 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9B228805B5CED7F22ED093 /* SidebarView.swift */; };
+		01FB1E1B3E10BE46C4862CBF /* MagiqApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396E10527A74871DE5F2704 /* MagiqApp.swift */; };
+		03882A1D0308FDC9D731D433 /* PresetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C02BFC7BFEBEFA437EAAA1C /* PresetsView.swift */; };
+		04E491B81B330316BCBE49BF /* type-urw-base35.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6F9202D701C335B2898B173 /* type-urw-base35.xml */; };
+		08A54A8F745CB6EA061F27B2 /* psd.so in Resources */ = {isa = PBXBuildFile; fileRef = E893071D3B3859959D557036 /* psd.so */; };
+		093A2743FD2466445F272A89 /* null.so in Resources */ = {isa = PBXBuildFile; fileRef = E476724D2553EA90251B76CE /* null.so */; };
+		0BED6FCF9DD0EF7C77DC234B /* sun.so in Resources */ = {isa = PBXBuildFile; fileRef = 8D26587A766D0C3909C7663B /* sun.so */; };
+		0CFE20BF0620A9983903F355 /* dot.so in Resources */ = {isa = PBXBuildFile; fileRef = EA97B6E359B4585D3460B5E8 /* dot.so */; };
+		11304A2FDC56756662BEFE69 /* SingleDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47D566422A4B80EAB1D9D5F /* SingleDocumentView.swift */; };
+		128CCC686C13142DE65B15C8 /* tim.so in Resources */ = {isa = PBXBuildFile; fileRef = 0DE78AAAB50E4BF9F81182B5 /* tim.so */; };
+		129B8FD8A518DF6DF6663A4A /* plasma.so in Resources */ = {isa = PBXBuildFile; fileRef = 5BEECB881AD1BC3A7E548FC3 /* plasma.so */; };
+		12C64D545F2752C066EB9CB3 /* vid.so in Resources */ = {isa = PBXBuildFile; fileRef = 533E1DD4A59025FB9228793F /* vid.so */; };
+		149C56050BD18A97C062F081 /* dng.so in Resources */ = {isa = PBXBuildFile; fileRef = A518A9B505D3053D206FE7CB /* dng.so */; };
+		1702A8306D47F2B6BFBD18E4 /* label.so in Resources */ = {isa = PBXBuildFile; fileRef = 378782B89A3C84C26AE38B5B /* label.so */; };
+		1715CA83973CD8CF6AFEA754 /* libMagickCore-7.Q16HDRI.10.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 39C6D9BA6BAEEA5DAC2FAB67 /* libMagickCore-7.Q16HDRI.10.dylib */; };
+		1791288FC4CC4F7EE2715655 /* cals.so in Resources */ = {isa = PBXBuildFile; fileRef = 25F5B6ED431C379A00BE62ED /* cals.so */; };
+		17D6AB522FCC63F46E3CC5F0 /* MagickGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67EB81C5B52DF26B3F7E417A /* MagickGeometry.swift */; };
+		17F31657A85F2AF8E4F3D5EC /* pcx.so in Resources */ = {isa = PBXBuildFile; fileRef = 82D593755AE7D3196FB3BC9E /* pcx.so */; };
+		1BBA3375D6A14030A53557D7 /* hrz.so in Resources */ = {isa = PBXBuildFile; fileRef = 40C27FDFD8D2108005CE2685 /* hrz.so */; };
+		20442A409FC4B578A8FD3CEA /* raw.so in Resources */ = {isa = PBXBuildFile; fileRef = CB9F6915DCE303F278DA6E95 /* raw.so */; };
+		217F0831AA23F29C868C9FFE /* colors.xml in Resources */ = {isa = PBXBuildFile; fileRef = E72AFEF165271755321993B9 /* colors.xml */; };
+		22779898A0FC24F19EB7A6FE /* qoi.so in Resources */ = {isa = PBXBuildFile; fileRef = 5BE1862B14603D4208372BF6 /* qoi.so */; };
+		23FC9626169A5B02F9DBD5B0 /* uil.so in Resources */ = {isa = PBXBuildFile; fileRef = C49D8BB64777BFBBAE72C2CD /* uil.so */; };
+		26C28BF3ADA8C8DA88DC583D /* pattern.so in Resources */ = {isa = PBXBuildFile; fileRef = 631355565722A15288AABC35 /* pattern.so */; };
+		27BEC161D1B778EB91330745 /* hdr.so in Resources */ = {isa = PBXBuildFile; fileRef = FF6F516668C725C14F4D7F3A /* hdr.so */; };
+		28B29A3749646C42C3AFE63A /* cube.so in Resources */ = {isa = PBXBuildFile; fileRef = B82F24656D161132BADB6C3F /* cube.so */; };
+		2AAD9E2CFD4A106EEEBC3D04 /* cin.so in Resources */ = {isa = PBXBuildFile; fileRef = DA6BBFB8642FA95A271DC126 /* cin.so */; };
+		2DADAE70F1577258F13FD364 /* otb.so in Resources */ = {isa = PBXBuildFile; fileRef = 163696529C094DF9FBA53DBB /* otb.so */; };
+		2DEA6BAF03F2B5FA31A49CEF /* clip.so in Resources */ = {isa = PBXBuildFile; fileRef = 96C0A6D5F67FE9BB8A2196D5 /* clip.so */; };
+		2DEBEC379827D07B2C8FAAD7 /* mono.so in Resources */ = {isa = PBXBuildFile; fileRef = 5419360C2ACA784C92F1F5B2 /* mono.so */; };
+		2EA8FF0804D46575515AFD6C /* rgf.so in Resources */ = {isa = PBXBuildFile; fileRef = FA0414FD53967533C309AF21 /* rgf.so */; };
+		2F37085698772E432DDA5ECA /* xcf.so in Resources */ = {isa = PBXBuildFile; fileRef = 319213E8DBC94FB1FD6EA8A7 /* xcf.so */; };
+		2F5D1CFE15C788C5095F45CB /* dcm.so in Resources */ = {isa = PBXBuildFile; fileRef = BC34BB458B8741153300A51E /* dcm.so */; };
+		34DAA92651711CE86DA9D349 /* tiff.so in Resources */ = {isa = PBXBuildFile; fileRef = 891F78BCB7F9AC5975759153 /* tiff.so */; };
+		356D3C447AA524EAC01DAEC7 /* json.so in Resources */ = {isa = PBXBuildFile; fileRef = EC847B490D9359C4D38C7DF0 /* json.so */; };
+		35F595677BA39A04F541D595 /* thumbnail.so in Resources */ = {isa = PBXBuildFile; fileRef = F2D0038082A8B372AA201641 /* thumbnail.so */; };
+		360C1979EC437D93ABBF7A53 /* miff.so in Resources */ = {isa = PBXBuildFile; fileRef = 0EDCD33EE32509A7C3309889 /* miff.so */; };
+		3753977E4E8ADDB1CD72AC02 /* mpc.so in Resources */ = {isa = PBXBuildFile; fileRef = AFD4793E4F7B4EFFAA56B2C5 /* mpc.so */; };
+		38FF8CFCEF312CCB58665F5D /* mat.so in Resources */ = {isa = PBXBuildFile; fileRef = 46F582930ED7F8B8926656A4 /* mat.so */; };
+		3B4AA28618AA1E42EFFAE11B /* avs.so in Resources */ = {isa = PBXBuildFile; fileRef = D4D7C56F2B5806BC7DB718CC /* avs.so */; };
+		3BB995E553ADF35F6E7CEA35 /* farbfeld.so in Resources */ = {isa = PBXBuildFile; fileRef = 74D53C599046FF25BD12E447 /* farbfeld.so */; };
+		3D8D1305103249737FB39214 /* ThumbnailCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB0DF12FE7132A6C0030D9 /* ThumbnailCache.swift */; };
+		3FE360DE16941737B7C1B769 /* scr.so in Resources */ = {isa = PBXBuildFile; fileRef = 68D5038C42F5EB5D2188049F /* scr.so */; };
+		418C4CE176E7B79BC52E2D32 /* pix.so in Resources */ = {isa = PBXBuildFile; fileRef = CFCB94627E3B1896BDA361F5 /* pix.so */; };
+		4226D105290F9C1C04EE57AD /* PixelWandWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D9FF4CED53D9E161731BC1 /* PixelWandWrapper.swift */; };
+		45D77E32BE018E730C0FFEE3 /* yuv.so in Resources */ = {isa = PBXBuildFile; fileRef = 22460710D6407163E72A1516 /* yuv.so */; };
+		472EBD8B8D42B3721534279E /* ept.so in Resources */ = {isa = PBXBuildFile; fileRef = 97F838B73241D2F25D603E25 /* ept.so */; };
+		4749C960A96E4647848458FB /* pdb.so in Resources */ = {isa = PBXBuildFile; fileRef = D8C641E1CBFDF3F8EA48DA35 /* pdb.so */; };
+		47780649431E24E47C8A2D5A /* rle.so in Resources */ = {isa = PBXBuildFile; fileRef = 3DA2740BA37F24F7D1EB6D42 /* rle.so */; };
+		4830411C0A9F91846D42DAD0 /* ipl.so in Resources */ = {isa = PBXBuildFile; fileRef = AE49DA5C5ABFF965E799A394 /* ipl.so */; };
+		495BB75EF7CC62471D35D25D /* type.xml in Resources */ = {isa = PBXBuildFile; fileRef = 789FC654346AC8F24A875097 /* type.xml */; };
+		4996D8CBF60C49C9F02E5706 /* dib.so in Resources */ = {isa = PBXBuildFile; fileRef = 4E441B9729B20EA03B63A72A /* dib.so */; };
+		49CAE51D25E5279E4B03875D /* wbmp.so in Resources */ = {isa = PBXBuildFile; fileRef = 156FF38299854BE6DAD612C7 /* wbmp.so */; };
+		49E8D1AEAEB03049C03BC71D /* map.so in Resources */ = {isa = PBXBuildFile; fileRef = 7975620FB256D1CB872D946E /* map.so */; };
+		4B5BDA88BB849544528E9825 /* dds.so in Resources */ = {isa = PBXBuildFile; fileRef = 1569CDF588E626122DC93904 /* dds.so */; };
+		4E6D6392A28237C8BD5C1FCF /* c2pa.so in Resources */ = {isa = PBXBuildFile; fileRef = 7BB132C8F281E92D544C2155 /* c2pa.so */; };
+		5189677B63FE83996A491B82 /* braille.so in Resources */ = {isa = PBXBuildFile; fileRef = 21C14DDD3EA37931ADB15780 /* braille.so */; };
+		52712F6F0C0F7D463BA16D0C /* caption.so in Resources */ = {isa = PBXBuildFile; fileRef = F1E8F6C50D378E17FD2396AB /* caption.so */; };
+		563BD94D89FB64EC55BF1629 /* ase.so in Resources */ = {isa = PBXBuildFile; fileRef = A76A1C230C9220ED2BA066CD /* ase.so */; };
+		56545B674188E94CB95872B5 /* xbm.so in Resources */ = {isa = PBXBuildFile; fileRef = DDC4E1C94EA642050BE29582 /* xbm.so */; };
+		56CE2CF1658632F874A18D96 /* png.so in Resources */ = {isa = PBXBuildFile; fileRef = F00AB3A45B916F0A785CC27E /* png.so */; };
+		57831CE364C7C922CEE4E093 /* video.so in Resources */ = {isa = PBXBuildFile; fileRef = A525F29AEC55D426CB96E886 /* video.so */; };
+		583E8F677092BA08BB8B1486 /* MagickError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5355817382545BC478C80092 /* MagickError.swift */; };
+		58CE20C412D7C8C345EEFD05 /* rla.so in Resources */ = {isa = PBXBuildFile; fileRef = 977CFA5538B4E589B925D2BC /* rla.so */; };
+		5A86154D7B0D8F9F3FBC5F0A /* pdf.so in Resources */ = {isa = PBXBuildFile; fileRef = 868AB0A83935C01C41E60A20 /* pdf.so */; };
+		5B78EB84153DB0B3B4AFE1A5 /* stegano.so in Resources */ = {isa = PBXBuildFile; fileRef = 4270DE410A8C60E409957BA9 /* stegano.so */; };
+		5F13437C6823CA78C336B3FA /* tile.so in Resources */ = {isa = PBXBuildFile; fileRef = 7C2C538A14188C086436C0C0 /* tile.so */; };
+		62CF97248811F2DB71D9831E /* gif.so in Resources */ = {isa = PBXBuildFile; fileRef = FE4D7721AE723654287567FF /* gif.so */; };
+		6325B8795BCC3FF0C0C15E1C /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1992503A3E1C23FBC733197 /* DesignTokens.swift */; };
+		63825158A483CBDA999F31F0 /* bgr.so in Resources */ = {isa = PBXBuildFile; fileRef = D7CD574BD2A80FD5113246F6 /* bgr.so */; };
+		6D14BF180815533FC498CF90 /* SecurityScopedURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2E3F6DEF301A348B8805BC /* SecurityScopedURL.swift */; };
+		6FAEA124E401F80C8730A37E /* mvg.so in Resources */ = {isa = PBXBuildFile; fileRef = 67ED1327DF03CA9C7D748B71 /* mvg.so */; };
+		74B6517515EE7E82A2779E21 /* xc.so in Resources */ = {isa = PBXBuildFile; fileRef = DCAD2A0509D06E375E390BF6 /* xc.so */; };
+		75E7005F8AB2A8DABADB43B4 /* fl32.so in Resources */ = {isa = PBXBuildFile; fileRef = BBCCEA8C220684DF5205D29A /* fl32.so */; };
+		767D1C403E114CAB4C5E5BC8 /* pango.so in Resources */ = {isa = PBXBuildFile; fileRef = FA824AA3BC201A653882ABA7 /* pango.so */; };
+		795A0C698C5E1510F77D33CA /* dpx.so in Resources */ = {isa = PBXBuildFile; fileRef = 05C6BC9705CDA5906BC4CD62 /* dpx.so */; };
+		79B3129AEE0D54EB1F84FB3A /* pwp.so in Resources */ = {isa = PBXBuildFile; fileRef = 81FF39BC51C1B2B560EB8D76 /* pwp.so */; };
+		7B00084E371BFC676649C8DC /* vicar.so in Resources */ = {isa = PBXBuildFile; fileRef = 393A1A7685535213D3A6F878 /* vicar.so */; };
+		7BA355AE0D0061B622CF5CB0 /* pcd.so in Resources */ = {isa = PBXBuildFile; fileRef = 48D2FD6A135CC364E46BB72F /* pcd.so */; };
+		8241BFFEFACC5AB4DE07CC41 /* sgi.so in Resources */ = {isa = PBXBuildFile; fileRef = 7BFCA5B50F47C5AD87C20566 /* sgi.so */; };
+		824D6C238C46B91F8D4C9940 /* type-urw-base35-type1.xml in Resources */ = {isa = PBXBuildFile; fileRef = CF9DA2A15E2838FF059532B6 /* type-urw-base35-type1.xml */; };
+		827B6FAEEAF1B689A9EE37D9 /* ps.so in Resources */ = {isa = PBXBuildFile; fileRef = B1AC1692A64E6B291BEBAEE4 /* ps.so */; };
+		84465F1D3B398CF8DB3A0F7D /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A260BEABC8369956F4A8D49C /* InspectorView.swift */; };
+		85F31862BE962AFE11F27E09 /* mime.xml in Resources */ = {isa = PBXBuildFile; fileRef = D753E1B52B641179BC88B104 /* mime.xml */; };
+		8632769240A5F862387F88C9 /* cut.so in Resources */ = {isa = PBXBuildFile; fileRef = 9249880E2FC84F199E90B4CD /* cut.so */; };
+		8AC65FD7E467117CA428FAC9 /* ftxt.so in Resources */ = {isa = PBXBuildFile; fileRef = 664A23C633DAB9B1C06729A6 /* ftxt.so */; };
+		8E115506DDC916C880F61FD5 /* txt.so in Resources */ = {isa = PBXBuildFile; fileRef = F2B08BF6081AFDC65F5F1ACF /* txt.so */; };
+		8E51560AC1110367F3CA17F3 /* mpr.so in Resources */ = {isa = PBXBuildFile; fileRef = 9E8FE4152117EE0A72944E4A /* mpr.so */; };
+		8F45897A3F10050796877097 /* libMagickWand-7.Q16HDRI.10.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 21039E68619B355CF2A3615D /* libMagickWand-7.Q16HDRI.10.dylib */; };
+		912D5BE8754BDF7376446BFE /* msl.so in Resources */ = {isa = PBXBuildFile; fileRef = DA79D1E4106AD2E77F030870 /* msl.so */; };
+		9199BB09125880C1BB2BF490 /* gray.so in Resources */ = {isa = PBXBuildFile; fileRef = 10211EFCAAA648950F3C155E /* gray.so */; };
+		9303CF5930E907E77E9D9CB0 /* mtv.so in Resources */ = {isa = PBXBuildFile; fileRef = 6F7129DE3FF24416F74BF236 /* mtv.so */; };
+		97A5C14E5875F56E0EEBC701 /* sixel.so in Resources */ = {isa = PBXBuildFile; fileRef = 1928249854DC78657E8C28CA /* sixel.so */; };
+		99302073C8B6E6C7FB543A6F /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E64185FCBF5ACE3BFDCE0 /* CanvasView.swift */; };
+		99C0CA18274ED296391B61E2 /* libMagickWand-7.Q16HDRI.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 5883B5E8BBD75EBA9544EEDB /* libMagickWand-7.Q16HDRI.dylib */; };
+		9AC96EC3D18C95EB893BE8D5 /* aai.so in Resources */ = {isa = PBXBuildFile; fileRef = 62013883C0A5FC18D96740DF /* aai.so */; };
+		9B19C551D49BBB28FEFA845B /* html.so in Resources */ = {isa = PBXBuildFile; fileRef = 31BA82D2585F161C8FBB2CB6 /* html.so */; };
+		9B60A14597282597AD03CD04 /* delegates.xml in Resources */ = {isa = PBXBuildFile; fileRef = 959C1F6F005BEFC0C1E7E04A /* delegates.xml */; };
+		9EFBCCCE159013EF6F3FC7FB /* tga.so in Resources */ = {isa = PBXBuildFile; fileRef = D93D21C9926B7239471CB0AF /* tga.so */; };
+		A033A7972F042D36F354809D /* jnx.so in Resources */ = {isa = PBXBuildFile; fileRef = 3926576952F1A411B374526D /* jnx.so */; };
+		A5F51B7CFDE536C2DB5EBB48 /* ttf.so in Resources */ = {isa = PBXBuildFile; fileRef = DBA404F8174326A810BBBB29 /* ttf.so */; };
+		A6F315640594F4D4882E271C /* ImageWand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FCBBD7BB02BB4ABCCAC55E /* ImageWand.swift */; };
+		A769E2246AF9F6373564478F /* pict.so in Resources */ = {isa = PBXBuildFile; fileRef = F8F925BFC49A39333EC67EDB /* pict.so */; };
+		A8A3E758D5AC0BD709BE8374 /* thresholds.xml in Resources */ = {isa = PBXBuildFile; fileRef = 9FF8E4E481DB133FB6136920 /* thresholds.xml */; };
+		A9C986436C9279690E202BC5 /* fits.so in Resources */ = {isa = PBXBuildFile; fileRef = 396D496C8F79AC58554F719C /* fits.so */; };
+		ABFE42097FB936E215FCEA19 /* type-dejavu.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2285E50F44A864071E71085A /* type-dejavu.xml */; };
+		AE838D0222E3E9F5445752D7 /* quantization-table.xml in Resources */ = {isa = PBXBuildFile; fileRef = 5B0708C5206243E981621469 /* quantization-table.xml */; };
+		AED2B703A3EA73D6914929FE /* jpeg.so in Resources */ = {isa = PBXBuildFile; fileRef = 946724D76FFF65980B946399 /* jpeg.so */; };
+		B1C07D23D62BABAC5F3107F2 /* type-windows.xml in Resources */ = {isa = PBXBuildFile; fileRef = 3FE8BB169873D75DA2476BBA /* type-windows.xml */; };
+		B3B8F332A4D7E064887A5DFB /* sfw.so in Resources */ = {isa = PBXBuildFile; fileRef = 22A042394B8F9DF86AA9B181 /* sfw.so */; };
+		B4EAE5B88ED87768C57FE858 /* yaml.so in Resources */ = {isa = PBXBuildFile; fileRef = DDFA81B239E18CFB18E9FA62 /* yaml.so */; };
+		B5AD5D649D46E7216A4FB339 /* MagickCLIExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4616B5B917A1770C6759C7 /* MagickCLIExecutor.swift */; };
+		B6725C367F3B4EC7E3F7CC24 /* xps.so in Resources */ = {isa = PBXBuildFile; fileRef = 136D2B4D5CDB8678DBD55DFD /* xps.so */; };
+		B68FA869C1E2F84E0CDC4E7F /* libMagick++-7.Q16HDRI.5.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 81AAC586EE62A8DCC420515E /* libMagick++-7.Q16HDRI.5.dylib */; };
+		B6C39E3452A567673BEAA876 /* gradient.so in Resources */ = {isa = PBXBuildFile; fileRef = 1A3C2861C9244FA1343FAAF3 /* gradient.so */; };
+		B8B3FE23F2006676C578319C /* heic.so in Resources */ = {isa = PBXBuildFile; fileRef = 6AFC2B27B7A33BA882F4BEEE /* heic.so */; };
+		B915873EB196D140DEF791DF /* WandSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B049928CBA32F34FF2D73B6 /* WandSession.swift */; };
+		BD40DF88233E5D32E4DEAF21 /* palm.so in Resources */ = {isa = PBXBuildFile; fileRef = 8B4C21B97531868EB59D00A1 /* palm.so */; };
+		BDDDF3F5C4E5196932ACE188 /* wbinfo.so in Resources */ = {isa = PBXBuildFile; fileRef = A3BA32F65D79E99196C3C97D /* wbinfo.so */; };
+		BE4B2EC521BC74CC79C7E276 /* hald.so in Resources */ = {isa = PBXBuildFile; fileRef = AD865FFB75D0FF5CCFCD9B2C /* hald.so */; };
+		BEC942CF52118CBB48627E6E /* art.so in Resources */ = {isa = PBXBuildFile; fileRef = D9BA80871BE215585076F26D /* art.so */; };
+		BF24633610861203DDCD0006 /* ycbcr.so in Resources */ = {isa = PBXBuildFile; fileRef = A6E04D9915DF35FEB318034F /* ycbcr.so */; };
+		BFBB0457AA1637EAB67C64DF /* cip.so in Resources */ = {isa = PBXBuildFile; fileRef = AA0E094CC8EEFBAB5D64F084 /* cip.so */; };
+		C2701F634C097A21DA803009 /* type-ghostscript.xml in Resources */ = {isa = PBXBuildFile; fileRef = DE5102DA2B610F1A5EF4DF52 /* type-ghostscript.xml */; };
+		C509F499B5106098EF558BCD /* uyvy.so in Resources */ = {isa = PBXBuildFile; fileRef = F847096251201E98DA30ACF5 /* uyvy.so */; };
+		C5A4ED7E151169C237B13FBC /* ashlar.so in Resources */ = {isa = PBXBuildFile; fileRef = 93A0083B00B78BBB48775053 /* ashlar.so */; };
+		C5B457254E0E669B71A4AB8E /* BatchQueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4613B3BAEE053E40E63F6A /* BatchQueueView.swift */; };
+		C69509522CA49C5A8B4F688C /* bmp.so in Resources */ = {isa = PBXBuildFile; fileRef = FB23E986FCD30DAC31879FFE /* bmp.so */; };
+		C696486F71C31B10958A5FCB /* pgx.so in Resources */ = {isa = PBXBuildFile; fileRef = AAA22117AD58121E83C8507E /* pgx.so */; };
+		C76BB1566D3C4DD86867EF42 /* mask.so in Resources */ = {isa = PBXBuildFile; fileRef = 93556DC2AB8EFD36D37273FF /* mask.so */; };
+		C83C30BAF652848EB3130A99 /* kernel.so in Resources */ = {isa = PBXBuildFile; fileRef = 16CE7397ECAD7511B54BD258 /* kernel.so */; };
+		C8F8C7837E724180CFB6E2E5 /* bayer.so in Resources */ = {isa = PBXBuildFile; fileRef = 448ECBD6FC153F6FFBE7A1CA /* bayer.so */; };
+		CA33917020E9EB588A970BEA /* magick.so in Resources */ = {isa = PBXBuildFile; fileRef = 46E7E6C15782482F218D5B38 /* magick.so */; };
+		CC88CC863B9532BEBF6EC998 /* libMagick++-7.Q16HDRI.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 20BC188D2338E2CB126D724A /* libMagick++-7.Q16HDRI.dylib */; };
+		CEE15764A41EECB213DB652E /* matte.so in Resources */ = {isa = PBXBuildFile; fileRef = DEB9DD6595C1E304A729ECE4 /* matte.so */; };
+		CEE6B373B9A75836FA0E29CA /* viff.so in Resources */ = {isa = PBXBuildFile; fileRef = 7E8D3AE01576210A99564FE3 /* viff.so */; };
+		CF228824D9C11843C308829E /* inline.so in Resources */ = {isa = PBXBuildFile; fileRef = F1765F413075B04A060CDD74 /* inline.so */; };
+		CFCAE407AB15772FA854E0D9 /* debug.so in Resources */ = {isa = PBXBuildFile; fileRef = E616AF79FDBB066496CC1810 /* debug.so */; };
+		D04602E8A364DBF0CCBB413D /* tim2.so in Resources */ = {isa = PBXBuildFile; fileRef = 91412BE60A6D51F2970D3A4A /* tim2.so */; };
+		D05F48A38B5EB94656928243 /* histogram.so in Resources */ = {isa = PBXBuildFile; fileRef = 5802518DE258856FF3605D73 /* histogram.so */; };
+		D1A250E289CE50D67B4A3032 /* url.so in Resources */ = {isa = PBXBuildFile; fileRef = C9C8EA0975542C2031C67937 /* url.so */; };
+		D24EE0CA3AA95044380F418A /* fax.so in Resources */ = {isa = PBXBuildFile; fileRef = B584CD51DEFDA5AFD4F513B3 /* fax.so */; };
+		D46264E3A782B98B33207880 /* pes.so in Resources */ = {isa = PBXBuildFile; fileRef = A3421687E2FE0D673CC0C4D3 /* pes.so */; };
+		D5140216EDB4C1240C3CC8FB /* vips.so in Resources */ = {isa = PBXBuildFile; fileRef = 3DB9E005A70467E3558A9260 /* vips.so */; };
+		D57C1B3590CCE285D4E9EA9E /* cmyk.so in Resources */ = {isa = PBXBuildFile; fileRef = BF8D83D460A75D94933BE05D /* cmyk.so */; };
+		D7193754C0DDC480DFB7E4EF /* MagickCLITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEACEDBB0FC1E131C587199 /* MagickCLITests.swift */; };
+		D7777A7E9CA175A3CD046107 /* mac.so in Resources */ = {isa = PBXBuildFile; fileRef = 3FB6CF10F31424C374127F3B /* mac.so */; };
+		D96B9600354DAF75D46801CC /* libMagickCore-7.Q16HDRI.dylib in Resources */ = {isa = PBXBuildFile; fileRef = BA1CD681E0A13E5C34716A3B /* libMagickCore-7.Q16HDRI.dylib */; };
+		D9C8D60105AE88E1F628D388 /* ps3.so in Resources */ = {isa = PBXBuildFile; fileRef = 53F15905DED7E59707B44DA1 /* ps3.so */; };
+		DB881BAA7E4A70086D00F361 /* svg.so in Resources */ = {isa = PBXBuildFile; fileRef = D6E1371CA848C16D60975C67 /* svg.so */; };
+		DBBFFF377774BEB6163D52C7 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE118FB05CC0B4B99F1F9FE /* AppState.swift */; };
+		DC1C351DEBE05FDC57A40D00 /* log.xml in Resources */ = {isa = PBXBuildFile; fileRef = 88C3D97034C5D6CCC4CE30D5 /* log.xml */; };
+		DC96C47F2CE1ED059044B3C2 /* rgb.so in Resources */ = {isa = PBXBuildFile; fileRef = C430BA45FB9060D94687F166 /* rgb.so */; };
+		DCCAD8493CA25FA39FA875B4 /* MagickCLIResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E667CBB06D5AC77E944DDDB /* MagickCLIResult.swift */; };
+		DD3FBE8F725802EA6E8C978C /* MagickCLIArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AA1F7DA607146692EC0EC79 /* MagickCLIArguments.swift */; };
+		E2940158F58428C1EB7EBBE7 /* meta.so in Resources */ = {isa = PBXBuildFile; fileRef = 7D00FEAAAF182FDBAF5F36ED /* meta.so */; };
+		E34388A96BF2B7742211761D /* policy.xml in Resources */ = {isa = PBXBuildFile; fileRef = 0666A785251392FDF2CB859D /* policy.xml */; };
+		E35340DCC175721BBFD4C9C0 /* ImageOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C441E0948E84AA441F3F7F /* ImageOperation.swift */; };
+		E728D3520C2240E65349F79D /* MagickCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C6E82318DB72BB6623043D /* MagickCoreTests.swift */; };
+		E794E6C70D44CB2452635546 /* strimg.so in Resources */ = {isa = PBXBuildFile; fileRef = C674FBA6B396467EEEEDB502 /* strimg.so */; };
+		E9D307AEBA9789EA1F2B5F16 /* ImagePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF59A32E940B0DF543D6B3EF /* ImagePipeline.swift */; };
+		EB579D0933C660919DE9CA91 /* wpg.so in Resources */ = {isa = PBXBuildFile; fileRef = DF3C744B92C866219E249A1F /* wpg.so */; };
+		EC147ED7CB451CA2A1F93359 /* ora.so in Resources */ = {isa = PBXBuildFile; fileRef = 4881B446405F6A14A40FA2B2 /* ora.so */; };
+		EC60221D5D54F31618984A99 /* type-apple.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7B89F818A738001759860384 /* type-apple.xml */; };
+		EE4AF6344134A9C5B4849AEE /* ps2.so in Resources */ = {isa = PBXBuildFile; fileRef = 29AFC6ACACEC066441A48E43 /* ps2.so */; };
+		F01F733A0E7237EF5B8CD376 /* sct.so in Resources */ = {isa = PBXBuildFile; fileRef = B1A66E60A005AC46836A223E /* sct.so */; };
+		F14267EEB3577E0612583F4B /* pcl.so in Resources */ = {isa = PBXBuildFile; fileRef = BD220542FA3B7E2A3891159E /* pcl.so */; };
+		F632C4961F6DD134EBEB4185 /* info.so in Resources */ = {isa = PBXBuildFile; fileRef = 16596858448B703131774065 /* info.so */; };
+		F726599A51D0C4B53C5D2FEE /* xpm.so in Resources */ = {isa = PBXBuildFile; fileRef = 806B92CE2ACD266438340DE8 /* xpm.so */; };
+		FBFA2EDA3E25E4E6DAAE1C10 /* sf3.so in Resources */ = {isa = PBXBuildFile; fileRef = B829EE0B7BB899CB6C0EB02C /* sf3.so */; };
+		FD4453BCADDBCC0F41E88165 /* icon.so in Resources */ = {isa = PBXBuildFile; fileRef = B1B255767B1D0CAA720BDAD3 /* icon.so */; };
+		FDAD3F0E5C69388E19B7D25A /* webp.so in Resources */ = {isa = PBXBuildFile; fileRef = A91C2DD20FD252FBD98F7945 /* webp.so */; };
+		FE18732C2D9DBBF298A82A11 /* pnm.so in Resources */ = {isa = PBXBuildFile; fileRef = 615E8FFDE8036AB0FF716450 /* pnm.so */; };
+		FFBE88A76700CA8313CBF061 /* magick in Resources */ = {isa = PBXBuildFile; fileRef = 0C84D9A73A134ACA775DCADD /* magick */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		558687A026BFDFBEDB141DDD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4BA4D862494DFE9E9BBAB6E8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6BDCB57E07ADAB6A6B340354;
+			remoteInfo = Magiq;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		05C6BC9705CDA5906BC4CD62 /* dpx.so */ = {isa = PBXFileReference; path = dpx.so; sourceTree = "<group>"; };
+		0666A785251392FDF2CB859D /* policy.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = policy.xml; sourceTree = "<group>"; };
+		0AF567C2407A155C0C938F0E /* MagiqQuickLook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MagiqQuickLook.entitlements; sourceTree = "<group>"; };
+		0B4A543B472D8EA93110E275 /* MagickWandBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MagickWandBridge.h; sourceTree = "<group>"; };
+		0C84D9A73A134ACA775DCADD /* magick */ = {isa = PBXFileReference; path = magick; sourceTree = "<group>"; };
+		0DE78AAAB50E4BF9F81182B5 /* tim.so */ = {isa = PBXFileReference; path = tim.so; sourceTree = "<group>"; };
+		0E667CBB06D5AC77E944DDDB /* MagickCLIResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickCLIResult.swift; sourceTree = "<group>"; };
+		0EDCD33EE32509A7C3309889 /* miff.so */ = {isa = PBXFileReference; path = miff.so; sourceTree = "<group>"; };
+		10211EFCAAA648950F3C155E /* gray.so */ = {isa = PBXFileReference; path = gray.so; sourceTree = "<group>"; };
+		136D2B4D5CDB8678DBD55DFD /* xps.so */ = {isa = PBXFileReference; path = xps.so; sourceTree = "<group>"; };
+		1569CDF588E626122DC93904 /* dds.so */ = {isa = PBXFileReference; path = dds.so; sourceTree = "<group>"; };
+		156FF38299854BE6DAD612C7 /* wbmp.so */ = {isa = PBXFileReference; path = wbmp.so; sourceTree = "<group>"; };
+		163696529C094DF9FBA53DBB /* otb.so */ = {isa = PBXFileReference; path = otb.so; sourceTree = "<group>"; };
+		16596858448B703131774065 /* info.so */ = {isa = PBXFileReference; path = info.so; sourceTree = "<group>"; };
+		16CE7397ECAD7511B54BD258 /* kernel.so */ = {isa = PBXFileReference; path = kernel.so; sourceTree = "<group>"; };
+		1928249854DC78657E8C28CA /* sixel.so */ = {isa = PBXFileReference; path = sixel.so; sourceTree = "<group>"; };
+		19C6E82318DB72BB6623043D /* MagickCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickCoreTests.swift; sourceTree = "<group>"; };
+		1A3C2861C9244FA1343FAAF3 /* gradient.so */ = {isa = PBXFileReference; path = gradient.so; sourceTree = "<group>"; };
+		1A4616B5B917A1770C6759C7 /* MagickCLIExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickCLIExecutor.swift; sourceTree = "<group>"; };
+		1F63F8D4E2652DFAE58388F4 /* Magiq.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Magiq.entitlements; sourceTree = "<group>"; };
+		20BC188D2338E2CB126D724A /* libMagick++-7.Q16HDRI.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagick++-7.Q16HDRI.dylib"; sourceTree = "<group>"; };
+		21039E68619B355CF2A3615D /* libMagickWand-7.Q16HDRI.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagickWand-7.Q16HDRI.10.dylib"; sourceTree = "<group>"; };
+		217CCB193203EDA2D47C7EE2 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
+		21C14DDD3EA37931ADB15780 /* braille.so */ = {isa = PBXFileReference; path = braille.so; sourceTree = "<group>"; };
+		22460710D6407163E72A1516 /* yuv.so */ = {isa = PBXFileReference; path = yuv.so; sourceTree = "<group>"; };
+		2285E50F44A864071E71085A /* type-dejavu.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-dejavu.xml"; sourceTree = "<group>"; };
+		22A042394B8F9DF86AA9B181 /* sfw.so */ = {isa = PBXFileReference; path = sfw.so; sourceTree = "<group>"; };
+		25F5B6ED431C379A00BE62ED /* cals.so */ = {isa = PBXFileReference; path = cals.so; sourceTree = "<group>"; };
+		29AFC6ACACEC066441A48E43 /* ps2.so */ = {isa = PBXFileReference; path = ps2.so; sourceTree = "<group>"; };
+		2AA1F7DA607146692EC0EC79 /* MagickCLIArguments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickCLIArguments.swift; sourceTree = "<group>"; };
+		2B049928CBA32F34FF2D73B6 /* WandSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WandSession.swift; sourceTree = "<group>"; };
+		2F6C82A1EE5E06E024B89CE4 /* MagiqTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MagiqTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		319213E8DBC94FB1FD6EA8A7 /* xcf.so */ = {isa = PBXFileReference; path = xcf.so; sourceTree = "<group>"; };
+		31BA82D2585F161C8FBB2CB6 /* html.so */ = {isa = PBXFileReference; path = html.so; sourceTree = "<group>"; };
+		31FCBBD7BB02BB4ABCCAC55E /* ImageWand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageWand.swift; sourceTree = "<group>"; };
+		3396E10527A74871DE5F2704 /* MagiqApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagiqApp.swift; sourceTree = "<group>"; };
+		33C441E0948E84AA441F3F7F /* ImageOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOperation.swift; sourceTree = "<group>"; };
+		378782B89A3C84C26AE38B5B /* label.so */ = {isa = PBXFileReference; path = label.so; sourceTree = "<group>"; };
+		3926576952F1A411B374526D /* jnx.so */ = {isa = PBXFileReference; path = jnx.so; sourceTree = "<group>"; };
+		393A1A7685535213D3A6F878 /* vicar.so */ = {isa = PBXFileReference; path = vicar.so; sourceTree = "<group>"; };
+		396D496C8F79AC58554F719C /* fits.so */ = {isa = PBXFileReference; path = fits.so; sourceTree = "<group>"; };
+		39C6D9BA6BAEEA5DAC2FAB67 /* libMagickCore-7.Q16HDRI.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagickCore-7.Q16HDRI.10.dylib"; sourceTree = "<group>"; };
+		3DA2740BA37F24F7D1EB6D42 /* rle.so */ = {isa = PBXFileReference; path = rle.so; sourceTree = "<group>"; };
+		3DB9E005A70467E3558A9260 /* vips.so */ = {isa = PBXFileReference; path = vips.so; sourceTree = "<group>"; };
+		3FB6CF10F31424C374127F3B /* mac.so */ = {isa = PBXFileReference; path = mac.so; sourceTree = "<group>"; };
+		3FE8BB169873D75DA2476BBA /* type-windows.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-windows.xml"; sourceTree = "<group>"; };
+		40C27FDFD8D2108005CE2685 /* hrz.so */ = {isa = PBXFileReference; path = hrz.so; sourceTree = "<group>"; };
+		4270DE410A8C60E409957BA9 /* stegano.so */ = {isa = PBXFileReference; path = stegano.so; sourceTree = "<group>"; };
+		448ECBD6FC153F6FFBE7A1CA /* bayer.so */ = {isa = PBXFileReference; path = bayer.so; sourceTree = "<group>"; };
+		44EB0DF12FE7132A6C0030D9 /* ThumbnailCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCache.swift; sourceTree = "<group>"; };
+		46E7E6C15782482F218D5B38 /* magick.so */ = {isa = PBXFileReference; path = magick.so; sourceTree = "<group>"; };
+		46F582930ED7F8B8926656A4 /* mat.so */ = {isa = PBXFileReference; path = mat.so; sourceTree = "<group>"; };
+		4881B446405F6A14A40FA2B2 /* ora.so */ = {isa = PBXFileReference; path = ora.so; sourceTree = "<group>"; };
+		48D2FD6A135CC364E46BB72F /* pcd.so */ = {isa = PBXFileReference; path = pcd.so; sourceTree = "<group>"; };
+		4E441B9729B20EA03B63A72A /* dib.so */ = {isa = PBXFileReference; path = dib.so; sourceTree = "<group>"; };
+		533E1DD4A59025FB9228793F /* vid.so */ = {isa = PBXFileReference; path = vid.so; sourceTree = "<group>"; };
+		5355817382545BC478C80092 /* MagickError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickError.swift; sourceTree = "<group>"; };
+		53F15905DED7E59707B44DA1 /* ps3.so */ = {isa = PBXFileReference; path = ps3.so; sourceTree = "<group>"; };
+		5419360C2ACA784C92F1F5B2 /* mono.so */ = {isa = PBXFileReference; path = mono.so; sourceTree = "<group>"; };
+		5802518DE258856FF3605D73 /* histogram.so */ = {isa = PBXFileReference; path = histogram.so; sourceTree = "<group>"; };
+		5883B5E8BBD75EBA9544EEDB /* libMagickWand-7.Q16HDRI.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagickWand-7.Q16HDRI.dylib"; sourceTree = "<group>"; };
+		5B0708C5206243E981621469 /* quantization-table.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "quantization-table.xml"; sourceTree = "<group>"; };
+		5BE1862B14603D4208372BF6 /* qoi.so */ = {isa = PBXFileReference; path = qoi.so; sourceTree = "<group>"; };
+		5BEECB881AD1BC3A7E548FC3 /* plasma.so */ = {isa = PBXFileReference; path = plasma.so; sourceTree = "<group>"; };
+		615E8FFDE8036AB0FF716450 /* pnm.so */ = {isa = PBXFileReference; path = pnm.so; sourceTree = "<group>"; };
+		62013883C0A5FC18D96740DF /* aai.so */ = {isa = PBXFileReference; path = aai.so; sourceTree = "<group>"; };
+		631355565722A15288AABC35 /* pattern.so */ = {isa = PBXFileReference; path = pattern.so; sourceTree = "<group>"; };
+		664A23C633DAB9B1C06729A6 /* ftxt.so */ = {isa = PBXFileReference; path = ftxt.so; sourceTree = "<group>"; };
+		67EB81C5B52DF26B3F7E417A /* MagickGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickGeometry.swift; sourceTree = "<group>"; };
+		67ED1327DF03CA9C7D748B71 /* mvg.so */ = {isa = PBXFileReference; path = mvg.so; sourceTree = "<group>"; };
+		681E64185FCBF5ACE3BFDCE0 /* CanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
+		68D5038C42F5EB5D2188049F /* scr.so */ = {isa = PBXFileReference; path = scr.so; sourceTree = "<group>"; };
+		6AFC2B27B7A33BA882F4BEEE /* heic.so */ = {isa = PBXFileReference; path = heic.so; sourceTree = "<group>"; };
+		6D4613B3BAEE053E40E63F6A /* BatchQueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchQueueView.swift; sourceTree = "<group>"; };
+		6F7129DE3FF24416F74BF236 /* mtv.so */ = {isa = PBXFileReference; path = mtv.so; sourceTree = "<group>"; };
+		74D53C599046FF25BD12E447 /* farbfeld.so */ = {isa = PBXFileReference; path = farbfeld.so; sourceTree = "<group>"; };
+		789FC654346AC8F24A875097 /* type.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = type.xml; sourceTree = "<group>"; };
+		7975620FB256D1CB872D946E /* map.so */ = {isa = PBXFileReference; path = map.so; sourceTree = "<group>"; };
+		7B89F818A738001759860384 /* type-apple.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-apple.xml"; sourceTree = "<group>"; };
+		7BB132C8F281E92D544C2155 /* c2pa.so */ = {isa = PBXFileReference; path = c2pa.so; sourceTree = "<group>"; };
+		7BFCA5B50F47C5AD87C20566 /* sgi.so */ = {isa = PBXFileReference; path = sgi.so; sourceTree = "<group>"; };
+		7C2C538A14188C086436C0C0 /* tile.so */ = {isa = PBXFileReference; path = tile.so; sourceTree = "<group>"; };
+		7D00FEAAAF182FDBAF5F36ED /* meta.so */ = {isa = PBXFileReference; path = meta.so; sourceTree = "<group>"; };
+		7E8D3AE01576210A99564FE3 /* viff.so */ = {isa = PBXFileReference; path = viff.so; sourceTree = "<group>"; };
+		806B92CE2ACD266438340DE8 /* xpm.so */ = {isa = PBXFileReference; path = xpm.so; sourceTree = "<group>"; };
+		81AAC586EE62A8DCC420515E /* libMagick++-7.Q16HDRI.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagick++-7.Q16HDRI.5.dylib"; sourceTree = "<group>"; };
+		81FF39BC51C1B2B560EB8D76 /* pwp.so */ = {isa = PBXFileReference; path = pwp.so; sourceTree = "<group>"; };
+		82D593755AE7D3196FB3BC9E /* pcx.so */ = {isa = PBXFileReference; path = pcx.so; sourceTree = "<group>"; };
+		868AB0A83935C01C41E60A20 /* pdf.so */ = {isa = PBXFileReference; path = pdf.so; sourceTree = "<group>"; };
+		88C3D97034C5D6CCC4CE30D5 /* log.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = log.xml; sourceTree = "<group>"; };
+		891F78BCB7F9AC5975759153 /* tiff.so */ = {isa = PBXFileReference; path = tiff.so; sourceTree = "<group>"; };
+		8B4C21B97531868EB59D00A1 /* palm.so */ = {isa = PBXFileReference; path = palm.so; sourceTree = "<group>"; };
+		8B9B228805B5CED7F22ED093 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		8D26587A766D0C3909C7663B /* sun.so */ = {isa = PBXFileReference; path = sun.so; sourceTree = "<group>"; };
+		91412BE60A6D51F2970D3A4A /* tim2.so */ = {isa = PBXFileReference; path = tim2.so; sourceTree = "<group>"; };
+		9249880E2FC84F199E90B4CD /* cut.so */ = {isa = PBXFileReference; path = cut.so; sourceTree = "<group>"; };
+		93556DC2AB8EFD36D37273FF /* mask.so */ = {isa = PBXFileReference; path = mask.so; sourceTree = "<group>"; };
+		93A0083B00B78BBB48775053 /* ashlar.so */ = {isa = PBXFileReference; path = ashlar.so; sourceTree = "<group>"; };
+		946724D76FFF65980B946399 /* jpeg.so */ = {isa = PBXFileReference; path = jpeg.so; sourceTree = "<group>"; };
+		959C1F6F005BEFC0C1E7E04A /* delegates.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = delegates.xml; sourceTree = "<group>"; };
+		96C0A6D5F67FE9BB8A2196D5 /* clip.so */ = {isa = PBXFileReference; path = clip.so; sourceTree = "<group>"; };
+		977CFA5538B4E589B925D2BC /* rla.so */ = {isa = PBXFileReference; path = rla.so; sourceTree = "<group>"; };
+		97F838B73241D2F25D603E25 /* ept.so */ = {isa = PBXFileReference; path = ept.so; sourceTree = "<group>"; };
+		9C02BFC7BFEBEFA437EAAA1C /* PresetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetsView.swift; sourceTree = "<group>"; };
+		9E8FE4152117EE0A72944E4A /* mpr.so */ = {isa = PBXFileReference; path = mpr.so; sourceTree = "<group>"; };
+		9FF8E4E481DB133FB6136920 /* thresholds.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = thresholds.xml; sourceTree = "<group>"; };
+		A260BEABC8369956F4A8D49C /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
+		A3421687E2FE0D673CC0C4D3 /* pes.so */ = {isa = PBXFileReference; path = pes.so; sourceTree = "<group>"; };
+		A3BA32F65D79E99196C3C97D /* wbinfo.so */ = {isa = PBXFileReference; path = wbinfo.so; sourceTree = "<group>"; };
+		A518A9B505D3053D206FE7CB /* dng.so */ = {isa = PBXFileReference; path = dng.so; sourceTree = "<group>"; };
+		A525F29AEC55D426CB96E886 /* video.so */ = {isa = PBXFileReference; path = video.so; sourceTree = "<group>"; };
+		A6E04D9915DF35FEB318034F /* ycbcr.so */ = {isa = PBXFileReference; path = ycbcr.so; sourceTree = "<group>"; };
+		A76A1C230C9220ED2BA066CD /* ase.so */ = {isa = PBXFileReference; path = ase.so; sourceTree = "<group>"; };
+		A91C2DD20FD252FBD98F7945 /* webp.so */ = {isa = PBXFileReference; path = webp.so; sourceTree = "<group>"; };
+		AA0E094CC8EEFBAB5D64F084 /* cip.so */ = {isa = PBXFileReference; path = cip.so; sourceTree = "<group>"; };
+		AAA22117AD58121E83C8507E /* pgx.so */ = {isa = PBXFileReference; path = pgx.so; sourceTree = "<group>"; };
+		AD865FFB75D0FF5CCFCD9B2C /* hald.so */ = {isa = PBXFileReference; path = hald.so; sourceTree = "<group>"; };
+		AE2E3F6DEF301A348B8805BC /* SecurityScopedURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityScopedURL.swift; sourceTree = "<group>"; };
+		AE49DA5C5ABFF965E799A394 /* ipl.so */ = {isa = PBXFileReference; path = ipl.so; sourceTree = "<group>"; };
+		AF59A32E940B0DF543D6B3EF /* ImagePipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePipeline.swift; sourceTree = "<group>"; };
+		AFD4793E4F7B4EFFAA56B2C5 /* mpc.so */ = {isa = PBXFileReference; path = mpc.so; sourceTree = "<group>"; };
+		B1992503A3E1C23FBC733197 /* DesignTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignTokens.swift; sourceTree = "<group>"; };
+		B1A66E60A005AC46836A223E /* sct.so */ = {isa = PBXFileReference; path = sct.so; sourceTree = "<group>"; };
+		B1AC1692A64E6B291BEBAEE4 /* ps.so */ = {isa = PBXFileReference; path = ps.so; sourceTree = "<group>"; };
+		B1B255767B1D0CAA720BDAD3 /* icon.so */ = {isa = PBXFileReference; path = icon.so; sourceTree = "<group>"; };
+		B584CD51DEFDA5AFD4F513B3 /* fax.so */ = {isa = PBXFileReference; path = fax.so; sourceTree = "<group>"; };
+		B829EE0B7BB899CB6C0EB02C /* sf3.so */ = {isa = PBXFileReference; path = sf3.so; sourceTree = "<group>"; };
+		B82F24656D161132BADB6C3F /* cube.so */ = {isa = PBXFileReference; path = cube.so; sourceTree = "<group>"; };
+		BA1CD681E0A13E5C34716A3B /* libMagickCore-7.Q16HDRI.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagickCore-7.Q16HDRI.dylib"; sourceTree = "<group>"; };
+		BBCCEA8C220684DF5205D29A /* fl32.so */ = {isa = PBXFileReference; path = fl32.so; sourceTree = "<group>"; };
+		BC34BB458B8741153300A51E /* dcm.so */ = {isa = PBXFileReference; path = dcm.so; sourceTree = "<group>"; };
+		BD220542FA3B7E2A3891159E /* pcl.so */ = {isa = PBXFileReference; path = pcl.so; sourceTree = "<group>"; };
+		BE8638AE822AE3D8A8395B65 /* Magiq.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Magiq.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF8D83D460A75D94933BE05D /* cmyk.so */ = {isa = PBXFileReference; path = cmyk.so; sourceTree = "<group>"; };
+		C430BA45FB9060D94687F166 /* rgb.so */ = {isa = PBXFileReference; path = rgb.so; sourceTree = "<group>"; };
+		C47D566422A4B80EAB1D9D5F /* SingleDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleDocumentView.swift; sourceTree = "<group>"; };
+		C49D8BB64777BFBBAE72C2CD /* uil.so */ = {isa = PBXFileReference; path = uil.so; sourceTree = "<group>"; };
+		C674FBA6B396467EEEEDB502 /* strimg.so */ = {isa = PBXFileReference; path = strimg.so; sourceTree = "<group>"; };
+		C6F9202D701C335B2898B173 /* type-urw-base35.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-urw-base35.xml"; sourceTree = "<group>"; };
+		C9C8EA0975542C2031C67937 /* url.so */ = {isa = PBXFileReference; path = url.so; sourceTree = "<group>"; };
+		CB9F6915DCE303F278DA6E95 /* raw.so */ = {isa = PBXFileReference; path = raw.so; sourceTree = "<group>"; };
+		CF9DA2A15E2838FF059532B6 /* type-urw-base35-type1.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-urw-base35-type1.xml"; sourceTree = "<group>"; };
+		CFCB94627E3B1896BDA361F5 /* pix.so */ = {isa = PBXFileReference; path = pix.so; sourceTree = "<group>"; };
+		D4D7C56F2B5806BC7DB718CC /* avs.so */ = {isa = PBXFileReference; path = avs.so; sourceTree = "<group>"; };
+		D6E1371CA848C16D60975C67 /* svg.so */ = {isa = PBXFileReference; path = svg.so; sourceTree = "<group>"; };
+		D753E1B52B641179BC88B104 /* mime.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = mime.xml; sourceTree = "<group>"; };
+		D7CD574BD2A80FD5113246F6 /* bgr.so */ = {isa = PBXFileReference; path = bgr.so; sourceTree = "<group>"; };
+		D8C641E1CBFDF3F8EA48DA35 /* pdb.so */ = {isa = PBXFileReference; path = pdb.so; sourceTree = "<group>"; };
+		D93D21C9926B7239471CB0AF /* tga.so */ = {isa = PBXFileReference; path = tga.so; sourceTree = "<group>"; };
+		D9BA80871BE215585076F26D /* art.so */ = {isa = PBXFileReference; path = art.so; sourceTree = "<group>"; };
+		DA6BBFB8642FA95A271DC126 /* cin.so */ = {isa = PBXFileReference; path = cin.so; sourceTree = "<group>"; };
+		DA79D1E4106AD2E77F030870 /* msl.so */ = {isa = PBXFileReference; path = msl.so; sourceTree = "<group>"; };
+		DBA404F8174326A810BBBB29 /* ttf.so */ = {isa = PBXFileReference; path = ttf.so; sourceTree = "<group>"; };
+		DCAD2A0509D06E375E390BF6 /* xc.so */ = {isa = PBXFileReference; path = xc.so; sourceTree = "<group>"; };
+		DDC4E1C94EA642050BE29582 /* xbm.so */ = {isa = PBXFileReference; path = xbm.so; sourceTree = "<group>"; };
+		DDFA81B239E18CFB18E9FA62 /* yaml.so */ = {isa = PBXFileReference; path = yaml.so; sourceTree = "<group>"; };
+		DE5102DA2B610F1A5EF4DF52 /* type-ghostscript.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-ghostscript.xml"; sourceTree = "<group>"; };
+		DEB9DD6595C1E304A729ECE4 /* matte.so */ = {isa = PBXFileReference; path = matte.so; sourceTree = "<group>"; };
+		DF3C744B92C866219E249A1F /* wpg.so */ = {isa = PBXFileReference; path = wpg.so; sourceTree = "<group>"; };
+		DFEACEDBB0FC1E131C587199 /* MagickCLITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickCLITests.swift; sourceTree = "<group>"; };
+		E476724D2553EA90251B76CE /* null.so */ = {isa = PBXFileReference; path = null.so; sourceTree = "<group>"; };
+		E616AF79FDBB066496CC1810 /* debug.so */ = {isa = PBXFileReference; path = debug.so; sourceTree = "<group>"; };
+		E72AFEF165271755321993B9 /* colors.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = colors.xml; sourceTree = "<group>"; };
+		E893071D3B3859959D557036 /* psd.so */ = {isa = PBXFileReference; path = psd.so; sourceTree = "<group>"; };
+		EA97B6E359B4585D3460B5E8 /* dot.so */ = {isa = PBXFileReference; path = dot.so; sourceTree = "<group>"; };
+		EBE118FB05CC0B4B99F1F9FE /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		EC847B490D9359C4D38C7DF0 /* json.so */ = {isa = PBXFileReference; path = json.so; sourceTree = "<group>"; };
+		F00AB3A45B916F0A785CC27E /* png.so */ = {isa = PBXFileReference; path = png.so; sourceTree = "<group>"; };
+		F1765F413075B04A060CDD74 /* inline.so */ = {isa = PBXFileReference; path = inline.so; sourceTree = "<group>"; };
+		F1E8F6C50D378E17FD2396AB /* caption.so */ = {isa = PBXFileReference; path = caption.so; sourceTree = "<group>"; };
+		F2B08BF6081AFDC65F5F1ACF /* txt.so */ = {isa = PBXFileReference; path = txt.so; sourceTree = "<group>"; };
+		F2D0038082A8B372AA201641 /* thumbnail.so */ = {isa = PBXFileReference; path = thumbnail.so; sourceTree = "<group>"; };
+		F5D9FF4CED53D9E161731BC1 /* PixelWandWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelWandWrapper.swift; sourceTree = "<group>"; };
+		F847096251201E98DA30ACF5 /* uyvy.so */ = {isa = PBXFileReference; path = uyvy.so; sourceTree = "<group>"; };
+		F8F925BFC49A39333EC67EDB /* pict.so */ = {isa = PBXFileReference; path = pict.so; sourceTree = "<group>"; };
+		FA0414FD53967533C309AF21 /* rgf.so */ = {isa = PBXFileReference; path = rgf.so; sourceTree = "<group>"; };
+		FA824AA3BC201A653882ABA7 /* pango.so */ = {isa = PBXFileReference; path = pango.so; sourceTree = "<group>"; };
+		FB23E986FCD30DAC31879FFE /* bmp.so */ = {isa = PBXFileReference; path = bmp.so; sourceTree = "<group>"; };
+		FE4D7721AE723654287567FF /* gif.so */ = {isa = PBXFileReference; path = gif.so; sourceTree = "<group>"; };
+		FF6F516668C725C14F4D7F3A /* hdr.so */ = {isa = PBXFileReference; path = hdr.so; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		143AE4977BCCA2A23BB19687 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				0B4A543B472D8EA93110E275 /* MagickWandBridge.h */,
+				217CCB193203EDA2D47C7EE2 /* module.modulemap */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		177BDB0199BD26E88E09807C /* Canvas */ = {
+			isa = PBXGroup;
+			children = (
+				681E64185FCBF5ACE3BFDCE0 /* CanvasView.swift */,
+			);
+			path = Canvas;
+			sourceTree = "<group>";
+		};
+		190FAD4D4776E3362219385B /* ImagePipeline */ = {
+			isa = PBXGroup;
+			children = (
+				33C441E0948E84AA441F3F7F /* ImageOperation.swift */,
+				AF59A32E940B0DF543D6B3EF /* ImagePipeline.swift */,
+				AE2E3F6DEF301A348B8805BC /* SecurityScopedURL.swift */,
+				44EB0DF12FE7132A6C0030D9 /* ThumbnailCache.swift */,
+			);
+			path = ImagePipeline;
+			sourceTree = "<group>";
+		};
+		28B73E4C4000B20D13C56533 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				B1992503A3E1C23FBC733197 /* DesignTokens.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		3BBEC67E9282667384992E5E /* BatchQueueView */ = {
+			isa = PBXGroup;
+			children = (
+				6D4613B3BAEE053E40E63F6A /* BatchQueueView.swift */,
+			);
+			path = BatchQueueView;
+			sourceTree = "<group>";
+		};
+		49607BA7D05AD9B7AC14AE8E /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				FB50211D99026B754C04F750 /* coders */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		5FA1728E329840C0477D7C60 /* MagickCore */ = {
+			isa = PBXGroup;
+			children = (
+				31FCBBD7BB02BB4ABCCAC55E /* ImageWand.swift */,
+				5355817382545BC478C80092 /* MagickError.swift */,
+				67EB81C5B52DF26B3F7E417A /* MagickGeometry.swift */,
+				F5D9FF4CED53D9E161731BC1 /* PixelWandWrapper.swift */,
+				2B049928CBA32F34FF2D73B6 /* WandSession.swift */,
+				143AE4977BCCA2A23BB19687 /* include */,
+			);
+			path = MagickCore;
+			sourceTree = "<group>";
+		};
+		6034C6BE5F7CB6F1083224DF /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				0C84D9A73A134ACA775DCADD /* magick */,
+			);
+			path = bin;
+			sourceTree = "<group>";
+		};
+		60E8227EB0459B7B30D06FAA /* MagickCLITests */ = {
+			isa = PBXGroup;
+			children = (
+				DFEACEDBB0FC1E131C587199 /* MagickCLITests.swift */,
+			);
+			path = MagickCLITests;
+			sourceTree = "<group>";
+		};
+		65A57A47DF25F09931038ACD /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				190FAD4D4776E3362219385B /* ImagePipeline */,
+				8318889C9F397518334C6C10 /* MagickCLI */,
+				5FA1728E329840C0477D7C60 /* MagickCore */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		795FDC61C15C2DD82C5CA0C9 /* ImageMagick-7 */ = {
+			isa = PBXGroup;
+			children = (
+				E72AFEF165271755321993B9 /* colors.xml */,
+				959C1F6F005BEFC0C1E7E04A /* delegates.xml */,
+				88C3D97034C5D6CCC4CE30D5 /* log.xml */,
+				D753E1B52B641179BC88B104 /* mime.xml */,
+				0666A785251392FDF2CB859D /* policy.xml */,
+				5B0708C5206243E981621469 /* quantization-table.xml */,
+				9FF8E4E481DB133FB6136920 /* thresholds.xml */,
+				7B89F818A738001759860384 /* type-apple.xml */,
+				2285E50F44A864071E71085A /* type-dejavu.xml */,
+				DE5102DA2B610F1A5EF4DF52 /* type-ghostscript.xml */,
+				CF9DA2A15E2838FF059532B6 /* type-urw-base35-type1.xml */,
+				C6F9202D701C335B2898B173 /* type-urw-base35.xml */,
+				3FE8BB169873D75DA2476BBA /* type-windows.xml */,
+				789FC654346AC8F24A875097 /* type.xml */,
+			);
+			path = "ImageMagick-7";
+			sourceTree = "<group>";
+		};
+		8318889C9F397518334C6C10 /* MagickCLI */ = {
+			isa = PBXGroup;
+			children = (
+				2AA1F7DA607146692EC0EC79 /* MagickCLIArguments.swift */,
+				1A4616B5B917A1770C6759C7 /* MagickCLIExecutor.swift */,
+				0E667CBB06D5AC77E944DDDB /* MagickCLIResult.swift */,
+			);
+			path = MagickCLI;
+			sourceTree = "<group>";
+		};
+		92DD11F89AEAAB27A146F712 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				C47D566422A4B80EAB1D9D5F /* SingleDocumentView.swift */,
+				3BBEC67E9282667384992E5E /* BatchQueueView */,
+				177BDB0199BD26E88E09807C /* Canvas */,
+				28B73E4C4000B20D13C56533 /* DesignSystem */,
+				F7B73D5F990D34D9CD5DEDA8 /* Inspector */,
+				F4F9CC5F419152A456738728 /* PresetsView */,
+				A72C44B0AC79774060529892 /* Sidebar */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		9350F7709D5A9E6854ACCF8E /* Entitlements */ = {
+			isa = PBXGroup;
+			children = (
+				1F63F8D4E2652DFAE58388F4 /* Magiq.entitlements */,
+				0AF567C2407A155C0C938F0E /* MagiqQuickLook.entitlements */,
+			);
+			path = Entitlements;
+			sourceTree = "<group>";
+		};
+		99EF488E533FEDCEFEE7998F /* etc */ = {
+			isa = PBXGroup;
+			children = (
+				795FDC61C15C2DD82C5CA0C9 /* ImageMagick-7 */,
+			);
+			path = etc;
+			sourceTree = "<group>";
+		};
+		A18D2107460756C17BF437DF /* MagickCoreTests */ = {
+			isa = PBXGroup;
+			children = (
+				19C6E82318DB72BB6623043D /* MagickCoreTests.swift */,
+			);
+			path = MagickCoreTests;
+			sourceTree = "<group>";
+		};
+		A72C44B0AC79774060529892 /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				8B9B228805B5CED7F22ED093 /* SidebarView.swift */,
+			);
+			path = Sidebar;
+			sourceTree = "<group>";
+		};
+		B39A2C77F251AD3FCFE30D49 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				60E8227EB0459B7B30D06FAA /* MagickCLITests */,
+				A18D2107460756C17BF437DF /* MagickCoreTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		BBC054B3964ED94D20466F11 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				81AAC586EE62A8DCC420515E /* libMagick++-7.Q16HDRI.5.dylib */,
+				20BC188D2338E2CB126D724A /* libMagick++-7.Q16HDRI.dylib */,
+				39C6D9BA6BAEEA5DAC2FAB67 /* libMagickCore-7.Q16HDRI.10.dylib */,
+				BA1CD681E0A13E5C34716A3B /* libMagickCore-7.Q16HDRI.dylib */,
+				21039E68619B355CF2A3615D /* libMagickWand-7.Q16HDRI.10.dylib */,
+				5883B5E8BBD75EBA9544EEDB /* libMagickWand-7.Q16HDRI.dylib */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		D43A192C7489B3A9899B6F7F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BE8638AE822AE3D8A8395B65 /* Magiq.app */,
+				2F6C82A1EE5E06E024B89CE4 /* MagiqTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DA37345B6AA693F3002502DB = {
+			isa = PBXGroup;
+			children = (
+				DD00D9BD3E03C918F91D5C8A /* App */,
+				65A57A47DF25F09931038ACD /* Core */,
+				E0336E173FFAB7B9D886947E /* Features */,
+				EB0C44E3195D7FF3A7D8CE5A /* ImageMagickDistribution */,
+				B39A2C77F251AD3FCFE30D49 /* Tests */,
+				92DD11F89AEAAB27A146F712 /* UI */,
+				D43A192C7489B3A9899B6F7F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DD00D9BD3E03C918F91D5C8A /* App */ = {
+			isa = PBXGroup;
+			children = (
+				EBE118FB05CC0B4B99F1F9FE /* AppState.swift */,
+				3396E10527A74871DE5F2704 /* MagiqApp.swift */,
+				9350F7709D5A9E6854ACCF8E /* Entitlements */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E0336E173FFAB7B9D886947E /* Features */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		EB0C44E3195D7FF3A7D8CE5A /* ImageMagickDistribution */ = {
+			isa = PBXGroup;
+			children = (
+				6034C6BE5F7CB6F1083224DF /* bin */,
+				99EF488E533FEDCEFEE7998F /* etc */,
+				BBC054B3964ED94D20466F11 /* lib */,
+				49607BA7D05AD9B7AC14AE8E /* modules */,
+			);
+			name = ImageMagickDistribution;
+			path = Resources/ImageMagickDistribution;
+			sourceTree = "<group>";
+		};
+		F4F9CC5F419152A456738728 /* PresetsView */ = {
+			isa = PBXGroup;
+			children = (
+				9C02BFC7BFEBEFA437EAAA1C /* PresetsView.swift */,
+			);
+			path = PresetsView;
+			sourceTree = "<group>";
+		};
+		F7B73D5F990D34D9CD5DEDA8 /* Inspector */ = {
+			isa = PBXGroup;
+			children = (
+				A260BEABC8369956F4A8D49C /* InspectorView.swift */,
+			);
+			path = Inspector;
+			sourceTree = "<group>";
+		};
+		FB50211D99026B754C04F750 /* coders */ = {
+			isa = PBXGroup;
+			children = (
+				62013883C0A5FC18D96740DF /* aai.so */,
+				D9BA80871BE215585076F26D /* art.so */,
+				A76A1C230C9220ED2BA066CD /* ase.so */,
+				93A0083B00B78BBB48775053 /* ashlar.so */,
+				D4D7C56F2B5806BC7DB718CC /* avs.so */,
+				448ECBD6FC153F6FFBE7A1CA /* bayer.so */,
+				D7CD574BD2A80FD5113246F6 /* bgr.so */,
+				FB23E986FCD30DAC31879FFE /* bmp.so */,
+				21C14DDD3EA37931ADB15780 /* braille.so */,
+				7BB132C8F281E92D544C2155 /* c2pa.so */,
+				25F5B6ED431C379A00BE62ED /* cals.so */,
+				F1E8F6C50D378E17FD2396AB /* caption.so */,
+				DA6BBFB8642FA95A271DC126 /* cin.so */,
+				AA0E094CC8EEFBAB5D64F084 /* cip.so */,
+				96C0A6D5F67FE9BB8A2196D5 /* clip.so */,
+				BF8D83D460A75D94933BE05D /* cmyk.so */,
+				B82F24656D161132BADB6C3F /* cube.so */,
+				9249880E2FC84F199E90B4CD /* cut.so */,
+				BC34BB458B8741153300A51E /* dcm.so */,
+				1569CDF588E626122DC93904 /* dds.so */,
+				E616AF79FDBB066496CC1810 /* debug.so */,
+				4E441B9729B20EA03B63A72A /* dib.so */,
+				A518A9B505D3053D206FE7CB /* dng.so */,
+				EA97B6E359B4585D3460B5E8 /* dot.so */,
+				05C6BC9705CDA5906BC4CD62 /* dpx.so */,
+				97F838B73241D2F25D603E25 /* ept.so */,
+				74D53C599046FF25BD12E447 /* farbfeld.so */,
+				B584CD51DEFDA5AFD4F513B3 /* fax.so */,
+				396D496C8F79AC58554F719C /* fits.so */,
+				BBCCEA8C220684DF5205D29A /* fl32.so */,
+				664A23C633DAB9B1C06729A6 /* ftxt.so */,
+				FE4D7721AE723654287567FF /* gif.so */,
+				1A3C2861C9244FA1343FAAF3 /* gradient.so */,
+				10211EFCAAA648950F3C155E /* gray.so */,
+				AD865FFB75D0FF5CCFCD9B2C /* hald.so */,
+				FF6F516668C725C14F4D7F3A /* hdr.so */,
+				6AFC2B27B7A33BA882F4BEEE /* heic.so */,
+				5802518DE258856FF3605D73 /* histogram.so */,
+				40C27FDFD8D2108005CE2685 /* hrz.so */,
+				31BA82D2585F161C8FBB2CB6 /* html.so */,
+				B1B255767B1D0CAA720BDAD3 /* icon.so */,
+				16596858448B703131774065 /* info.so */,
+				F1765F413075B04A060CDD74 /* inline.so */,
+				AE49DA5C5ABFF965E799A394 /* ipl.so */,
+				3926576952F1A411B374526D /* jnx.so */,
+				946724D76FFF65980B946399 /* jpeg.so */,
+				EC847B490D9359C4D38C7DF0 /* json.so */,
+				16CE7397ECAD7511B54BD258 /* kernel.so */,
+				378782B89A3C84C26AE38B5B /* label.so */,
+				3FB6CF10F31424C374127F3B /* mac.so */,
+				46E7E6C15782482F218D5B38 /* magick.so */,
+				7975620FB256D1CB872D946E /* map.so */,
+				93556DC2AB8EFD36D37273FF /* mask.so */,
+				46F582930ED7F8B8926656A4 /* mat.so */,
+				DEB9DD6595C1E304A729ECE4 /* matte.so */,
+				7D00FEAAAF182FDBAF5F36ED /* meta.so */,
+				0EDCD33EE32509A7C3309889 /* miff.so */,
+				5419360C2ACA784C92F1F5B2 /* mono.so */,
+				AFD4793E4F7B4EFFAA56B2C5 /* mpc.so */,
+				9E8FE4152117EE0A72944E4A /* mpr.so */,
+				DA79D1E4106AD2E77F030870 /* msl.so */,
+				6F7129DE3FF24416F74BF236 /* mtv.so */,
+				67ED1327DF03CA9C7D748B71 /* mvg.so */,
+				E476724D2553EA90251B76CE /* null.so */,
+				4881B446405F6A14A40FA2B2 /* ora.so */,
+				163696529C094DF9FBA53DBB /* otb.so */,
+				8B4C21B97531868EB59D00A1 /* palm.so */,
+				FA824AA3BC201A653882ABA7 /* pango.so */,
+				631355565722A15288AABC35 /* pattern.so */,
+				48D2FD6A135CC364E46BB72F /* pcd.so */,
+				BD220542FA3B7E2A3891159E /* pcl.so */,
+				82D593755AE7D3196FB3BC9E /* pcx.so */,
+				D8C641E1CBFDF3F8EA48DA35 /* pdb.so */,
+				868AB0A83935C01C41E60A20 /* pdf.so */,
+				A3421687E2FE0D673CC0C4D3 /* pes.so */,
+				AAA22117AD58121E83C8507E /* pgx.so */,
+				F8F925BFC49A39333EC67EDB /* pict.so */,
+				CFCB94627E3B1896BDA361F5 /* pix.so */,
+				5BEECB881AD1BC3A7E548FC3 /* plasma.so */,
+				F00AB3A45B916F0A785CC27E /* png.so */,
+				615E8FFDE8036AB0FF716450 /* pnm.so */,
+				B1AC1692A64E6B291BEBAEE4 /* ps.so */,
+				29AFC6ACACEC066441A48E43 /* ps2.so */,
+				53F15905DED7E59707B44DA1 /* ps3.so */,
+				E893071D3B3859959D557036 /* psd.so */,
+				81FF39BC51C1B2B560EB8D76 /* pwp.so */,
+				5BE1862B14603D4208372BF6 /* qoi.so */,
+				CB9F6915DCE303F278DA6E95 /* raw.so */,
+				C430BA45FB9060D94687F166 /* rgb.so */,
+				FA0414FD53967533C309AF21 /* rgf.so */,
+				977CFA5538B4E589B925D2BC /* rla.so */,
+				3DA2740BA37F24F7D1EB6D42 /* rle.so */,
+				68D5038C42F5EB5D2188049F /* scr.so */,
+				B1A66E60A005AC46836A223E /* sct.so */,
+				B829EE0B7BB899CB6C0EB02C /* sf3.so */,
+				22A042394B8F9DF86AA9B181 /* sfw.so */,
+				7BFCA5B50F47C5AD87C20566 /* sgi.so */,
+				1928249854DC78657E8C28CA /* sixel.so */,
+				4270DE410A8C60E409957BA9 /* stegano.so */,
+				C674FBA6B396467EEEEDB502 /* strimg.so */,
+				8D26587A766D0C3909C7663B /* sun.so */,
+				D6E1371CA848C16D60975C67 /* svg.so */,
+				D93D21C9926B7239471CB0AF /* tga.so */,
+				F2D0038082A8B372AA201641 /* thumbnail.so */,
+				891F78BCB7F9AC5975759153 /* tiff.so */,
+				7C2C538A14188C086436C0C0 /* tile.so */,
+				0DE78AAAB50E4BF9F81182B5 /* tim.so */,
+				91412BE60A6D51F2970D3A4A /* tim2.so */,
+				DBA404F8174326A810BBBB29 /* ttf.so */,
+				F2B08BF6081AFDC65F5F1ACF /* txt.so */,
+				C49D8BB64777BFBBAE72C2CD /* uil.so */,
+				C9C8EA0975542C2031C67937 /* url.so */,
+				F847096251201E98DA30ACF5 /* uyvy.so */,
+				393A1A7685535213D3A6F878 /* vicar.so */,
+				533E1DD4A59025FB9228793F /* vid.so */,
+				A525F29AEC55D426CB96E886 /* video.so */,
+				7E8D3AE01576210A99564FE3 /* viff.so */,
+				3DB9E005A70467E3558A9260 /* vips.so */,
+				A3BA32F65D79E99196C3C97D /* wbinfo.so */,
+				156FF38299854BE6DAD612C7 /* wbmp.so */,
+				A91C2DD20FD252FBD98F7945 /* webp.so */,
+				DF3C744B92C866219E249A1F /* wpg.so */,
+				DDC4E1C94EA642050BE29582 /* xbm.so */,
+				DCAD2A0509D06E375E390BF6 /* xc.so */,
+				319213E8DBC94FB1FD6EA8A7 /* xcf.so */,
+				806B92CE2ACD266438340DE8 /* xpm.so */,
+				136D2B4D5CDB8678DBD55DFD /* xps.so */,
+				DDFA81B239E18CFB18E9FA62 /* yaml.so */,
+				A6E04D9915DF35FEB318034F /* ycbcr.so */,
+				22460710D6407163E72A1516 /* yuv.so */,
+			);
+			path = coders;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6BDCB57E07ADAB6A6B340354 /* Magiq */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E25FBF42DE3FF09C5B7FC00A /* Build configuration list for PBXNativeTarget "Magiq" */;
+			buildPhases = (
+				671901D42D6DD7B2694EA3B3 /* Sources */,
+				50CA3711C1B67EA6F68B206F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Magiq;
+			packageProductDependencies = (
+			);
+			productName = Magiq;
+			productReference = BE8638AE822AE3D8A8395B65 /* Magiq.app */;
+			productType = "com.apple.product-type.application";
+		};
+		827D93A4DF34178FABF00E77 /* MagiqTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88E59E1CB0EDA4125B7FF371 /* Build configuration list for PBXNativeTarget "MagiqTests" */;
+			buildPhases = (
+				CD92B64244C6A47638292E2F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8ACF5A0E4820E17ABC9A7B6A /* PBXTargetDependency */,
+			);
+			name = MagiqTests;
+			packageProductDependencies = (
+			);
+			productName = MagiqTests;
+			productReference = 2F6C82A1EE5E06E024B89CE4 /* MagiqTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4BA4D862494DFE9E9BBAB6E8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					6BDCB57E07ADAB6A6B340354 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 265A3389CE34CA3EB849DDBA /* Build configuration list for PBXProject "Magiq" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = DA37345B6AA693F3002502DB;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D43A192C7489B3A9899B6F7F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6BDCB57E07ADAB6A6B340354 /* Magiq */,
+				827D93A4DF34178FABF00E77 /* MagiqTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		50CA3711C1B67EA6F68B206F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AC96EC3D18C95EB893BE8D5 /* aai.so in Resources */,
+				BEC942CF52118CBB48627E6E /* art.so in Resources */,
+				563BD94D89FB64EC55BF1629 /* ase.so in Resources */,
+				C5A4ED7E151169C237B13FBC /* ashlar.so in Resources */,
+				3B4AA28618AA1E42EFFAE11B /* avs.so in Resources */,
+				C8F8C7837E724180CFB6E2E5 /* bayer.so in Resources */,
+				63825158A483CBDA999F31F0 /* bgr.so in Resources */,
+				C69509522CA49C5A8B4F688C /* bmp.so in Resources */,
+				5189677B63FE83996A491B82 /* braille.so in Resources */,
+				4E6D6392A28237C8BD5C1FCF /* c2pa.so in Resources */,
+				1791288FC4CC4F7EE2715655 /* cals.so in Resources */,
+				52712F6F0C0F7D463BA16D0C /* caption.so in Resources */,
+				2AAD9E2CFD4A106EEEBC3D04 /* cin.so in Resources */,
+				BFBB0457AA1637EAB67C64DF /* cip.so in Resources */,
+				2DEA6BAF03F2B5FA31A49CEF /* clip.so in Resources */,
+				D57C1B3590CCE285D4E9EA9E /* cmyk.so in Resources */,
+				217F0831AA23F29C868C9FFE /* colors.xml in Resources */,
+				28B29A3749646C42C3AFE63A /* cube.so in Resources */,
+				8632769240A5F862387F88C9 /* cut.so in Resources */,
+				2F5D1CFE15C788C5095F45CB /* dcm.so in Resources */,
+				4B5BDA88BB849544528E9825 /* dds.so in Resources */,
+				CFCAE407AB15772FA854E0D9 /* debug.so in Resources */,
+				9B60A14597282597AD03CD04 /* delegates.xml in Resources */,
+				4996D8CBF60C49C9F02E5706 /* dib.so in Resources */,
+				149C56050BD18A97C062F081 /* dng.so in Resources */,
+				0CFE20BF0620A9983903F355 /* dot.so in Resources */,
+				795A0C698C5E1510F77D33CA /* dpx.so in Resources */,
+				472EBD8B8D42B3721534279E /* ept.so in Resources */,
+				3BB995E553ADF35F6E7CEA35 /* farbfeld.so in Resources */,
+				D24EE0CA3AA95044380F418A /* fax.so in Resources */,
+				A9C986436C9279690E202BC5 /* fits.so in Resources */,
+				75E7005F8AB2A8DABADB43B4 /* fl32.so in Resources */,
+				8AC65FD7E467117CA428FAC9 /* ftxt.so in Resources */,
+				62CF97248811F2DB71D9831E /* gif.so in Resources */,
+				B6C39E3452A567673BEAA876 /* gradient.so in Resources */,
+				9199BB09125880C1BB2BF490 /* gray.so in Resources */,
+				BE4B2EC521BC74CC79C7E276 /* hald.so in Resources */,
+				27BEC161D1B778EB91330745 /* hdr.so in Resources */,
+				B8B3FE23F2006676C578319C /* heic.so in Resources */,
+				D05F48A38B5EB94656928243 /* histogram.so in Resources */,
+				1BBA3375D6A14030A53557D7 /* hrz.so in Resources */,
+				9B19C551D49BBB28FEFA845B /* html.so in Resources */,
+				FD4453BCADDBCC0F41E88165 /* icon.so in Resources */,
+				F632C4961F6DD134EBEB4185 /* info.so in Resources */,
+				CF228824D9C11843C308829E /* inline.so in Resources */,
+				4830411C0A9F91846D42DAD0 /* ipl.so in Resources */,
+				A033A7972F042D36F354809D /* jnx.so in Resources */,
+				AED2B703A3EA73D6914929FE /* jpeg.so in Resources */,
+				356D3C447AA524EAC01DAEC7 /* json.so in Resources */,
+				C83C30BAF652848EB3130A99 /* kernel.so in Resources */,
+				1702A8306D47F2B6BFBD18E4 /* label.so in Resources */,
+				B68FA869C1E2F84E0CDC4E7F /* libMagick++-7.Q16HDRI.5.dylib in Resources */,
+				CC88CC863B9532BEBF6EC998 /* libMagick++-7.Q16HDRI.dylib in Resources */,
+				1715CA83973CD8CF6AFEA754 /* libMagickCore-7.Q16HDRI.10.dylib in Resources */,
+				D96B9600354DAF75D46801CC /* libMagickCore-7.Q16HDRI.dylib in Resources */,
+				8F45897A3F10050796877097 /* libMagickWand-7.Q16HDRI.10.dylib in Resources */,
+				99C0CA18274ED296391B61E2 /* libMagickWand-7.Q16HDRI.dylib in Resources */,
+				DC1C351DEBE05FDC57A40D00 /* log.xml in Resources */,
+				D7777A7E9CA175A3CD046107 /* mac.so in Resources */,
+				FFBE88A76700CA8313CBF061 /* magick in Resources */,
+				CA33917020E9EB588A970BEA /* magick.so in Resources */,
+				49E8D1AEAEB03049C03BC71D /* map.so in Resources */,
+				C76BB1566D3C4DD86867EF42 /* mask.so in Resources */,
+				38FF8CFCEF312CCB58665F5D /* mat.so in Resources */,
+				CEE15764A41EECB213DB652E /* matte.so in Resources */,
+				E2940158F58428C1EB7EBBE7 /* meta.so in Resources */,
+				360C1979EC437D93ABBF7A53 /* miff.so in Resources */,
+				85F31862BE962AFE11F27E09 /* mime.xml in Resources */,
+				2DEBEC379827D07B2C8FAAD7 /* mono.so in Resources */,
+				3753977E4E8ADDB1CD72AC02 /* mpc.so in Resources */,
+				8E51560AC1110367F3CA17F3 /* mpr.so in Resources */,
+				912D5BE8754BDF7376446BFE /* msl.so in Resources */,
+				9303CF5930E907E77E9D9CB0 /* mtv.so in Resources */,
+				6FAEA124E401F80C8730A37E /* mvg.so in Resources */,
+				093A2743FD2466445F272A89 /* null.so in Resources */,
+				EC147ED7CB451CA2A1F93359 /* ora.so in Resources */,
+				2DADAE70F1577258F13FD364 /* otb.so in Resources */,
+				BD40DF88233E5D32E4DEAF21 /* palm.so in Resources */,
+				767D1C403E114CAB4C5E5BC8 /* pango.so in Resources */,
+				26C28BF3ADA8C8DA88DC583D /* pattern.so in Resources */,
+				7BA355AE0D0061B622CF5CB0 /* pcd.so in Resources */,
+				F14267EEB3577E0612583F4B /* pcl.so in Resources */,
+				17F31657A85F2AF8E4F3D5EC /* pcx.so in Resources */,
+				4749C960A96E4647848458FB /* pdb.so in Resources */,
+				5A86154D7B0D8F9F3FBC5F0A /* pdf.so in Resources */,
+				D46264E3A782B98B33207880 /* pes.so in Resources */,
+				C696486F71C31B10958A5FCB /* pgx.so in Resources */,
+				A769E2246AF9F6373564478F /* pict.so in Resources */,
+				418C4CE176E7B79BC52E2D32 /* pix.so in Resources */,
+				129B8FD8A518DF6DF6663A4A /* plasma.so in Resources */,
+				56CE2CF1658632F874A18D96 /* png.so in Resources */,
+				FE18732C2D9DBBF298A82A11 /* pnm.so in Resources */,
+				E34388A96BF2B7742211761D /* policy.xml in Resources */,
+				827B6FAEEAF1B689A9EE37D9 /* ps.so in Resources */,
+				EE4AF6344134A9C5B4849AEE /* ps2.so in Resources */,
+				D9C8D60105AE88E1F628D388 /* ps3.so in Resources */,
+				08A54A8F745CB6EA061F27B2 /* psd.so in Resources */,
+				79B3129AEE0D54EB1F84FB3A /* pwp.so in Resources */,
+				22779898A0FC24F19EB7A6FE /* qoi.so in Resources */,
+				AE838D0222E3E9F5445752D7 /* quantization-table.xml in Resources */,
+				20442A409FC4B578A8FD3CEA /* raw.so in Resources */,
+				DC96C47F2CE1ED059044B3C2 /* rgb.so in Resources */,
+				2EA8FF0804D46575515AFD6C /* rgf.so in Resources */,
+				58CE20C412D7C8C345EEFD05 /* rla.so in Resources */,
+				47780649431E24E47C8A2D5A /* rle.so in Resources */,
+				3FE360DE16941737B7C1B769 /* scr.so in Resources */,
+				F01F733A0E7237EF5B8CD376 /* sct.so in Resources */,
+				FBFA2EDA3E25E4E6DAAE1C10 /* sf3.so in Resources */,
+				B3B8F332A4D7E064887A5DFB /* sfw.so in Resources */,
+				8241BFFEFACC5AB4DE07CC41 /* sgi.so in Resources */,
+				97A5C14E5875F56E0EEBC701 /* sixel.so in Resources */,
+				5B78EB84153DB0B3B4AFE1A5 /* stegano.so in Resources */,
+				E794E6C70D44CB2452635546 /* strimg.so in Resources */,
+				0BED6FCF9DD0EF7C77DC234B /* sun.so in Resources */,
+				DB881BAA7E4A70086D00F361 /* svg.so in Resources */,
+				9EFBCCCE159013EF6F3FC7FB /* tga.so in Resources */,
+				A8A3E758D5AC0BD709BE8374 /* thresholds.xml in Resources */,
+				35F595677BA39A04F541D595 /* thumbnail.so in Resources */,
+				34DAA92651711CE86DA9D349 /* tiff.so in Resources */,
+				5F13437C6823CA78C336B3FA /* tile.so in Resources */,
+				128CCC686C13142DE65B15C8 /* tim.so in Resources */,
+				D04602E8A364DBF0CCBB413D /* tim2.so in Resources */,
+				A5F51B7CFDE536C2DB5EBB48 /* ttf.so in Resources */,
+				8E115506DDC916C880F61FD5 /* txt.so in Resources */,
+				EC60221D5D54F31618984A99 /* type-apple.xml in Resources */,
+				ABFE42097FB936E215FCEA19 /* type-dejavu.xml in Resources */,
+				C2701F634C097A21DA803009 /* type-ghostscript.xml in Resources */,
+				824D6C238C46B91F8D4C9940 /* type-urw-base35-type1.xml in Resources */,
+				04E491B81B330316BCBE49BF /* type-urw-base35.xml in Resources */,
+				B1C07D23D62BABAC5F3107F2 /* type-windows.xml in Resources */,
+				495BB75EF7CC62471D35D25D /* type.xml in Resources */,
+				23FC9626169A5B02F9DBD5B0 /* uil.so in Resources */,
+				D1A250E289CE50D67B4A3032 /* url.so in Resources */,
+				C509F499B5106098EF558BCD /* uyvy.so in Resources */,
+				7B00084E371BFC676649C8DC /* vicar.so in Resources */,
+				12C64D545F2752C066EB9CB3 /* vid.so in Resources */,
+				57831CE364C7C922CEE4E093 /* video.so in Resources */,
+				CEE6B373B9A75836FA0E29CA /* viff.so in Resources */,
+				D5140216EDB4C1240C3CC8FB /* vips.so in Resources */,
+				BDDDF3F5C4E5196932ACE188 /* wbinfo.so in Resources */,
+				49CAE51D25E5279E4B03875D /* wbmp.so in Resources */,
+				FDAD3F0E5C69388E19B7D25A /* webp.so in Resources */,
+				EB579D0933C660919DE9CA91 /* wpg.so in Resources */,
+				56545B674188E94CB95872B5 /* xbm.so in Resources */,
+				74B6517515EE7E82A2779E21 /* xc.so in Resources */,
+				2F37085698772E432DDA5ECA /* xcf.so in Resources */,
+				F726599A51D0C4B53C5D2FEE /* xpm.so in Resources */,
+				B6725C367F3B4EC7E3F7CC24 /* xps.so in Resources */,
+				B4EAE5B88ED87768C57FE858 /* yaml.so in Resources */,
+				BF24633610861203DDCD0006 /* ycbcr.so in Resources */,
+				45D77E32BE018E730C0FFEE3 /* yuv.so in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		671901D42D6DD7B2694EA3B3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBBFFF377774BEB6163D52C7 /* AppState.swift in Sources */,
+				C5B457254E0E669B71A4AB8E /* BatchQueueView.swift in Sources */,
+				99302073C8B6E6C7FB543A6F /* CanvasView.swift in Sources */,
+				6325B8795BCC3FF0C0C15E1C /* DesignTokens.swift in Sources */,
+				E35340DCC175721BBFD4C9C0 /* ImageOperation.swift in Sources */,
+				E9D307AEBA9789EA1F2B5F16 /* ImagePipeline.swift in Sources */,
+				A6F315640594F4D4882E271C /* ImageWand.swift in Sources */,
+				84465F1D3B398CF8DB3A0F7D /* InspectorView.swift in Sources */,
+				DD3FBE8F725802EA6E8C978C /* MagickCLIArguments.swift in Sources */,
+				B5AD5D649D46E7216A4FB339 /* MagickCLIExecutor.swift in Sources */,
+				DCCAD8493CA25FA39FA875B4 /* MagickCLIResult.swift in Sources */,
+				583E8F677092BA08BB8B1486 /* MagickError.swift in Sources */,
+				17D6AB522FCC63F46E3CC5F0 /* MagickGeometry.swift in Sources */,
+				01FB1E1B3E10BE46C4862CBF /* MagiqApp.swift in Sources */,
+				4226D105290F9C1C04EE57AD /* PixelWandWrapper.swift in Sources */,
+				03882A1D0308FDC9D731D433 /* PresetsView.swift in Sources */,
+				6D14BF180815533FC498CF90 /* SecurityScopedURL.swift in Sources */,
+				0175EC29432AEC474E885F64 /* SidebarView.swift in Sources */,
+				11304A2FDC56756662BEFE69 /* SingleDocumentView.swift in Sources */,
+				3D8D1305103249737FB39214 /* ThumbnailCache.swift in Sources */,
+				B915873EB196D140DEF791DF /* WandSession.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD92B64244C6A47638292E2F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D7193754C0DDC480DFB7E4EF /* MagickCLITests.swift in Sources */,
+				E728D3520C2240E65349F79D /* MagickCoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8ACF5A0E4820E17ABC9A7B6A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6BDCB57E07ADAB6A6B340354 /* Magiq */;
+			targetProxy = 558687A026BFDFBEDB141DDD /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3890C0BAE2CB2067CD6B7DC7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Core/MagickCore/include",
+					"/opt/homebrew/include/ImageMagick-7",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					"$(SRCROOT)/Resources/ImageMagickDistribution/lib",
+					/opt/homebrew/lib,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/Resources/ImageMagickDistribution/lib",
+					/opt/homebrew/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				OTHER_CFLAGS = (
+					"-DMAGICKCORE_HDRI_ENABLE=1",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+				);
+				OTHER_LDFLAGS = (
+					"-lMagickWand-7.Q16HDRI",
+					"-lMagickCore-7.Q16HDRI",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = Core/MagickCore/include/MagickWandBridge.h;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		9058401AB9B9A1F5B38BE9F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Core/MagickCore/include",
+					"/opt/homebrew/include/ImageMagick-7",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+					"$(SRCROOT)/Resources/ImageMagickDistribution/lib",
+					/opt/homebrew/lib,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SRCROOT)/Resources/ImageMagickDistribution/lib",
+					/opt/homebrew/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = (
+					"-DMAGICKCORE_HDRI_ENABLE=1",
+					"-DMAGICKCORE_QUANTUM_DEPTH=16",
+				);
+				OTHER_LDFLAGS = (
+					"-lMagickWand-7.Q16HDRI",
+					"-lMagickCore-7.Q16HDRI",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = Core/MagickCore/include/MagickWandBridge.h;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		96551E380336B5CDD0D7115E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.magiq.appTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Magiq.app/Contents/MacOS/Magiq";
+			};
+			name = Debug;
+		};
+		9C5A3ED321F5064FCAED675C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/Entitlements/Magiq.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Magiq;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Magiq. All rights reserved.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.magiq.app;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C2E49CCB7528A1539C0E86BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.magiq.appTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Magiq.app/Contents/MacOS/Magiq";
+			};
+			name = Release;
+		};
+		EE66143935859E168DF7AB9A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = App/Entitlements/Magiq.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Magiq;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Magiq. All rights reserved.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.magiq.app;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		265A3389CE34CA3EB849DDBA /* Build configuration list for PBXProject "Magiq" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9058401AB9B9A1F5B38BE9F5 /* Debug */,
+				3890C0BAE2CB2067CD6B7DC7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		88E59E1CB0EDA4125B7FF371 /* Build configuration list for PBXNativeTarget "MagiqTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				96551E380336B5CDD0D7115E /* Debug */,
+				C2E49CCB7528A1539C0E86BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E25FBF42DE3FF09C5B7FC00A /* Build configuration list for PBXNativeTarget "Magiq" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EE66143935859E168DF7AB9A /* Debug */,
+				9C5A3ED321F5064FCAED675C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4BA4D862494DFE9E9BBAB6E8 /* Project object */;
+}
