@@ -42,17 +42,32 @@ public final class WandSession: @unchecked Sendable {
 
     private func configureResourcePaths() {
         let bundle = Bundle.main
-        let distPath: String
+        var distPath: String?
+
         if let resourcePath = bundle.resourcePath,
            FileManager.default.fileExists(atPath: "\(resourcePath)/ImageMagickDistribution") {
             distPath = "\(resourcePath)/ImageMagickDistribution"
-        } else {
+        } else if FileManager.default.fileExists(atPath: "\(FileManager.default.currentDirectoryPath)/Resources/ImageMagickDistribution") {
             distPath = "\(FileManager.default.currentDirectoryPath)/Resources/ImageMagickDistribution"
+        } else if let sourceRoot = ProcessInfo.processInfo.environment["SRCROOT"],
+                  FileManager.default.fileExists(atPath: "\(sourceRoot)/Resources/ImageMagickDistribution") {
+            distPath = "\(sourceRoot)/Resources/ImageMagickDistribution"
         }
 
-        setenv("MAGICK_HOME", distPath, 0)
-        setenv("MAGICK_CODER_MODULE_PATH", "\(distPath)/modules/coders", 0)
-        setenv("MAGICK_CONFIGURE_PATH", "\(distPath)/etc/ImageMagick-7", 0)
+        if let dist = distPath {
+            setenv("MAGICK_HOME", dist, 1)
+            setenv("MAGICK_CODER_MODULE_PATH", "\(dist)/modules/coders", 1)
+            setenv("MAGICK_CONFIGURE_PATH", "\(dist)/etc/ImageMagick-7", 1)
+            setenv("DYLD_LIBRARY_PATH", "\(dist)/lib", 0)
+        } else if FileManager.default.fileExists(atPath: "/opt/homebrew/Cellar/imagemagick") {
+            let cellar = "/opt/homebrew/Cellar/imagemagick"
+            if let versions = try? FileManager.default.contentsOfDirectory(atPath: cellar),
+               let latest = versions.sorted().last {
+                let homebrewCoders = "\(cellar)/\(latest)/lib/ImageMagick/modules-Q16HDRI/coders"
+                setenv("MAGICK_CODER_MODULE_PATH", homebrewCoders, 1)
+                setenv("MAGICK_CONFIGURE_PATH", "\(cellar)/\(latest)/etc/ImageMagick-7", 1)
+            }
+        }
     }
 
     deinit {

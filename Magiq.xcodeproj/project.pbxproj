@@ -12,6 +12,7 @@
 		01FB1E1B3E10BE46C4862CBF /* MagiqApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396E10527A74871DE5F2704 /* MagiqApp.swift */; };
 		03882A1D0308FDC9D731D433 /* PresetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C02BFC7BFEBEFA437EAAA1C /* PresetsView.swift */; };
 		04E491B81B330316BCBE49BF /* type-urw-base35.xml in Resources */ = {isa = PBXBuildFile; fileRef = C6F9202D701C335B2898B173 /* type-urw-base35.xml */; };
+		05584902F8C9D98558032909 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BD3119FB131EC03BC4A1F6 /* HistoryManager.swift */; };
 		08A54A8F745CB6EA061F27B2 /* psd.so in Resources */ = {isa = PBXBuildFile; fileRef = E893071D3B3859959D557036 /* psd.so */; };
 		093A2743FD2466445F272A89 /* null.so in Resources */ = {isa = PBXBuildFile; fileRef = E476724D2553EA90251B76CE /* null.so */; };
 		0BED6FCF9DD0EF7C77DC234B /* sun.so in Resources */ = {isa = PBXBuildFile; fileRef = 8D26587A766D0C3909C7663B /* sun.so */; };
@@ -27,6 +28,7 @@
 		17D6AB522FCC63F46E3CC5F0 /* MagickGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67EB81C5B52DF26B3F7E417A /* MagickGeometry.swift */; };
 		17F31657A85F2AF8E4F3D5EC /* pcx.so in Resources */ = {isa = PBXBuildFile; fileRef = 82D593755AE7D3196FB3BC9E /* pcx.so */; };
 		1BBA3375D6A14030A53557D7 /* hrz.so in Resources */ = {isa = PBXBuildFile; fileRef = 40C27FDFD8D2108005CE2685 /* hrz.so */; };
+		1CE81B86E5E5D709F46B1703 /* Preset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C371CE76164225A8EF90F19A /* Preset.swift */; };
 		20442A409FC4B578A8FD3CEA /* raw.so in Resources */ = {isa = PBXBuildFile; fileRef = CB9F6915DCE303F278DA6E95 /* raw.so */; };
 		217F0831AA23F29C868C9FFE /* colors.xml in Resources */ = {isa = PBXBuildFile; fileRef = E72AFEF165271755321993B9 /* colors.xml */; };
 		22779898A0FC24F19EB7A6FE /* qoi.so in Resources */ = {isa = PBXBuildFile; fileRef = 5BE1862B14603D4208372BF6 /* qoi.so */; };
@@ -45,11 +47,13 @@
 		356D3C447AA524EAC01DAEC7 /* json.so in Resources */ = {isa = PBXBuildFile; fileRef = EC847B490D9359C4D38C7DF0 /* json.so */; };
 		35F595677BA39A04F541D595 /* thumbnail.so in Resources */ = {isa = PBXBuildFile; fileRef = F2D0038082A8B372AA201641 /* thumbnail.so */; };
 		360C1979EC437D93ABBF7A53 /* miff.so in Resources */ = {isa = PBXBuildFile; fileRef = 0EDCD33EE32509A7C3309889 /* miff.so */; };
+		36900F191821331DFC05F37E /* BatchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F953668CE79316BD81DA3C /* BatchItem.swift */; };
 		3753977E4E8ADDB1CD72AC02 /* mpc.so in Resources */ = {isa = PBXBuildFile; fileRef = AFD4793E4F7B4EFFAA56B2C5 /* mpc.so */; };
 		38FF8CFCEF312CCB58665F5D /* mat.so in Resources */ = {isa = PBXBuildFile; fileRef = 46F582930ED7F8B8926656A4 /* mat.so */; };
 		3B4AA28618AA1E42EFFAE11B /* avs.so in Resources */ = {isa = PBXBuildFile; fileRef = D4D7C56F2B5806BC7DB718CC /* avs.so */; };
 		3BB995E553ADF35F6E7CEA35 /* farbfeld.so in Resources */ = {isa = PBXBuildFile; fileRef = 74D53C599046FF25BD12E447 /* farbfeld.so */; };
 		3D8D1305103249737FB39214 /* ThumbnailCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB0DF12FE7132A6C0030D9 /* ThumbnailCache.swift */; };
+		3E6E2071DE44A983637C63F2 /* BatchProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF27D9236A7DB2072A0E5297 /* BatchProcessor.swift */; };
 		3FE360DE16941737B7C1B769 /* scr.so in Resources */ = {isa = PBXBuildFile; fileRef = 68D5038C42F5EB5D2188049F /* scr.so */; };
 		418C4CE176E7B79BC52E2D32 /* pix.so in Resources */ = {isa = PBXBuildFile; fileRef = CFCB94627E3B1896BDA361F5 /* pix.so */; };
 		4226D105290F9C1C04EE57AD /* PixelWandWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D9FF4CED53D9E161731BC1 /* PixelWandWrapper.swift */; };
@@ -78,6 +82,7 @@
 		62CF97248811F2DB71D9831E /* gif.so in Resources */ = {isa = PBXBuildFile; fileRef = FE4D7721AE723654287567FF /* gif.so */; };
 		6325B8795BCC3FF0C0C15E1C /* DesignTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1992503A3E1C23FBC733197 /* DesignTokens.swift */; };
 		63825158A483CBDA999F31F0 /* bgr.so in Resources */ = {isa = PBXBuildFile; fileRef = D7CD574BD2A80FD5113246F6 /* bgr.so */; };
+		6A5D2906B110A9ABA8E0AE99 /* BatchQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA5564BB67ECC07277F4D95 /* BatchQueueManager.swift */; };
 		6D14BF180815533FC498CF90 /* SecurityScopedURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2E3F6DEF301A348B8805BC /* SecurityScopedURL.swift */; };
 		6EB6CA525ABAFB7D8E5ED6F9 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7087C4AE14296A2CF8467159 /* SettingsView.swift */; };
 		6FAEA124E401F80C8730A37E /* mvg.so in Resources */ = {isa = PBXBuildFile; fileRef = 67ED1327DF03CA9C7D748B71 /* mvg.so */; };
@@ -94,6 +99,7 @@
 		84465F1D3B398CF8DB3A0F7D /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A260BEABC8369956F4A8D49C /* InspectorView.swift */; };
 		85F31862BE962AFE11F27E09 /* mime.xml in Resources */ = {isa = PBXBuildFile; fileRef = D753E1B52B641179BC88B104 /* mime.xml */; };
 		8632769240A5F862387F88C9 /* cut.so in Resources */ = {isa = PBXBuildFile; fileRef = 9249880E2FC84F199E90B4CD /* cut.so */; };
+		8870CD6E43E2DE11E5C2E520 /* HistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62DAF87F13EE0704C07F9D8D /* HistoryTests.swift */; };
 		8AC65FD7E467117CA428FAC9 /* ftxt.so in Resources */ = {isa = PBXBuildFile; fileRef = 664A23C633DAB9B1C06729A6 /* ftxt.so */; };
 		8E115506DDC916C880F61FD5 /* txt.so in Resources */ = {isa = PBXBuildFile; fileRef = F2B08BF6081AFDC65F5F1ACF /* txt.so */; };
 		8E51560AC1110367F3CA17F3 /* mpr.so in Resources */ = {isa = PBXBuildFile; fileRef = 9E8FE4152117EE0A72944E4A /* mpr.so */; };
@@ -102,13 +108,16 @@
 		9199BB09125880C1BB2BF490 /* gray.so in Resources */ = {isa = PBXBuildFile; fileRef = 10211EFCAAA648950F3C155E /* gray.so */; };
 		9303CF5930E907E77E9D9CB0 /* mtv.so in Resources */ = {isa = PBXBuildFile; fileRef = 6F7129DE3FF24416F74BF236 /* mtv.so */; };
 		97A5C14E5875F56E0EEBC701 /* sixel.so in Resources */ = {isa = PBXBuildFile; fileRef = 1928249854DC78657E8C28CA /* sixel.so */; };
+		98463DCE7445C09A6EFFAD80 /* BatchQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0117AA25A6F88DAEEE2F11 /* BatchQueueTests.swift */; };
 		99302073C8B6E6C7FB543A6F /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681E64185FCBF5ACE3BFDCE0 /* CanvasView.swift */; };
 		99C0CA18274ED296391B61E2 /* libMagickWand-7.Q16HDRI.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 5883B5E8BBD75EBA9544EEDB /* libMagickWand-7.Q16HDRI.dylib */; };
 		9AC96EC3D18C95EB893BE8D5 /* aai.so in Resources */ = {isa = PBXBuildFile; fileRef = 62013883C0A5FC18D96740DF /* aai.so */; };
 		9B19C551D49BBB28FEFA845B /* html.so in Resources */ = {isa = PBXBuildFile; fileRef = 31BA82D2585F161C8FBB2CB6 /* html.so */; };
 		9B60A14597282597AD03CD04 /* delegates.xml in Resources */ = {isa = PBXBuildFile; fileRef = 959C1F6F005BEFC0C1E7E04A /* delegates.xml */; };
+		9B65FAD498BD0729EF964360 /* HistoryStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C8360C7E0599D1E63D9E8A /* HistoryStep.swift */; };
 		9EFBCCCE159013EF6F3FC7FB /* tga.so in Resources */ = {isa = PBXBuildFile; fileRef = D93D21C9926B7239471CB0AF /* tga.so */; };
 		A033A7972F042D36F354809D /* jnx.so in Resources */ = {isa = PBXBuildFile; fileRef = 3926576952F1A411B374526D /* jnx.so */; };
+		A0AD387EF7EAF9AA9F264981 /* CheckerboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22B6D7E8CB35F6E34E88FA3 /* CheckerboardView.swift */; };
 		A5F51B7CFDE536C2DB5EBB48 /* ttf.so in Resources */ = {isa = PBXBuildFile; fileRef = DBA404F8174326A810BBBB29 /* ttf.so */; };
 		A6F315640594F4D4882E271C /* ImageWand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FCBBD7BB02BB4ABCCAC55E /* ImageWand.swift */; };
 		A769E2246AF9F6373564478F /* pict.so in Resources */ = {isa = PBXBuildFile; fileRef = F8F925BFC49A39333EC67EDB /* pict.so */; };
@@ -130,6 +139,7 @@
 		BDDDF3F5C4E5196932ACE188 /* wbinfo.so in Resources */ = {isa = PBXBuildFile; fileRef = A3BA32F65D79E99196C3C97D /* wbinfo.so */; };
 		BE4B2EC521BC74CC79C7E276 /* hald.so in Resources */ = {isa = PBXBuildFile; fileRef = AD865FFB75D0FF5CCFCD9B2C /* hald.so */; };
 		BEC942CF52118CBB48627E6E /* art.so in Resources */ = {isa = PBXBuildFile; fileRef = D9BA80871BE215585076F26D /* art.so */; };
+		BEFC2CC661A4CFB0116927F8 /* PresetsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C740AB439EFCE632A97A7FE3 /* PresetsTests.swift */; };
 		BF24633610861203DDCD0006 /* ycbcr.so in Resources */ = {isa = PBXBuildFile; fileRef = A6E04D9915DF35FEB318034F /* ycbcr.so */; };
 		BFBB0457AA1637EAB67C64DF /* cip.so in Resources */ = {isa = PBXBuildFile; fileRef = AA0E094CC8EEFBAB5D64F084 /* cip.so */; };
 		C2701F634C097A21DA803009 /* type-ghostscript.xml in Resources */ = {isa = PBXBuildFile; fileRef = DE5102DA2B610F1A5EF4DF52 /* type-ghostscript.xml */; };
@@ -143,6 +153,7 @@
 		C8F8C7837E724180CFB6E2E5 /* bayer.so in Resources */ = {isa = PBXBuildFile; fileRef = 448ECBD6FC153F6FFBE7A1CA /* bayer.so */; };
 		CA33917020E9EB588A970BEA /* magick.so in Resources */ = {isa = PBXBuildFile; fileRef = 46E7E6C15782482F218D5B38 /* magick.so */; };
 		CC88CC863B9532BEBF6EC998 /* libMagick++-7.Q16HDRI.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 20BC188D2338E2CB126D724A /* libMagick++-7.Q16HDRI.dylib */; };
+		CCE688DC616FF2ADE1B93814 /* PresetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2BD165691DF349F3CB08E03 /* PresetStore.swift */; };
 		CEE15764A41EECB213DB652E /* matte.so in Resources */ = {isa = PBXBuildFile; fileRef = DEB9DD6595C1E304A729ECE4 /* matte.so */; };
 		CEE6B373B9A75836FA0E29CA /* viff.so in Resources */ = {isa = PBXBuildFile; fileRef = 7E8D3AE01576210A99564FE3 /* viff.so */; };
 		CF228824D9C11843C308829E /* inline.so in Resources */ = {isa = PBXBuildFile; fileRef = F1765F413075B04A060CDD74 /* inline.so */; };
@@ -154,6 +165,7 @@
 		D46264E3A782B98B33207880 /* pes.so in Resources */ = {isa = PBXBuildFile; fileRef = A3421687E2FE0D673CC0C4D3 /* pes.so */; };
 		D5140216EDB4C1240C3CC8FB /* vips.so in Resources */ = {isa = PBXBuildFile; fileRef = 3DB9E005A70467E3558A9260 /* vips.so */; };
 		D57C1B3590CCE285D4E9EA9E /* cmyk.so in Resources */ = {isa = PBXBuildFile; fileRef = BF8D83D460A75D94933BE05D /* cmyk.so */; };
+		D63FBE33F41FD61802CFEC6E /* FolderWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2045AEC9C7D323866EE81DE5 /* FolderWatcher.swift */; };
 		D7193754C0DDC480DFB7E4EF /* MagickCLITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEACEDBB0FC1E131C587199 /* MagickCLITests.swift */; };
 		D7777A7E9CA175A3CD046107 /* mac.so in Resources */ = {isa = PBXBuildFile; fileRef = 3FB6CF10F31424C374127F3B /* mac.so */; };
 		D96B9600354DAF75D46801CC /* libMagickCore-7.Q16HDRI.dylib in Resources */ = {isa = PBXBuildFile; fileRef = BA1CD681E0A13E5C34716A3B /* libMagickCore-7.Q16HDRI.dylib */; };
@@ -178,6 +190,7 @@
 		F14267EEB3577E0612583F4B /* pcl.so in Resources */ = {isa = PBXBuildFile; fileRef = BD220542FA3B7E2A3891159E /* pcl.so */; };
 		F632C4961F6DD134EBEB4185 /* info.so in Resources */ = {isa = PBXBuildFile; fileRef = 16596858448B703131774065 /* info.so */; };
 		F726599A51D0C4B53C5D2FEE /* xpm.so in Resources */ = {isa = PBXBuildFile; fileRef = 806B92CE2ACD266438340DE8 /* xpm.so */; };
+		F9B3A6EFFB2EE3802C04BD59 /* ImageMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BC45A00647EB1B8F2C52991 /* ImageMetadata.swift */; };
 		FBFA2EDA3E25E4E6DAAE1C10 /* sf3.so in Resources */ = {isa = PBXBuildFile; fileRef = B829EE0B7BB899CB6C0EB02C /* sf3.so */; };
 		FD4453BCADDBCC0F41E88165 /* icon.so in Resources */ = {isa = PBXBuildFile; fileRef = B1B255767B1D0CAA720BDAD3 /* icon.so */; };
 		FDAD3F0E5C69388E19B7D25A /* webp.so in Resources */ = {isa = PBXBuildFile; fileRef = A91C2DD20FD252FBD98F7945 /* webp.so */; };
@@ -196,6 +209,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00C8360C7E0599D1E63D9E8A /* HistoryStep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStep.swift; sourceTree = "<group>"; };
 		05C6BC9705CDA5906BC4CD62 /* dpx.so */ = {isa = PBXFileReference; path = dpx.so; sourceTree = "<group>"; };
 		0666A785251392FDF2CB859D /* policy.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = policy.xml; sourceTree = "<group>"; };
 		0AF567C2407A155C0C938F0E /* MagiqQuickLook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MagiqQuickLook.entitlements; sourceTree = "<group>"; };
@@ -216,6 +230,7 @@
 		1A3C2861C9244FA1343FAAF3 /* gradient.so */ = {isa = PBXFileReference; path = gradient.so; sourceTree = "<group>"; };
 		1A4616B5B917A1770C6759C7 /* MagickCLIExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickCLIExecutor.swift; sourceTree = "<group>"; };
 		1F63F8D4E2652DFAE58388F4 /* Magiq.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Magiq.entitlements; sourceTree = "<group>"; };
+		2045AEC9C7D323866EE81DE5 /* FolderWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderWatcher.swift; sourceTree = "<group>"; };
 		20BC188D2338E2CB126D724A /* libMagick++-7.Q16HDRI.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagick++-7.Q16HDRI.dylib"; sourceTree = "<group>"; };
 		21039E68619B355CF2A3615D /* libMagickWand-7.Q16HDRI.10.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = "libMagickWand-7.Q16HDRI.10.dylib"; sourceTree = "<group>"; };
 		217CCB193203EDA2D47C7EE2 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
@@ -227,6 +242,7 @@
 		29AFC6ACACEC066441A48E43 /* ps2.so */ = {isa = PBXFileReference; path = ps2.so; sourceTree = "<group>"; };
 		2AA1F7DA607146692EC0EC79 /* MagickCLIArguments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickCLIArguments.swift; sourceTree = "<group>"; };
 		2B049928CBA32F34FF2D73B6 /* WandSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WandSession.swift; sourceTree = "<group>"; };
+		2BC45A00647EB1B8F2C52991 /* ImageMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageMetadata.swift; sourceTree = "<group>"; };
 		2F6C82A1EE5E06E024B89CE4 /* MagiqTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MagiqTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		319213E8DBC94FB1FD6EA8A7 /* xcf.so */ = {isa = PBXFileReference; path = xcf.so; sourceTree = "<group>"; };
 		31BA82D2585F161C8FBB2CB6 /* html.so */ = {isa = PBXFileReference; path = html.so; sourceTree = "<group>"; };
@@ -262,6 +278,7 @@
 		5BEECB881AD1BC3A7E548FC3 /* plasma.so */ = {isa = PBXFileReference; path = plasma.so; sourceTree = "<group>"; };
 		615E8FFDE8036AB0FF716450 /* pnm.so */ = {isa = PBXFileReference; path = pnm.so; sourceTree = "<group>"; };
 		62013883C0A5FC18D96740DF /* aai.so */ = {isa = PBXFileReference; path = aai.so; sourceTree = "<group>"; };
+		62DAF87F13EE0704C07F9D8D /* HistoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTests.swift; sourceTree = "<group>"; };
 		631355565722A15288AABC35 /* pattern.so */ = {isa = PBXFileReference; path = pattern.so; sourceTree = "<group>"; };
 		664A23C633DAB9B1C06729A6 /* ftxt.so */ = {isa = PBXFileReference; path = ftxt.so; sourceTree = "<group>"; };
 		67EB81C5B52DF26B3F7E417A /* MagickGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickGeometry.swift; sourceTree = "<group>"; };
@@ -279,6 +296,7 @@
 		7BB132C8F281E92D544C2155 /* c2pa.so */ = {isa = PBXFileReference; path = c2pa.so; sourceTree = "<group>"; };
 		7BFCA5B50F47C5AD87C20566 /* sgi.so */ = {isa = PBXFileReference; path = sgi.so; sourceTree = "<group>"; };
 		7C2C538A14188C086436C0C0 /* tile.so */ = {isa = PBXFileReference; path = tile.so; sourceTree = "<group>"; };
+		7CA5564BB67ECC07277F4D95 /* BatchQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchQueueManager.swift; sourceTree = "<group>"; };
 		7D00FEAAAF182FDBAF5F36ED /* meta.so */ = {isa = PBXFileReference; path = meta.so; sourceTree = "<group>"; };
 		7E8D3AE01576210A99564FE3 /* viff.so */ = {isa = PBXFileReference; path = viff.so; sourceTree = "<group>"; };
 		806B92CE2ACD266438340DE8 /* xpm.so */ = {isa = PBXFileReference; path = xpm.so; sourceTree = "<group>"; };
@@ -295,6 +313,7 @@
 		9249880E2FC84F199E90B4CD /* cut.so */ = {isa = PBXFileReference; path = cut.so; sourceTree = "<group>"; };
 		93556DC2AB8EFD36D37273FF /* mask.so */ = {isa = PBXFileReference; path = mask.so; sourceTree = "<group>"; };
 		93A0083B00B78BBB48775053 /* ashlar.so */ = {isa = PBXFileReference; path = ashlar.so; sourceTree = "<group>"; };
+		93BD3119FB131EC03BC4A1F6 /* HistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		946724D76FFF65980B946399 /* jpeg.so */ = {isa = PBXFileReference; path = jpeg.so; sourceTree = "<group>"; };
 		959C1F6F005BEFC0C1E7E04A /* delegates.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = delegates.xml; sourceTree = "<group>"; };
 		96C0A6D5F67FE9BB8A2196D5 /* clip.so */ = {isa = PBXFileReference; path = clip.so; sourceTree = "<group>"; };
@@ -331,16 +350,20 @@
 		BD220542FA3B7E2A3891159E /* pcl.so */ = {isa = PBXFileReference; path = pcl.so; sourceTree = "<group>"; };
 		BE8638AE822AE3D8A8395B65 /* Magiq.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Magiq.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF8D83D460A75D94933BE05D /* cmyk.so */ = {isa = PBXFileReference; path = cmyk.so; sourceTree = "<group>"; };
+		C371CE76164225A8EF90F19A /* Preset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preset.swift; sourceTree = "<group>"; };
 		C430BA45FB9060D94687F166 /* rgb.so */ = {isa = PBXFileReference; path = rgb.so; sourceTree = "<group>"; };
 		C47D566422A4B80EAB1D9D5F /* SingleDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleDocumentView.swift; sourceTree = "<group>"; };
 		C49D8BB64777BFBBAE72C2CD /* uil.so */ = {isa = PBXFileReference; path = uil.so; sourceTree = "<group>"; };
 		C674FBA6B396467EEEEDB502 /* strimg.so */ = {isa = PBXFileReference; path = strimg.so; sourceTree = "<group>"; };
 		C6F9202D701C335B2898B173 /* type-urw-base35.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-urw-base35.xml"; sourceTree = "<group>"; };
+		C740AB439EFCE632A97A7FE3 /* PresetsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetsTests.swift; sourceTree = "<group>"; };
 		C9C8EA0975542C2031C67937 /* url.so */ = {isa = PBXFileReference; path = url.so; sourceTree = "<group>"; };
 		CB9F6915DCE303F278DA6E95 /* raw.so */ = {isa = PBXFileReference; path = raw.so; sourceTree = "<group>"; };
 		CF9DA2A15E2838FF059532B6 /* type-urw-base35-type1.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-urw-base35-type1.xml"; sourceTree = "<group>"; };
 		CFCB94627E3B1896BDA361F5 /* pix.so */ = {isa = PBXFileReference; path = pix.so; sourceTree = "<group>"; };
+		D2BD165691DF349F3CB08E03 /* PresetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresetStore.swift; sourceTree = "<group>"; };
 		D4D7C56F2B5806BC7DB718CC /* avs.so */ = {isa = PBXFileReference; path = avs.so; sourceTree = "<group>"; };
+		D5F953668CE79316BD81DA3C /* BatchItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchItem.swift; sourceTree = "<group>"; };
 		D6E1371CA848C16D60975C67 /* svg.so */ = {isa = PBXFileReference; path = svg.so; sourceTree = "<group>"; };
 		D753E1B52B641179BC88B104 /* mime.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = mime.xml; sourceTree = "<group>"; };
 		D7CD574BD2A80FD5113246F6 /* bgr.so */ = {isa = PBXFileReference; path = bgr.so; sourceTree = "<group>"; };
@@ -355,6 +378,7 @@
 		DDFA81B239E18CFB18E9FA62 /* yaml.so */ = {isa = PBXFileReference; path = yaml.so; sourceTree = "<group>"; };
 		DE5102DA2B610F1A5EF4DF52 /* type-ghostscript.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "type-ghostscript.xml"; sourceTree = "<group>"; };
 		DEB9DD6595C1E304A729ECE4 /* matte.so */ = {isa = PBXFileReference; path = matte.so; sourceTree = "<group>"; };
+		DF27D9236A7DB2072A0E5297 /* BatchProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchProcessor.swift; sourceTree = "<group>"; };
 		DF3C744B92C866219E249A1F /* wpg.so */ = {isa = PBXFileReference; path = wpg.so; sourceTree = "<group>"; };
 		DFEACEDBB0FC1E131C587199 /* MagickCLITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagickCLITests.swift; sourceTree = "<group>"; };
 		E476724D2553EA90251B76CE /* null.so */ = {isa = PBXFileReference; path = null.so; sourceTree = "<group>"; };
@@ -368,6 +392,7 @@
 		F00AB3A45B916F0A785CC27E /* png.so */ = {isa = PBXFileReference; path = png.so; sourceTree = "<group>"; };
 		F1765F413075B04A060CDD74 /* inline.so */ = {isa = PBXFileReference; path = inline.so; sourceTree = "<group>"; };
 		F1E8F6C50D378E17FD2396AB /* caption.so */ = {isa = PBXFileReference; path = caption.so; sourceTree = "<group>"; };
+		F22B6D7E8CB35F6E34E88FA3 /* CheckerboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckerboardView.swift; sourceTree = "<group>"; };
 		F2B08BF6081AFDC65F5F1ACF /* txt.so */ = {isa = PBXFileReference; path = txt.so; sourceTree = "<group>"; };
 		F2D0038082A8B372AA201641 /* thumbnail.so */ = {isa = PBXFileReference; path = thumbnail.so; sourceTree = "<group>"; };
 		F5D9FF4CED53D9E161731BC1 /* PixelWandWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PixelWandWrapper.swift; sourceTree = "<group>"; };
@@ -376,11 +401,20 @@
 		FA0414FD53967533C309AF21 /* rgf.so */ = {isa = PBXFileReference; path = rgf.so; sourceTree = "<group>"; };
 		FA824AA3BC201A653882ABA7 /* pango.so */ = {isa = PBXFileReference; path = pango.so; sourceTree = "<group>"; };
 		FB23E986FCD30DAC31879FFE /* bmp.so */ = {isa = PBXFileReference; path = bmp.so; sourceTree = "<group>"; };
+		FC0117AA25A6F88DAEEE2F11 /* BatchQueueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchQueueTests.swift; sourceTree = "<group>"; };
 		FE4D7721AE723654287567FF /* gif.so */ = {isa = PBXFileReference; path = gif.so; sourceTree = "<group>"; };
 		FF6F516668C725C14F4D7F3A /* hdr.so */ = {isa = PBXFileReference; path = hdr.so; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		0C95746DE0D2F01C664E079F /* PresetsTests */ = {
+			isa = PBXGroup;
+			children = (
+				C740AB439EFCE632A97A7FE3 /* PresetsTests.swift */,
+			);
+			path = PresetsTests;
+			sourceTree = "<group>";
+		};
 		143AE4977BCCA2A23BB19687 /* include */ = {
 			isa = PBXGroup;
 			children = (
@@ -407,6 +441,14 @@
 				44EB0DF12FE7132A6C0030D9 /* ThumbnailCache.swift */,
 			);
 			path = ImagePipeline;
+			sourceTree = "<group>";
+		};
+		259F8E322BDC5B0E4F6576B5 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				F22B6D7E8CB35F6E34E88FA3 /* CheckerboardView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		28B73E4C4000B20D13C56533 /* DesignSystem */ = {
@@ -445,6 +487,7 @@
 		5FA1728E329840C0477D7C60 /* MagickCore */ = {
 			isa = PBXGroup;
 			children = (
+				2BC45A00647EB1B8F2C52991 /* ImageMetadata.swift */,
 				31FCBBD7BB02BB4ABCCAC55E /* ImageWand.swift */,
 				5355817382545BC478C80092 /* MagickError.swift */,
 				67EB81C5B52DF26B3F7E417A /* MagickGeometry.swift */,
@@ -479,6 +522,14 @@
 				5FA1728E329840C0477D7C60 /* MagickCore */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		66B3E0CAD911BCEF67282A60 /* HistoryTests */ = {
+			isa = PBXGroup;
+			children = (
+				62DAF87F13EE0704C07F9D8D /* HistoryTests.swift */,
+			);
+			path = HistoryTests;
 			sourceTree = "<group>";
 		};
 		795FDC61C15C2DD82C5CA0C9 /* ImageMagick-7 */ = {
@@ -518,6 +569,7 @@
 				C47D566422A4B80EAB1D9D5F /* SingleDocumentView.swift */,
 				3BBEC67E9282667384992E5E /* BatchQueueView */,
 				177BDB0199BD26E88E09807C /* Canvas */,
+				259F8E322BDC5B0E4F6576B5 /* Components */,
 				28B73E4C4000B20D13C56533 /* DesignSystem */,
 				F7B73D5F990D34D9CD5DEDA8 /* Inspector */,
 				F4F9CC5F419152A456738728 /* PresetsView */,
@@ -562,8 +614,11 @@
 		B39A2C77F251AD3FCFE30D49 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				DFD664B344C92FB809FA48BB /* BatchQueueTests */,
+				66B3E0CAD911BCEF67282A60 /* HistoryTests */,
 				60E8227EB0459B7B30D06FAA /* MagickCLITests */,
 				A18D2107460756C17BF437DF /* MagickCoreTests */,
+				0C95746DE0D2F01C664E079F /* PresetsTests */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -613,12 +668,32 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		DFD664B344C92FB809FA48BB /* BatchQueueTests */ = {
+			isa = PBXGroup;
+			children = (
+				FC0117AA25A6F88DAEEE2F11 /* BatchQueueTests.swift */,
+			);
+			path = BatchQueueTests;
+			sourceTree = "<group>";
+		};
 		E0336E173FFAB7B9D886947E /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				F2E6A981905F80B8CDD74940 /* BatchQueue */,
+				E309F3D05D738EE7633D81FF /* History */,
+				EB27FC18033887F5121DBFD0 /* Presets */,
 				356DEC810AE138A731A25D17 /* Settings */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		E309F3D05D738EE7633D81FF /* History */ = {
+			isa = PBXGroup;
+			children = (
+				93BD3119FB131EC03BC4A1F6 /* HistoryManager.swift */,
+				00C8360C7E0599D1E63D9E8A /* HistoryStep.swift */,
+			);
+			path = History;
 			sourceTree = "<group>";
 		};
 		EB0C44E3195D7FF3A7D8CE5A /* ImageMagickDistribution */ = {
@@ -631,6 +706,26 @@
 			);
 			name = ImageMagickDistribution;
 			path = Resources/ImageMagickDistribution;
+			sourceTree = "<group>";
+		};
+		EB27FC18033887F5121DBFD0 /* Presets */ = {
+			isa = PBXGroup;
+			children = (
+				C371CE76164225A8EF90F19A /* Preset.swift */,
+				D2BD165691DF349F3CB08E03 /* PresetStore.swift */,
+			);
+			path = Presets;
+			sourceTree = "<group>";
+		};
+		F2E6A981905F80B8CDD74940 /* BatchQueue */ = {
+			isa = PBXGroup;
+			children = (
+				D5F953668CE79316BD81DA3C /* BatchItem.swift */,
+				DF27D9236A7DB2072A0E5297 /* BatchProcessor.swift */,
+				7CA5564BB67ECC07277F4D95 /* BatchQueueManager.swift */,
+				2045AEC9C7D323866EE81DE5 /* FolderWatcher.swift */,
+			);
+			path = BatchQueue;
 			sourceTree = "<group>";
 		};
 		F4F9CC5F419152A456738728 /* PresetsView */ = {
@@ -1026,9 +1121,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBBFFF377774BEB6163D52C7 /* AppState.swift in Sources */,
+				36900F191821331DFC05F37E /* BatchItem.swift in Sources */,
+				3E6E2071DE44A983637C63F2 /* BatchProcessor.swift in Sources */,
+				6A5D2906B110A9ABA8E0AE99 /* BatchQueueManager.swift in Sources */,
 				C5B457254E0E669B71A4AB8E /* BatchQueueView.swift in Sources */,
 				99302073C8B6E6C7FB543A6F /* CanvasView.swift in Sources */,
+				A0AD387EF7EAF9AA9F264981 /* CheckerboardView.swift in Sources */,
 				6325B8795BCC3FF0C0C15E1C /* DesignTokens.swift in Sources */,
+				D63FBE33F41FD61802CFEC6E /* FolderWatcher.swift in Sources */,
+				05584902F8C9D98558032909 /* HistoryManager.swift in Sources */,
+				9B65FAD498BD0729EF964360 /* HistoryStep.swift in Sources */,
+				F9B3A6EFFB2EE3802C04BD59 /* ImageMetadata.swift in Sources */,
 				E35340DCC175721BBFD4C9C0 /* ImageOperation.swift in Sources */,
 				E9D307AEBA9789EA1F2B5F16 /* ImagePipeline.swift in Sources */,
 				A6F315640594F4D4882E271C /* ImageWand.swift in Sources */,
@@ -1040,6 +1143,8 @@
 				17D6AB522FCC63F46E3CC5F0 /* MagickGeometry.swift in Sources */,
 				01FB1E1B3E10BE46C4862CBF /* MagiqApp.swift in Sources */,
 				4226D105290F9C1C04EE57AD /* PixelWandWrapper.swift in Sources */,
+				1CE81B86E5E5D709F46B1703 /* Preset.swift in Sources */,
+				CCE688DC616FF2ADE1B93814 /* PresetStore.swift in Sources */,
 				03882A1D0308FDC9D731D433 /* PresetsView.swift in Sources */,
 				6D14BF180815533FC498CF90 /* SecurityScopedURL.swift in Sources */,
 				6EB6CA525ABAFB7D8E5ED6F9 /* SettingsView.swift in Sources */,
@@ -1055,8 +1160,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98463DCE7445C09A6EFFAD80 /* BatchQueueTests.swift in Sources */,
+				8870CD6E43E2DE11E5C2E520 /* HistoryTests.swift in Sources */,
 				D7193754C0DDC480DFB7E4EF /* MagickCLITests.swift in Sources */,
 				E728D3520C2240E65349F79D /* MagickCoreTests.swift in Sources */,
+				BEFC2CC661A4CFB0116927F8 /* PresetsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

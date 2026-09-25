@@ -15,11 +15,11 @@ before being built (see `AGENTS.md` → Non-negotiables → Scope discipline).
 
 ## Phase 1 — Core feature set (approved for this pass)
 
-- [ ] **Batch queue + folder watch**
+- [x] **Batch queue + folder watch**
   - Add multiple images / a watched folder.
   - Bounded worker pool for processing; visible per-item progress and errors.
   - Apply a preset or an ad-hoc operation chain across the batch.
-- [ ] **Undo/redo history + preset profiles**
+- [x] **Undo/redo history + preset profiles**
   - Non-destructive operation history per open document (lightweight, not full-buffer
     snapshots — see ARCHITECTURE.md RAM discipline).
   - Save an operation chain as a named preset; apply presets to single images or batches.

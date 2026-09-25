@@ -38,6 +38,35 @@ struct MagiqApp: App {
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("Single Document Mode") {
+                    self.appState.navigationMode = .singleImage
+                }
+                .keyboardShortcut("1", modifiers: .command)
+
+                Button("Batch Queue Mode") {
+                    self.appState.navigationMode = .batchQueue
+                }
+                .keyboardShortcut("2", modifiers: .command)
+
+                Button("Presets Mode") {
+                    self.appState.navigationMode = .presets
+                }
+                .keyboardShortcut("3", modifiers: .command)
+            }
+
+            CommandMenu("View") {
+                Button("Toggle Sidebar") {
+                    if self.columnVisibility == .detailOnly {
+                        self.columnVisibility = .all
+                    } else {
+                        self.columnVisibility = .detailOnly
+                    }
+                }
+                .keyboardShortcut("s", modifiers: [.command, .control])
+            }
+        }
 
         Settings {
             SettingsView()

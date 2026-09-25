@@ -55,6 +55,50 @@ public final class ImageWand: Identifiable {
         return MagickGeometry(width: self.width, height: self.height)
     }
 
+    public var depth: Int {
+        return Int(MagickGetImageDepth(self.pointer))
+    }
+
+    public var colorspace: String {
+        let cs = MagickGetImageColorspace(self.pointer)
+        return self.formatColorspace(cs)
+    }
+
+    public var metadata: ImageMetadata {
+        return ImageMetadata(
+            width: self.width,
+            height: self.height,
+            format: self.format ?? "UNKNOWN",
+            colorspace: self.colorspace,
+            depth: self.depth
+        )
+    }
+
+    /// Reads image metadata with zero full-buffer decode using MagickPingImage.
+    public static func pingMetadata(from url: URL) throws -> ImageMetadata {
+        let wand = try ImageWand()
+        let status = MagickPingImage(wand.pointer, url.path)
+        try wand.verifyStatus(status, operation: "MagickPingImage (\(url.lastPathComponent))")
+
+        let fileSize = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber)?.int64Value
+
+        return ImageMetadata(
+            width: wand.width,
+            height: wand.height,
+            format: wand.format ?? url.pathExtension.uppercased(),
+            colorspace: wand.colorspace,
+            depth: wand.depth,
+            fileSize: fileSize
+        )
+    }
+
+    /// Creates a blank image canvas in memory with the specified dimensions and background color.
+    public func createBlank(width: Int, height: Int, background: String = "white") throws {
+        let pixel = try PixelWandWrapper(color: background)
+        let status = MagickNewImage(self.pointer, size_t(max(1, width)), size_t(max(1, height)), pixel.pointer)
+        try self.verifyStatus(status, operation: "MagickNewImage")
+    }
+
     // MARK: - Reading & Writing
 
     public func read(from url: URL) throws {
@@ -122,11 +166,65 @@ public final class ImageWand: Identifiable {
         try self.verifyStatus(status, operation: "MagickSetImageCompressionQuality (\(quality))")
     }
 
+    public func flip() throws {
+        let status = MagickFlipImage(self.pointer)
+        try self.verifyStatus(status, operation: "MagickFlipImage")
+    }
+
+    public func flop() throws {
+        let status = MagickFlopImage(self.pointer)
+        try self.verifyStatus(status, operation: "MagickFlopImage")
+    }
+
+    public func brightnessContrast(brightness: Double, contrast: Double) throws {
+        let status = MagickBrightnessContrastImage(self.pointer, brightness, contrast)
+        try self.verifyStatus(status, operation: "MagickBrightnessContrastImage")
+    }
+
+    public func modulate(brightness: Double = 100.0, saturation: Double = 100.0, hue: Double = 100.0) throws {
+        let status = MagickModulateImage(self.pointer, brightness, saturation, hue)
+        try self.verifyStatus(status, operation: "MagickModulateImage")
+    }
+
+    public func autoLevel() throws {
+        let status = MagickAutoLevelImage(self.pointer)
+        try self.verifyStatus(status, operation: "MagickAutoLevelImage")
+    }
+
+    public func sharpen(radius: Double = 0.0, sigma: Double = 1.0) throws {
+        let status = MagickSharpenImage(self.pointer, radius, sigma)
+        try self.verifyStatus(status, operation: "MagickSharpenImage")
+    }
+
+    public func blur(radius: Double = 0.0, sigma: Double = 1.0) throws {
+        let status = MagickBlurImage(self.pointer, radius, sigma)
+        try self.verifyStatus(status, operation: "MagickBlurImage")
+    }
+
+    public func strip() throws {
+        let status = MagickStripImage(self.pointer)
+        try self.verifyStatus(status, operation: "MagickStripImage")
+    }
+
     public func clone() throws -> ImageWand {
         guard let clonedPtr = CloneMagickWand(self.pointer) else {
             throw MagickError.wandAllocationFailed
         }
         return ImageWand(pointer: clonedPtr)
+    }
+
+    // MARK: - Helpers
+
+    private func formatColorspace(_ cs: ColorspaceType) -> String {
+        switch cs {
+        case sRGBColorspace: return "sRGB"
+        case RGBColorspace: return "RGB"
+        case DisplayP3Colorspace: return "Display P3"
+        case Adobe98Colorspace: return "Adobe RGB (1998)"
+        case GRAYColorspace, LinearGRAYColorspace: return "Grayscale"
+        case CMYKColorspace: return "CMYK"
+        default: return "sRGB"
+        }
     }
 
     // MARK: - NSImage Interop
@@ -138,16 +236,29 @@ public final class ImageWand: Identifiable {
         guard let tempWand = CloneMagickWand(self.pointer) else { return nil }
         defer { DestroyMagickWand(tempWand) }
 
-        MagickSetImageFormat(tempWand, "PNG")
-
+        // Attempt TIFF export first (native macOS bitmap format, preserving full color and alpha)
+        MagickSetImageFormat(tempWand, "TIFF")
         var blobLength: size_t = 0
-        guard let blob = MagickGetImageBlob(tempWand, &blobLength), blobLength > 0 else {
-            return nil
+        if let blob = MagickGetImageBlob(tempWand, &blobLength), blobLength > 0 {
+            defer { MagickRelinquishMemory(blob) }
+            let data = Data(bytes: blob, count: blobLength)
+            if let image = NSImage(data: data) {
+                return image
+            }
         }
-        defer { MagickRelinquishMemory(blob) }
 
-        let data = Data(bytes: blob, count: blobLength)
-        return NSImage(data: data)
+        // Fallback to PNG
+        MagickSetImageFormat(tempWand, "PNG")
+        blobLength = 0
+        if let blob = MagickGetImageBlob(tempWand, &blobLength), blobLength > 0 {
+            defer { MagickRelinquishMemory(blob) }
+            let data = Data(bytes: blob, count: blobLength)
+            if let image = NSImage(data: data) {
+                return image
+            }
+        }
+
+        return nil
     }
 
     // MARK: - Error Checking

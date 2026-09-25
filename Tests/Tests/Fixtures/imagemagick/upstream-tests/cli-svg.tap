@@ -1,0 +1,36 @@
+#!/bin/sh
+#
+#  Copyright 1999 ImageMagick Studio LLC, a non-profit organization
+#  dedicated to making software imaging solutions freely available.
+#
+#  You may not use this file except in compliance with the License.  You may
+#  obtain a copy of the License at
+#
+#    https://imagemagick.org/license/
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+#  Regression tests for SVG coder.
+#
+. ./common.shi
+. ${srcdir}/tests/common.shi
+echo "1..2"
+
+# gradientTransform should not cause a double-free / SIGABRT (#8582)
+${MAGICK} ${SRCDIR}/input_svg_gradient_transform.svg null: && echo "ok" || echo "not ok"
+
+# Inline styles override presentation attributes regardless of attribute order.
+msvg_mode=`${MAGICK} -list format | awk '$1 ~ /^MSVG/ { print $2 }'`
+case "$msvg_mode" in
+  *r*)
+    colors=`${MAGICK} MSVG:${SRCDIR}/input_svg_inline_style.svg \
+      -format '%[fx:int(255*p{5,5}.r+0.5)],%[fx:int(255*p{5,5}.g+0.5)],%[fx:int(255*p{5,5}.b+0.5)] %[fx:int(255*p{15,5}.r+0.5)],%[fx:int(255*p{15,5}.g+0.5)],%[fx:int(255*p{15,5}.b+0.5)]' info:-`
+    [ "X$colors" = "X255,255,255 255,255,255" ] && echo "ok" || echo "not ok"
+    ;;
+  *) echo "ok # SKIP MSVG coder unavailable" ;;
+esac
+:
