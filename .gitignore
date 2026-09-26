@@ -96,3 +96,12 @@ samples/
 *.orig
 .claude/
 .cursor/
+
+# AI Agent Instructions & Guidance (no place in repository)
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.agents/
+FEATURE_MAP.md
+
+

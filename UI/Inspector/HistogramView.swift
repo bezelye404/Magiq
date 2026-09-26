@@ -21,19 +21,36 @@ public enum HistogramChannel: String, CaseIterable, Identifiable {
 
 public struct HistogramView: View {
     public let data: HistogramData?
+    public let isProcessing: Bool
     @State private var selectedChannel: HistogramChannel = .rgb
 
-    public init(data: HistogramData?) {
+    public init(data: HistogramData?, isProcessing: Bool = false) {
         self.data = data
+        self.isProcessing = isProcessing
     }
 
     public var body: some View {
         VStack(spacing: 8) {
-            // Channel Selector Header
-            HStack {
+            // Channel Selector Header with Zero Layout Shift Live Status
+            HStack(spacing: 6) {
                 Label("Histogram", systemImage: "chart.bar.xaxis")
                     .font(.caption.bold())
                     .foregroundStyle(.secondary)
+
+                if self.isProcessing {
+                    HStack(spacing: 3) {
+                        ProgressView()
+                            .scaleEffect(0.5)
+                            .frame(width: 10, height: 10)
+                        Text("Live")
+                            .font(.caption2.bold())
+                            .foregroundStyle(.tint)
+                    }
+                    .padding(.horizontal, 5)
+                    .padding(.vertical, 2)
+                    .background(Color.accentColor.opacity(0.12), in: Capsule())
+                    .transition(.opacity)
+                }
 
                 Spacer()
 
@@ -44,8 +61,9 @@ public struct HistogramView: View {
                 }
                 .pickerStyle(.segmented)
                 .controlSize(.mini)
-                .frame(width: 170)
+                .frame(width: 160)
             }
+            .animation(.easeInOut(duration: 0.15), value: self.isProcessing)
 
             // Graph Area
             ZStack(alignment: .bottomLeading) {

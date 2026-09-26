@@ -79,6 +79,21 @@ final class FeaturesTests: XCTestCase {
         XCTAssertNil(cached)
     }
 
+    @MainActor
+    func testSandboxPermissionsReset() {
+        let settings = UserSettings.shared
+        let defaults = UserDefaults.standard
+        defaults.set("dummy-bookmark-data".data(using: .utf8), forKey: "FolderBookmark_123")
+        defaults.set("/path/to/recent", forKey: "recentDocumentPaths")
+
+        // Execute sandbox reset
+        settings.resetSandboxPermissions()
+
+        // Verify bookmark keys were stripped
+        XCTAssertNil(defaults.object(forKey: "FolderBookmark_123"))
+        XCTAssertNil(defaults.object(forKey: "recentDocumentPaths"))
+    }
+
     // MARK: - Live Histogram Tests
 
     func testHistogramCalculation() {

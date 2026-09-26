@@ -106,28 +106,8 @@ public struct InspectorView: View {
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
-                // Live Status Indicator Banner
-                Group {
-                    if self.isProcessing {
-                        HStack(spacing: 6) {
-                            ProgressView()
-                                .scaleEffect(0.65)
-                                .frame(width: 14, height: 14)
-                            Text("Live Rendering...")
-                                .font(.caption2.bold())
-                                .foregroundStyle(.tint)
-                            Spacer()
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Color.accentColor.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                    }
-                }
-                .animation(.easeInOut(duration: 0.15), value: self.isProcessing)
-
-                // MARK: - Feature 1: Live Histogram
-                HistogramView(data: self.histogramData)
+                // MARK: - Feature 1: Live Histogram & Zero-Jitter Status
+                HistogramView(data: self.histogramData, isProcessing: self.isProcessing)
                     .padding(.bottom, 2)
 
                 // MARK: - Dimensions & Crop (Feature 2)
@@ -198,8 +178,24 @@ public struct InspectorView: View {
                     }
                     .padding(8)
                 } label: {
-                    Label("Dimensions & Crop", systemImage: "arrow.up.left.and.arrow.down.right")
-                        .font(.headline)
+                    HStack {
+                        Label("Dimensions & Crop", systemImage: "arrow.up.left.and.arrow.down.right")
+                            .font(.headline)
+                        Spacer()
+                        if let origW = self.originalWidth, let origH = self.originalHeight,
+                           (self.resizeWidth != origW || self.resizeHeight != origH) {
+                            Button(action: {
+                                self.resizeWidth = origW
+                                self.resizeHeight = origH
+                            }) {
+                                Image(systemName: "arrow.counterclockwise")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .help("Reset to original image dimensions")
+                        }
+                    }
                 }
 
                 // MARK: - Geometry & Orientation
@@ -209,7 +205,19 @@ public struct InspectorView: View {
                             Text("Angle")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
+
+                            if self.rotationDegrees != 0.0 {
+                                Button(action: { self.rotationDegrees = 0.0 }) {
+                                    Image(systemName: "arrow.counterclockwise")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .help("Reset rotation angle to 0°")
+                            }
+
                             Spacer()
+
                             Text("\(Int(self.rotationDegrees))°")
                                 .font(.caption.monospacedDigit())
                                 .foregroundStyle(.secondary)
@@ -247,6 +255,19 @@ public struct InspectorView: View {
                             }
                             .toggleStyle(.button)
                             .frame(maxWidth: .infinity)
+
+                            if self.flipHorizontal || self.flipVertical {
+                                Button(action: {
+                                    self.flipHorizontal = false
+                                    self.flipVertical = false
+                                }) {
+                                    Image(systemName: "arrow.counterclockwise")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .help("Reset flips")
+                            }
                         }
                     }
                     .padding(8)
@@ -263,7 +284,19 @@ public struct InspectorView: View {
                             Text("Film Look")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
+
+                            if self.filmProfile != .none {
+                                Button(action: { self.filmProfile = .none }) {
+                                    Image(systemName: "arrow.counterclockwise")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .help("Reset film look to none")
+                            }
+
                             Spacer()
+
                             Picker("Film Look", selection: self.$filmProfile) {
                                 ForEach(FilmProfile.allCases) { profile in
                                     Label(profile.rawValue, systemImage: profile.iconName)
@@ -283,6 +316,17 @@ public struct InspectorView: View {
                                 Text("Brightness")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+
+                                if self.brightness != 0.0 {
+                                    Button(action: { self.brightness = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset brightness to 0")
+                                }
+
                                 Spacer()
                                 Text("\(Int(self.brightness))")
                                     .font(.caption.monospacedDigit())
@@ -296,6 +340,17 @@ public struct InspectorView: View {
                                 Text("Contrast")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+
+                                if self.contrast != 0.0 {
+                                    Button(action: { self.contrast = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset contrast to 0")
+                                }
+
                                 Spacer()
                                 Text("\(Int(self.contrast))")
                                     .font(.caption.monospacedDigit())
@@ -309,6 +364,17 @@ public struct InspectorView: View {
                                 Text("Saturation")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+
+                                if self.saturation != 0.0 {
+                                    Button(action: { self.saturation = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset saturation to 0")
+                                }
+
                                 Spacer()
                                 Text("\(Int(self.saturation))")
                                     .font(.caption.monospacedDigit())
@@ -316,8 +382,20 @@ public struct InspectorView: View {
                             Slider(value: self.$saturation, in: -100...100, step: 1)
                         }
 
-                        Toggle("Auto Level (Histogram Balance)", isOn: self.$autoLevel)
-                            .font(.caption)
+                        HStack {
+                            Toggle("Auto Level (Histogram Balance)", isOn: self.$autoLevel)
+                                .font(.caption)
+                            Spacer()
+                            if self.autoLevel {
+                                Button(action: { self.autoLevel = false }) {
+                                    Image(systemName: "arrow.counterclockwise")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .help("Disable auto level")
+                            }
+                        }
                     }
                     .padding(8)
                 } label: {
@@ -328,11 +406,23 @@ public struct InspectorView: View {
                 // MARK: - Focal & Clarity
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
+                        // Sharpen
                         VStack(alignment: .leading, spacing: 2) {
                             HStack {
                                 Text("Sharpen")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+
+                                if self.sharpen != 0.0 {
+                                    Button(action: { self.sharpen = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset sharpen to 0")
+                                }
+
                                 Spacer()
                                 Text(String(format: "%.1f", self.sharpen))
                                     .font(.caption.monospacedDigit())
@@ -340,11 +430,23 @@ public struct InspectorView: View {
                             Slider(value: self.$sharpen, in: 0...5, step: 0.1)
                         }
 
+                        // Blur
                         VStack(alignment: .leading, spacing: 2) {
                             HStack {
                                 Text("Blur")
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
+
+                                if self.blur != 0.0 {
+                                    Button(action: { self.blur = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset blur to 0")
+                                }
+
                                 Spacer()
                                 Text(String(format: "%.1f", self.blur))
                                     .font(.caption.monospacedDigit())
@@ -407,8 +509,20 @@ public struct InspectorView: View {
                     }
                     .padding(8)
                 } label: {
-                    Label("Watermark & Stamp", systemImage: "text.bubble")
-                        .font(.headline)
+                    HStack {
+                        Label("Watermark & Stamp", systemImage: "text.bubble")
+                            .font(.headline)
+                        Spacer()
+                        if !self.watermarkText.isEmpty {
+                            Button(action: { self.watermarkText = "" }) {
+                                Image(systemName: "arrow.counterclockwise")
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .buttonStyle(.plain)
+                            .help("Clear watermark text")
+                        }
+                    }
                 }
 
                 // MARK: - Format & Feature 3: Target Size Optimizer
@@ -435,6 +549,17 @@ public struct InspectorView: View {
                                     Text("Quality")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
+
+                                    if self.quality != 85 {
+                                        Button(action: { self.quality = 85 }) {
+                                            Image(systemName: "arrow.counterclockwise")
+                                                .font(.caption2)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .help("Reset quality to default 85%")
+                                    }
+
                                     Spacer()
                                     Text("\(self.quality)%")
                                         .font(.caption.monospacedDigit())

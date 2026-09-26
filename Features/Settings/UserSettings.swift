@@ -38,22 +38,23 @@ public final class UserSettings: ObservableObject {
         ThumbnailCache.shared.removeAll()
     }
 
+    /// Revokes and flushes all security-scoped bookmarks and stored sandbox permissions.
+    public func resetSandboxPermissions() {
+        let defaults = UserDefaults.standard
+        for key in defaults.dictionaryRepresentation().keys {
+            if key.contains("Bookmark") || key.contains("SecurityScoped") || key.contains("FolderAccess") || key.contains("recent") || key.contains("Recent") {
+                defaults.removeObject(forKey: key)
+            }
+        }
+        NSDocumentController.shared.clearRecentDocuments(nil)
+    }
+
     /// Resets all privacy-related settings, clears stored bookmarks, and flushes thumbnail/render cache.
     public func resetPrivacySettings() {
         self.clearThumbnailCache()
         self.preserveMetadata = true
         self.stripMetadataByDefault = false
         self.clearRecentFilesOnExit = true
-
-        // Clear macOS Recent Documents list
-        NSDocumentController.shared.clearRecentDocuments(nil)
-
-        // Clear any stored security bookmarks in UserDefaults
-        let defaults = UserDefaults.standard
-        for key in defaults.dictionaryRepresentation().keys {
-            if key.contains("Bookmark") || key.contains("recent") || key.contains("Recent") {
-                defaults.removeObject(forKey: key)
-            }
-        }
+        self.resetSandboxPermissions()
     }
 }

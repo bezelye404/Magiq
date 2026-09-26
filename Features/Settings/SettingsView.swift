@@ -14,6 +14,9 @@ public struct SettingsView: View {
     @State private var cachePurgedBanner: Bool = false
     @State private var privacyResetBanner: Bool = false
     @State private var showPrivacyResetConfirmation: Bool = false
+    @State private var showSandboxResetConfirmation: Bool = false
+    @State private var sandboxResetBanner: Bool = false
+    @State private var copiedTerminalCommand: Bool = false
     @State private var editingAction: AppAction?
 
     private let supportedFormats = ["WEBP", "JPEG", "PNG", "TIFF", "AVIF", "HEIC"]
@@ -179,72 +182,155 @@ public struct SettingsView: View {
                 Label("Shortcuts", systemImage: "command")
             }
 
-            // MARK: - Privacy Tab
-            Form {
-                Section(header: Text("Privacy by Construction")) {
-                    HStack(spacing: 12) {
-                        Image(systemName: "checkmark.shield.fill")
-                            .font(.system(size: 32))
-                            .foregroundStyle(.green)
+            // MARK: - Privacy & Security Tab
+            ScrollView {
+                Form {
+                    Section(header: Text("Privacy by Construction")) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "checkmark.shield.fill")
+                                .font(.system(size: 32))
+                                .foregroundStyle(.green)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Zero Network Access & Zero Telemetry")
+                                    .font(.headline)
+                                Text("Magiq makes no outbound network connections, includes no third-party tracking SDKs, and processes all files strictly locally on Apple Silicon.")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+
+                    Section(header: Text("Data & Metadata Protection")) {
+                        Toggle("Strip EXIF / Camera Metadata by Default", isOn: self.$settings.stripMetadataByDefault)
+                        Toggle("Clear Document Bookmarks and Recents on Exit", isOn: self.$settings.clearRecentFilesOnExit)
+                    }
+
+                    Section(header: Text("App Sandbox & Folder Access")) {
+                        Text("Magiq operates within the native macOS App Sandbox. Access to folders and files is managed via security-scoped bookmarks granted by you.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        VStack(alignment: .leading, spacing: 8) {
+                            Button(role: .destructive, action: { self.showSandboxResetConfirmation = true }) {
+                                Label("Revoke Magiq Folder Bookmarks", systemImage: "xmark.bin")
+                            }
+                            .confirmationDialog(
+                                "Revoke Sandbox Bookmarks",
+                                isPresented: self.$showSandboxResetConfirmation,
+                                titleVisibility: .visible
+                            ) {
+                                Button("Revoke All Bookmarks", role: .destructive) {
+                                    self.settings.resetSandboxPermissions()
+                                    self.sandboxResetBanner = true
+                                }
+                                Button("Cancel", role: .cancel) {}
+                            } message: {
+                                Text("This revokes all stored security-scoped folder bookmarks. The next time you open folders or batch queues, macOS will ask for authorization again.")
+                            }
+
+                            if self.sandboxResetBanner {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.green)
+                                    Text("Security-scoped bookmarks have been flushed.")
+                                        .font(.caption)
+                                        .foregroundStyle(.green)
+                                }
+                                .padding(.top, 2)
+                            }
+                        }
+                    }
+
+                    Section(header: Text("Apple System Permissions (TCC)")) {
+                        Text("macOS manages system-level Files & Folders access independently in System Settings.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Button(action: {
+                            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_FilesAndFolders"),
+                               NSWorkspace.shared.open(url) {
+                                // Opened Privacy_FilesAndFolders
+                            } else if let fallback = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy") {
+                                NSWorkspace.shared.open(fallback)
+                            }
+                        }) {
+                            Label("Open macOS Privacy & Security Settings…", systemImage: "arrow.up.forward.app")
+                        }
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Zero Network Access & Zero Telemetry")
-                                .font(.headline)
-                            Text("Magiq makes no outbound network connections, includes no third-party tracking SDKs, and processes all files strictly locally.")
-                                .font(.caption)
+                            Text("Reset via Terminal (Power Users):")
+                                .font(.caption.bold())
                                 .foregroundStyle(.secondary)
+
+                            HStack {
+                                Text("tccutil reset All com.magiq.app")
+                                    .font(.caption.monospaced())
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 4))
+
+                                Button(action: {
+                                    NSPasteboard.general.clearContents()
+                                    NSPasteboard.general.setString("tccutil reset All com.magiq.app", forType: .string)
+                                    self.copiedTerminalCommand = true
+                                }) {
+                                    Image(systemName: self.copiedTerminalCommand ? "checkmark" : "doc.on.doc")
+                                        .font(.caption)
+                                }
+                                .buttonStyle(.borderless)
+                                .help("Copy command to clipboard")
+
+                                if self.copiedTerminalCommand {
+                                    Text("Copied!")
+                                        .font(.caption2)
+                                        .foregroundStyle(.green)
+                                }
+                            }
+                        }
+                        .padding(.top, 4)
+                    }
+
+                    Section(header: Text("Reset All Privacy Defaults")) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Button(role: .destructive, action: { self.showPrivacyResetConfirmation = true }) {
+                                Label("Reset All Privacy Settings & Flush Caches", systemImage: "arrow.counterclockwise.shield")
+                            }
+                            .confirmationDialog(
+                                "Reset Privacy Settings",
+                                isPresented: self.$showPrivacyResetConfirmation,
+                                titleVisibility: .visible
+                            ) {
+                                Button("Reset & Flush Everything", role: .destructive) {
+                                    self.settings.resetPrivacySettings()
+                                    self.privacyResetBanner = true
+                                }
+                                Button("Cancel", role: .cancel) {}
+                            } message: {
+                                Text("This will purge the thumbnail cache, revoke stored security-scoped folder bookmarks, clear recent document history, and restore default privacy preferences.")
+                            }
+
+                            if self.privacyResetBanner {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(.green)
+                                    Text("All privacy settings, bookmarks, and thumbnail caches have been reset.")
+                                        .font(.caption)
+                                        .foregroundStyle(.green)
+                                }
+                                .padding(.top, 4)
+                            }
                         }
                     }
-                    .padding(.vertical, 4)
                 }
-
-                Section(header: Text("Data & Metadata Protection")) {
-                    Toggle("Strip EXIF / Camera Metadata by Default", isOn: self.$settings.stripMetadataByDefault)
-                    Toggle("Clear Document Bookmarks and Recents on Exit", isOn: self.$settings.clearRecentFilesOnExit)
-                }
-
-                Section(header: Text("Sandbox & Permission Management")) {
-                    Text("Magiq uses App Sandbox security-scoped bookmarks to access only the files and folders you explicitly open.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Button(role: .destructive, action: { self.showPrivacyResetConfirmation = true }) {
-                            Label("Reset Privacy Settings to Defaults", systemImage: "arrow.counterclockwise.shield")
-                        }
-                        .confirmationDialog(
-                            "Reset Privacy Settings",
-                            isPresented: self.$showPrivacyResetConfirmation,
-                            titleVisibility: .visible
-                        ) {
-                            Button("Reset & Flush All Permissions", role: .destructive) {
-                                self.settings.resetPrivacySettings()
-                                self.privacyResetBanner = true
-                            }
-                            Button("Cancel", role: .cancel) {}
-                        } message: {
-                            Text("This will purge the thumbnail cache, revoke stored security-scoped folder bookmarks, clear recent document history, and restore default privacy preferences.")
-                        }
-
-                        if self.privacyResetBanner {
-                            HStack(spacing: 6) {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .foregroundStyle(.green)
-                                Text("All privacy settings, bookmarks, and thumbnail caches have been reset.")
-                                    .font(.caption)
-                                    .foregroundStyle(.green)
-                            }
-                            .padding(.top, 4)
-                        }
-                    }
-                }
+                .padding(20)
             }
-            .padding(20)
             .tabItem {
-                Label("Privacy", systemImage: "hand.raised.shield")
+                Label("Privacy", systemImage: "hand.raised.fill")
             }
         }
-        .frame(width: 520, height: 420)
+        .frame(width: 540, height: 480)
         .sheet(item: self.$editingAction) { action in
             ShortcutEditorSheet(action: action)
         }
