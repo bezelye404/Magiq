@@ -6,6 +6,51 @@
 import AppKit
 import Foundation
 
+// MARK: - Supporting Types
+ 
+public enum MagiqNoiseType: String, CaseIterable, Identifiable, Codable, Equatable, Sendable {
+    case gaussian = "Gaussian"
+    case uniform = "Uniform"
+    case impulse = "Impulse"
+    case laplacian = "Laplacian"
+    case poisson = "Poisson"
+    case multiplicativeGaussian = "Multiplicative Gaussian"
+
+    public var id: String { self.rawValue }
+
+    public var cType: NoiseType {
+        switch self {
+        case .gaussian: return GaussianNoise
+        case .uniform: return UniformNoise
+        case .impulse: return ImpulseNoise
+        case .laplacian: return LaplacianNoise
+        case .poisson: return PoissonNoise
+        case .multiplicativeGaussian: return MultiplicativeGaussianNoise
+        }
+    }
+
+    public var cliName: String {
+        switch self {
+        case .gaussian: return "Gaussian"
+        case .uniform: return "Uniform"
+        case .impulse: return "Impulse"
+        case .laplacian: return "Laplacian"
+        case .poisson: return "Poisson"
+        case .multiplicativeGaussian: return "MultiplicativeGaussian"
+        }
+    }
+}
+
+public struct ComparisonResult: @unchecked Sendable {
+    public let differenceWand: ImageWand
+    public let distortion: Double
+
+    public init(differenceWand: ImageWand, distortion: Double) {
+        self.differenceWand = differenceWand
+        self.distortion = distortion
+    }
+}
+
 // MARK: - ImageWand
 
 /// RAII wrapper around ImageMagick's `MagickWand*` C pointer.
@@ -13,7 +58,7 @@ import Foundation
 /// **Linked Path Rationale:**
 /// Used for low-latency operations invoked repeatedly during user sessions (thumbnails,
 /// live parameter previews, interactive canvas rendering, and batch progress).
-public final class ImageWand: Identifiable {
+public final class ImageWand: Identifiable, @unchecked Sendable {
     public let id = UUID()
     public let pointer: OpaquePointer
 
@@ -306,6 +351,146 @@ public final class ImageWand: Identifiable {
         let status = MagickTrimImage(self.pointer, fuzz)
         try self.verifyStatus(status, operation: "MagickTrimImage")
         MagickResetImagePage(self.pointer, "0x0+0+0")
+    }
+
+    /// Transforms image into target colorspace (e.g. sRGB, CMYK, Gray, Lab, RGB).
+    public func transformColorspace(to colorspaceName: String) throws {
+        let type: ColorspaceType
+        switch colorspaceName.uppercased() {
+        case "CMYK":
+            type = CMYKColorspace
+        case "GRAY", "GRAYSCALE":
+            type = GRAYColorspace
+        case "LAB":
+            type = LabColorspace
+        case "RGB":
+            type = RGBColorspace
+        default:
+            type = sRGBColorspace
+        }
+        let status = MagickTransformImageColorspace(self.pointer, type)
+        try self.verifyStatus(status, operation: "MagickTransformImageColorspace (\(colorspaceName))")
+    }
+
+    /// Sets the color depth of the image (e.g. 8, 16 bit).
+    public func setDepth(_ depth: Int) throws {
+        let validDepth = max(1, min(64, depth))
+        let status = MagickSetImageDepth(self.pointer, size_t(validDepth))
+        try self.verifyStatus(status, operation: "MagickSetImageDepth (\(depth))")
+    }
+
+    /// Reduces the image palette to a given number of colors (e.g. 256, 128, 64, 32, 16) with Floyd-Steinberg dithering.
+    public func quantize(numberColors: Int, dither: Bool = true) throws {
+        guard numberColors > 0 else { return }
+        let ditherMethod = dither ? FloydSteinbergDitherMethod : NoDitherMethod
+        let status = MagickQuantizeImage(
+            self.pointer,
+            size_t(numberColors),
+            sRGBColorspace,
+            0,
+            ditherMethod,
+            MagickFalse
+        )
+        try self.verifyStatus(status, operation: "MagickQuantizeImage (\(numberColors))")
+    }
+
+    /// Adds a uniform solid border around the image with the specified width, height, and color.
+    public func addBorder(width: Int, height: Int, color: String = "black") throws {
+        guard width > 0 || height > 0 else { return }
+        let pixel = try PixelWandWrapper(color: color)
+        let status = MagickBorderImage(self.pointer, pixel.pointer, size_t(max(0, width)), size_t(max(0, height)), OverCompositeOp)
+        try self.verifyStatus(status, operation: "MagickBorderImage (\(width)x\(height), \(color))")
+    }
+
+    /// Adds an ornamental 3D beveled frame around the image with bevel offsets and matte color.
+    public func addFrame(width: Int, height: Int, innerBevel: Int = 2, outerBevel: Int = 2, color: String = "#808080") throws {
+        guard width > 0 || height > 0 else { return }
+        let pixel = try PixelWandWrapper(color: color)
+        let status = MagickFrameImage(
+            self.pointer,
+            pixel.pointer,
+            size_t(max(0, width)),
+            size_t(max(0, height)),
+            ssize_t(innerBevel),
+            ssize_t(outerBevel),
+            OverCompositeOp
+        )
+        try self.verifyStatus(status, operation: "MagickFrameImage (\(width)x\(height), \(color))")
+    }
+
+    // MARK: - Artistic & Stylize Filters (Paket C)
+
+    /// Applies an oil painting effect to the image using a circular neighborhood.
+    public func oilPaint(radius: Double, sigma: Double = 1.0) throws {
+        guard radius > 0.0 else { return }
+        let status = MagickOilPaintImage(self.pointer, radius, sigma)
+        try self.verifyStatus(status, operation: "MagickOilPaintImage (radius: \(radius))")
+    }
+
+    /// Simulates a charcoal drawing on the image.
+    public func charcoal(radius: Double, sigma: Double = 1.0) throws {
+        guard radius > 0.0 else { return }
+        let status = MagickCharcoalImage(self.pointer, radius, sigma)
+        try self.verifyStatus(status, operation: "MagickCharcoalImage (radius: \(radius))")
+    }
+
+    /// Simulates a pencil sketch effect with given angle.
+    public func sketch(radius: Double, sigma: Double = 1.0, angle: Double = 45.0) throws {
+        guard radius > 0.0 else { return }
+        let status = MagickSketchImage(self.pointer, radius, sigma, angle)
+        try self.verifyStatus(status, operation: "MagickSketchImage (radius: \(radius), angle: \(angle))")
+    }
+
+    /// Applies an embossing effect (raised relief) to the image.
+    public func emboss(radius: Double, sigma: Double = 1.0) throws {
+        guard radius > 0.0 else { return }
+        let status = MagickEmbossImage(self.pointer, radius, sigma)
+        try self.verifyStatus(status, operation: "MagickEmbossImage (radius: \(radius))")
+    }
+
+    /// Enhances edges within the image with a given radius.
+    public func edge(radius: Double) throws {
+        guard radius > 0.0 else { return }
+        let status = MagickEdgeImage(self.pointer, radius)
+        try self.verifyStatus(status, operation: "MagickEdgeImage (radius: \(radius))")
+    }
+
+    /// Adds synthetic noise (grain) to the image using the specified noise distribution.
+    public func addNoise(type: MagiqNoiseType, attenuate: Double = 1.0) throws {
+        guard attenuate > 0.0 else { return }
+        let status = MagickAddNoiseImage(self.pointer, type.cType, attenuate)
+        try self.verifyStatus(status, operation: "MagickAddNoiseImage (\(type.rawValue), attenuate: \(attenuate))")
+    }
+
+    // MARK: - Montage & Comparison (Paket D)
+
+    /// Combines this image with another image either horizontally (stackVertical: false) or vertically (stackVertical: true).
+    public func appended(with other: ImageWand, stackVertical: Bool = false) throws -> ImageWand {
+        guard let combined = CloneMagickWand(self.pointer) else {
+            throw MagickError.wandAllocationFailed
+        }
+        defer { DestroyMagickWand(combined) }
+
+        let addStatus = MagickAddImage(combined, other.pointer)
+        guard addStatus == MagickTrue else {
+            throw MagickError.operationFailed(operation: "MagickAddImage", reason: "Failed to add image")
+        }
+
+        MagickResetIterator(combined)
+
+        guard let appendedPtr = MagickAppendImages(combined, stackVertical ? MagickTrue : MagickFalse) else {
+            throw MagickError.operationFailed(operation: "MagickAppendImages", reason: "Failed to append images")
+        }
+        return ImageWand(pointer: appendedPtr)
+    }
+
+    /// Compares this image with another image and generates a difference visual map and distortion score.
+    public func compare(with other: ImageWand, metric: MetricType = MeanAbsoluteErrorMetric) throws -> ComparisonResult {
+        var distortion: Double = 0.0
+        guard let diffPtr = MagickCompareImages(self.pointer, other.pointer, metric, &distortion) else {
+            throw MagickError.operationFailed(operation: "MagickCompareImages", reason: "Failed to compare images")
+        }
+        return ComparisonResult(differenceWand: ImageWand(pointer: diffPtr), distortion: distortion)
     }
 
     // MARK: - Metadata Inspection

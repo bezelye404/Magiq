@@ -103,6 +103,52 @@ public final class SingleDocumentViewModel: ObservableObject {
         didSet { self.onParameterChanged() }
     }
 
+    // MARK: - Border & Framing (Paket B)
+    @Published public var borderWidth: Int = 0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var borderHeight: Int = 0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var borderColor: String = "black" {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var isFrameEnabled: Bool = false {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var frameWidth: Int = 15 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var frameHeight: Int = 15 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var frameColor: String = "#808080" {
+        didSet { self.onParameterChanged() }
+    }
+
+    // MARK: - Artistic & Stylize Filters (Paket C)
+    @Published public var oilPaintRadius: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var charcoalRadius: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var sketchRadius: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var embossRadius: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var edgeRadius: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var noiseAmount: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var noiseType: MagiqNoiseType = .gaussian {
+        didSet { self.onParameterChanged() }
+    }
+
     // MARK: - Sharpness & Blur
     @Published public var sharpen: Double = 0.0 {
         didSet { self.onParameterChanged() }
@@ -136,6 +182,17 @@ public final class SingleDocumentViewModel: ObservableObject {
         didSet { self.onParameterChanged() }
     }
     @Published public var quality: Int = 85 {
+        didSet { self.onParameterChanged() }
+    }
+
+    // MARK: - Colorspace, Depth & Palette Quantization
+    @Published public var targetColorspace: String = "sRGB" {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var bitDepth: Int = 8 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var quantizeColors: Int = 0 {
         didSet { self.onParameterChanged() }
     }
 
@@ -273,6 +330,23 @@ public final class SingleDocumentViewModel: ObservableObject {
                 self.watermarkText = ""
                 self.stripMetadata = false
                 self.quality = 85
+                self.targetColorspace = "sRGB"
+                self.bitDepth = 8
+                self.quantizeColors = 0
+                self.borderWidth = 0
+                self.borderHeight = 0
+                self.borderColor = "black"
+                self.isFrameEnabled = false
+                self.frameWidth = 15
+                self.frameHeight = 15
+                self.frameColor = "#808080"
+                self.oilPaintRadius = 0.0
+                self.charcoalRadius = 0.0
+                self.sketchRadius = 0.0
+                self.embossRadius = 0.0
+                self.edgeRadius = 0.0
+                self.noiseAmount = 0.0
+                self.noiseType = .gaussian
                 self.isBatchUpdating = false
 
                 // Load initial clean preview
@@ -417,6 +491,34 @@ public final class SingleDocumentViewModel: ObservableObject {
             case .formatConvert(let fmt):
                 self.targetFormat = fmt.format
                 self.quality = fmt.quality
+            case .colorspace(let cs):
+                self.targetColorspace = cs.colorspace
+            case .bitDepth(let bd):
+                self.bitDepth = bd.depth
+            case .quantize(let q):
+                self.quantizeColors = q.numberColors
+            case .border(let b):
+                self.borderWidth = b.width
+                self.borderHeight = b.height
+                self.borderColor = b.color
+            case .frame(let f):
+                self.isFrameEnabled = true
+                self.frameWidth = f.width
+                self.frameHeight = f.height
+                self.frameColor = f.color
+            case .oilPaint(let op):
+                self.oilPaintRadius = op.radius
+            case .charcoal(let op):
+                self.charcoalRadius = op.radius
+            case .sketch(let op):
+                self.sketchRadius = op.radius
+            case .emboss(let op):
+                self.embossRadius = op.radius
+            case .edge(let op):
+                self.edgeRadius = op.radius
+            case .addNoise(let op):
+                self.noiseAmount = op.attenuate
+                self.noiseType = op.noiseType
             }
         }
 
@@ -461,6 +563,23 @@ public final class SingleDocumentViewModel: ObservableObject {
         self.watermarkText = ""
         self.stripMetadata = false
         self.quality = 85
+        self.targetColorspace = "sRGB"
+        self.bitDepth = 8
+        self.quantizeColors = 0
+        self.borderWidth = 0
+        self.borderHeight = 0
+        self.borderColor = "black"
+        self.isFrameEnabled = false
+        self.frameWidth = 15
+        self.frameHeight = 15
+        self.frameColor = "#808080"
+        self.oilPaintRadius = 0.0
+        self.charcoalRadius = 0.0
+        self.sketchRadius = 0.0
+        self.embossRadius = 0.0
+        self.edgeRadius = 0.0
+        self.noiseAmount = 0.0
+        self.noiseType = .gaussian
         self.isBatchUpdating = false
 
         self.scheduleLivePreview()
@@ -570,12 +689,65 @@ public final class SingleDocumentViewModel: ObservableObject {
             )))
         }
 
-        // 13. Strip Metadata
+        // 13. Border
+        if self.borderWidth > 0 || self.borderHeight > 0 {
+            ops.append(.border(BorderOperation(
+                width: self.borderWidth,
+                height: self.borderHeight,
+                color: self.borderColor
+            )))
+        }
+
+        // 14. 3D Frame
+        if self.isFrameEnabled && (self.frameWidth > 0 || self.frameHeight > 0) {
+            ops.append(.frame(FrameOperation(
+                width: self.frameWidth,
+                height: self.frameHeight,
+                color: self.frameColor
+            )))
+        }
+
+        // 15. Artistic & Stylize Filters (Paket C)
+        if self.oilPaintRadius > 0.0 {
+            ops.append(.oilPaint(OilPaintOperation(radius: self.oilPaintRadius)))
+        }
+        if self.charcoalRadius > 0.0 {
+            ops.append(.charcoal(CharcoalOperation(radius: self.charcoalRadius)))
+        }
+        if self.sketchRadius > 0.0 {
+            ops.append(.sketch(SketchOperation(radius: self.sketchRadius)))
+        }
+        if self.embossRadius > 0.0 {
+            ops.append(.emboss(EmbossOperation(radius: self.embossRadius)))
+        }
+        if self.edgeRadius > 0.0 {
+            ops.append(.edge(EdgeDetectOperation(radius: self.edgeRadius)))
+        }
+        if self.noiseAmount > 0.0 {
+            ops.append(.addNoise(AddNoiseOperation(noiseType: self.noiseType, attenuate: self.noiseAmount)))
+        }
+
+        // 16. Colorspace Conversion
+        if self.targetColorspace.uppercased() != "SRGB" {
+            ops.append(.colorspace(ColorspaceOperation(colorspace: self.targetColorspace)))
+        }
+
+        // 17. Bit Depth
+        if self.bitDepth != 8 {
+            ops.append(.bitDepth(BitDepthOperation(depth: self.bitDepth)))
+        }
+
+        // 18. Palette Quantization
+        if self.quantizeColors > 0 {
+            ops.append(.quantize(QuantizeOperation(numberColors: self.quantizeColors)))
+        }
+
+        // 19. Strip Metadata
         if self.stripMetadata {
             ops.append(.stripMetadata(StripMetadataOperation(enabled: true)))
         }
 
-        // 14. Format & Quality
+        // 20. Format & Quality
         ops.append(.formatConvert(FormatConvertOperation(format: self.targetFormat, quality: self.quality)))
 
         return ops

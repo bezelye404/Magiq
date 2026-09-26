@@ -29,12 +29,16 @@ public struct PresetsView: View {
 
     private var selectedPresetBinding: Binding<Preset>? {
         guard let id = self.selectedPresetID,
-              let index = self.store.presets.firstIndex(where: { $0.id == id }) else {
+              let currentPreset = self.store.presets.first(where: { $0.id == id }) else {
             return nil
         }
         return Binding(
-            get: { self.store.presets[index] },
-            set: { self.store.save(preset: $0) }
+            get: {
+                self.store.presets.first(where: { $0.id == id }) ?? currentPreset
+            },
+            set: { updated in
+                self.store.save(preset: updated)
+            }
         )
     }
 
@@ -141,6 +145,11 @@ public struct PresetsView: View {
         .onAppear {
             if self.selectedPresetID == nil {
                 self.selectedPresetID = self.store.presets.first?.id
+            }
+        }
+        .onChange(of: self.store.presets) { _, newPresets in
+            if let current = self.selectedPresetID, !newPresets.contains(where: { $0.id == current }) {
+                self.selectedPresetID = newPresets.first?.id
             }
         }
     }
@@ -334,7 +343,11 @@ private struct PresetDetailView: View {
                                     Spacer()
 
                                     if !self.preset.isBuiltIn {
-                                        Button(action: { self.preset.operations.remove(at: index) }) {
+                                        Button(action: {
+                                            if let opIdx = self.preset.operations.firstIndex(where: { $0.id == op.id }) {
+                                                self.preset.operations.remove(at: opIdx)
+                                            }
+                                        }) {
                                             Image(systemName: "trash")
                                                 .font(.caption)
                                                 .foregroundStyle(.red.opacity(0.8))

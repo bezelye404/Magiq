@@ -447,6 +447,344 @@ public struct TrimOperation: ImageOperation, Equatable {
     }
 }
 
+// MARK: - Colorspace Conversion Operation
+
+public struct ColorspaceOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Color Space (\(self.colorspace))" }
+    public var colorspace: String // "sRGB", "CMYK", "Gray", "Lab", "RGB"
+
+    public init(id: UUID = UUID(), colorspace: String = "sRGB") {
+        self.id = id
+        self.colorspace = colorspace
+    }
+
+    public var isIdentity: Bool {
+        return self.colorspace.uppercased() == "SRGB"
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.transformColorspace(to: self.colorspace)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-colorspace", self.colorspace]
+    }
+}
+
+// MARK: - Bit Depth Operation
+
+public struct BitDepthOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Bit Depth (\(self.depth)-bit)" }
+    public var depth: Int // 8, 16
+
+    public init(id: UUID = UUID(), depth: Int = 8) {
+        self.id = id
+        self.depth = depth
+    }
+
+    public var isIdentity: Bool {
+        return self.depth == 8
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.setDepth(self.depth)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-depth", "\(self.depth)"]
+    }
+}
+
+// MARK: - Palette Quantization Operation
+
+public struct QuantizeOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Quantize (\(self.numberColors) colors)" }
+    public var numberColors: Int
+    public var dither: Bool
+
+    public init(id: UUID = UUID(), numberColors: Int = 256, dither: Bool = true) {
+        self.id = id
+        self.numberColors = max(2, min(256, numberColors))
+        self.dither = dither
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard self.numberColors > 0 else { return }
+        try wand.quantize(numberColors: self.numberColors, dither: self.dither)
+    }
+
+    public var cliArguments: [String] {
+        guard self.numberColors > 0 else { return [] }
+        var args = ["-colors", "\(self.numberColors)"]
+        if self.dither {
+            args.append(contentsOf: ["-dither", "FloydSteinberg"])
+        } else {
+            args.append(contentsOf: ["+dither"])
+        }
+        return args
+    }
+}
+
+// MARK: - Border Operation
+
+public struct BorderOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Border (\(self.width)x\(self.height))" }
+    public var width: Int
+    public var height: Int
+    public var color: String
+
+    public init(id: UUID = UUID(), width: Int = 10, height: Int = 10, color: String = "black") {
+        self.id = id
+        self.width = max(0, width)
+        self.height = max(0, height)
+        self.color = color
+    }
+
+    public var isIdentity: Bool {
+        return self.width == 0 && self.height == 0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.addBorder(width: self.width, height: self.height, color: self.color)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-bordercolor", self.color, "-border", "\(self.width)x\(self.height)"]
+    }
+}
+
+// MARK: - 3D Frame Operation
+
+public struct FrameOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Frame (\(self.width)x\(self.height))" }
+    public var width: Int
+    public var height: Int
+    public var innerBevel: Int
+    public var outerBevel: Int
+    public var color: String
+
+    public init(
+        id: UUID = UUID(),
+        width: Int = 15,
+        height: Int = 15,
+        innerBevel: Int = 2,
+        outerBevel: Int = 2,
+        color: String = "#808080"
+    ) {
+        self.id = id
+        self.width = max(0, width)
+        self.height = max(0, height)
+        self.innerBevel = max(0, innerBevel)
+        self.outerBevel = max(0, outerBevel)
+        self.color = color
+    }
+
+    public var isIdentity: Bool {
+        return self.width == 0 && self.height == 0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.addFrame(
+            width: self.width,
+            height: self.height,
+            innerBevel: self.innerBevel,
+            outerBevel: self.outerBevel,
+            color: self.color
+        )
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-mattecolor", self.color, "-frame", "\(self.width)x\(self.height)+\(self.innerBevel)+\(self.outerBevel)"]
+    }
+}
+
+// MARK: - Oil Paint Operation (Paket C)
+
+public struct OilPaintOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Oil Paint (\(String(format: "%.1f", self.radius)))" }
+    public var radius: Double
+    public var sigma: Double
+
+    public init(id: UUID = UUID(), radius: Double = 0.0, sigma: Double = 1.0) {
+        self.id = id
+        self.radius = max(0.0, min(20.0, radius))
+        self.sigma = max(0.1, min(10.0, sigma))
+    }
+
+    public var isIdentity: Bool {
+        return self.radius == 0.0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.oilPaint(radius: self.radius, sigma: self.sigma)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-paint", String(format: "%.1f", self.radius)]
+    }
+}
+
+// MARK: - Charcoal Operation (Paket C)
+
+public struct CharcoalOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Charcoal (\(String(format: "%.1f", self.radius)))" }
+    public var radius: Double
+    public var sigma: Double
+
+    public init(id: UUID = UUID(), radius: Double = 0.0, sigma: Double = 1.0) {
+        self.id = id
+        self.radius = max(0.0, min(20.0, radius))
+        self.sigma = max(0.1, min(10.0, sigma))
+    }
+
+    public var isIdentity: Bool {
+        return self.radius == 0.0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.charcoal(radius: self.radius, sigma: self.sigma)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-charcoal", "\(String(format: "%.1f", self.radius))x\(String(format: "%.1f", self.sigma))"]
+    }
+}
+
+// MARK: - Sketch Operation (Paket C)
+
+public struct SketchOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Sketch (\(String(format: "%.1f", self.radius)))" }
+    public var radius: Double
+    public var sigma: Double
+    public var angle: Double
+
+    public init(id: UUID = UUID(), radius: Double = 0.0, sigma: Double = 1.0, angle: Double = 45.0) {
+        self.id = id
+        self.radius = max(0.0, min(20.0, radius))
+        self.sigma = max(0.1, min(10.0, sigma))
+        self.angle = angle
+    }
+
+    public var isIdentity: Bool {
+        return self.radius == 0.0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.sketch(radius: self.radius, sigma: self.sigma, angle: self.angle)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-sketch", "\(String(format: "%.1f", self.radius))x\(String(format: "%.1f", self.sigma))+\(String(format: "%.0f", self.angle))"]
+    }
+}
+
+// MARK: - Emboss Operation (Paket C)
+
+public struct EmbossOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Emboss (\(String(format: "%.1f", self.radius)))" }
+    public var radius: Double
+    public var sigma: Double
+
+    public init(id: UUID = UUID(), radius: Double = 0.0, sigma: Double = 1.0) {
+        self.id = id
+        self.radius = max(0.0, min(20.0, radius))
+        self.sigma = max(0.1, min(10.0, sigma))
+    }
+
+    public var isIdentity: Bool {
+        return self.radius == 0.0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.emboss(radius: self.radius, sigma: self.sigma)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-emboss", "\(String(format: "%.1f", self.radius))x\(String(format: "%.1f", self.sigma))"]
+    }
+}
+
+// MARK: - Edge Detect Operation (Paket C)
+
+public struct EdgeDetectOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Edge Detect (\(String(format: "%.1f", self.radius)))" }
+    public var radius: Double
+
+    public init(id: UUID = UUID(), radius: Double = 0.0) {
+        self.id = id
+        self.radius = max(0.0, min(20.0, radius))
+    }
+
+    public var isIdentity: Bool {
+        return self.radius == 0.0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.edge(radius: self.radius)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-edge", String(format: "%.1f", self.radius)]
+    }
+}
+
+// MARK: - Add Noise Operation (Paket C)
+
+public struct AddNoiseOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Add Noise (\(self.noiseType.rawValue))" }
+    public var noiseType: MagiqNoiseType
+    public var attenuate: Double
+
+    public init(id: UUID = UUID(), noiseType: MagiqNoiseType = .gaussian, attenuate: Double = 0.0) {
+        self.id = id
+        self.noiseType = noiseType
+        self.attenuate = max(0.0, min(10.0, attenuate))
+    }
+
+    public var isIdentity: Bool {
+        return self.attenuate == 0.0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.addNoise(type: self.noiseType, attenuate: self.attenuate)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        return ["-attenuate", String(format: "%.2f", self.attenuate), "+noise", self.noiseType.cliName]
+    }
+}
+
 // MARK: - PipelineOperation Enum (For Presets & History Serialization)
 
 public enum PipelineOperation: ImageOperation, Equatable {
@@ -459,6 +797,17 @@ public enum PipelineOperation: ImageOperation, Equatable {
     case levels(LevelsOperation)
     case artisticTone(ArtisticToneOperation)
     case trim(TrimOperation)
+    case border(BorderOperation)
+    case frame(FrameOperation)
+    case oilPaint(OilPaintOperation)
+    case charcoal(CharcoalOperation)
+    case sketch(SketchOperation)
+    case emboss(EmbossOperation)
+    case edge(EdgeDetectOperation)
+    case addNoise(AddNoiseOperation)
+    case colorspace(ColorspaceOperation)
+    case bitDepth(BitDepthOperation)
+    case quantize(QuantizeOperation)
     case sharpenBlur(SharpenBlurOperation)
     case stripMetadata(StripMetadataOperation)
     case formatConvert(FormatConvertOperation)
@@ -476,6 +825,17 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .levels(let op): return op.id
         case .artisticTone(let op): return op.id
         case .trim(let op): return op.id
+        case .border(let op): return op.id
+        case .frame(let op): return op.id
+        case .oilPaint(let op): return op.id
+        case .charcoal(let op): return op.id
+        case .sketch(let op): return op.id
+        case .emboss(let op): return op.id
+        case .edge(let op): return op.id
+        case .addNoise(let op): return op.id
+        case .colorspace(let op): return op.id
+        case .bitDepth(let op): return op.id
+        case .quantize(let op): return op.id
         case .sharpenBlur(let op): return op.id
         case .stripMetadata(let op): return op.id
         case .formatConvert(let op): return op.id
@@ -495,6 +855,17 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .levels(let op): return op.name
         case .artisticTone(let op): return op.name
         case .trim(let op): return op.name
+        case .border(let op): return op.name
+        case .frame(let op): return op.name
+        case .oilPaint(let op): return op.name
+        case .charcoal(let op): return op.name
+        case .sketch(let op): return op.name
+        case .emboss(let op): return op.name
+        case .edge(let op): return op.name
+        case .addNoise(let op): return op.name
+        case .colorspace(let op): return op.name
+        case .bitDepth(let op): return op.name
+        case .quantize(let op): return op.name
         case .sharpenBlur(let op): return op.name
         case .stripMetadata(let op): return op.name
         case .formatConvert(let op): return op.name
@@ -514,6 +885,17 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .levels(let op): try op.apply(to: wand)
         case .artisticTone(let op): try op.apply(to: wand)
         case .trim(let op): try op.apply(to: wand)
+        case .border(let op): try op.apply(to: wand)
+        case .frame(let op): try op.apply(to: wand)
+        case .oilPaint(let op): try op.apply(to: wand)
+        case .charcoal(let op): try op.apply(to: wand)
+        case .sketch(let op): try op.apply(to: wand)
+        case .emboss(let op): try op.apply(to: wand)
+        case .edge(let op): try op.apply(to: wand)
+        case .addNoise(let op): try op.apply(to: wand)
+        case .colorspace(let op): try op.apply(to: wand)
+        case .bitDepth(let op): try op.apply(to: wand)
+        case .quantize(let op): try op.apply(to: wand)
         case .sharpenBlur(let op): try op.apply(to: wand)
         case .stripMetadata(let op): try op.apply(to: wand)
         case .formatConvert(let op): try op.apply(to: wand)
@@ -533,6 +915,17 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .levels(let op): return op.cliArguments
         case .artisticTone(let op): return op.cliArguments
         case .trim(let op): return op.cliArguments
+        case .border(let op): return op.cliArguments
+        case .frame(let op): return op.cliArguments
+        case .oilPaint(let op): return op.cliArguments
+        case .charcoal(let op): return op.cliArguments
+        case .sketch(let op): return op.cliArguments
+        case .emboss(let op): return op.cliArguments
+        case .edge(let op): return op.cliArguments
+        case .addNoise(let op): return op.cliArguments
+        case .colorspace(let op): return op.cliArguments
+        case .bitDepth(let op): return op.cliArguments
+        case .quantize(let op): return op.cliArguments
         case .sharpenBlur(let op): return op.cliArguments
         case .stripMetadata(let op): return op.cliArguments
         case .formatConvert(let op): return op.cliArguments

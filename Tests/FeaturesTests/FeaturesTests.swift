@@ -325,4 +325,218 @@ final class FeaturesTests: XCTestCase {
         let provider = PreviewProvider()
         XCTAssertNotNil(provider)
     }
+
+    // MARK: - Colorspace, Bit Depth & Quantize Tests
+
+    @MainActor
+    func testColorspaceBitDepthAndQuantizeOperations() throws {
+        let wand = try ImageWand()
+        try wand.createBlank(width: 80, height: 80, background: "coral")
+
+        // 1. Colorspace Transformation
+        let cmykOp = ColorspaceOperation(colorspace: "CMYK")
+        XCTAssertFalse(cmykOp.isIdentity)
+        XCTAssertEqual(cmykOp.cliArguments, ["-colorspace", "CMYK"])
+        try cmykOp.apply(to: wand)
+        XCTAssertEqual(wand.colorspace, "CMYK")
+
+        let srgbOp = ColorspaceOperation(colorspace: "sRGB")
+        XCTAssertTrue(srgbOp.isIdentity)
+        XCTAssertTrue(srgbOp.cliArguments.isEmpty)
+
+        // 2. Bit Depth
+        let depth16Op = BitDepthOperation(depth: 16)
+        XCTAssertFalse(depth16Op.isIdentity)
+        XCTAssertEqual(depth16Op.cliArguments, ["-depth", "16"])
+        try depth16Op.apply(to: wand)
+        XCTAssertEqual(wand.depth, 16)
+
+        let depth8Op = BitDepthOperation(depth: 8)
+        XCTAssertTrue(depth8Op.isIdentity)
+
+        // 3. Palette Quantization
+        let quantOp = QuantizeOperation(numberColors: 32, dither: true)
+        XCTAssertEqual(quantOp.numberColors, 32)
+        XCTAssertEqual(quantOp.cliArguments, ["-colors", "32", "-dither", "FloydSteinberg"])
+        try quantOp.apply(to: wand)
+
+        // 4. ViewModel Integration
+        let vm = SingleDocumentViewModel()
+        XCTAssertEqual(vm.targetColorspace, "sRGB")
+        XCTAssertEqual(vm.bitDepth, 8)
+        XCTAssertEqual(vm.quantizeColors, 0)
+
+        vm.targetColorspace = "CMYK"
+        vm.bitDepth = 16
+        vm.quantizeColors = 64
+
+        let ops = vm.buildPipelineOperations()
+        XCTAssertTrue(ops.contains(where: { if case .colorspace(let op) = $0 { return op.colorspace == "CMYK" }; return false }))
+        XCTAssertTrue(ops.contains(where: { if case .bitDepth(let op) = $0 { return op.depth == 16 }; return false }))
+        XCTAssertTrue(ops.contains(where: { if case .quantize(let op) = $0 { return op.numberColors == 64 }; return false }))
+
+        vm.resetParameters()
+        XCTAssertEqual(vm.targetColorspace, "sRGB")
+        XCTAssertEqual(vm.bitDepth, 8)
+        XCTAssertEqual(vm.quantizeColors, 0)
+    }
+
+    @MainActor
+    func testBorderAndFrameOperations() throws {
+        let wand = try ImageWand()
+        try wand.createBlank(width: 100, height: 100, background: "blue")
+        XCTAssertEqual(wand.width, 100)
+        XCTAssertEqual(wand.height, 100)
+
+        // 1. Border
+        let borderOp = BorderOperation(width: 10, height: 10, color: "black")
+        XCTAssertFalse(borderOp.isIdentity)
+        XCTAssertEqual(borderOp.cliArguments, ["-bordercolor", "black", "-border", "10x10"])
+        try borderOp.apply(to: wand)
+        // With 10px on each side (left/right, top/bottom), width increases by 20, height by 20
+        XCTAssertEqual(wand.width, 120)
+        XCTAssertEqual(wand.height, 120)
+
+        let identityBorder = BorderOperation(width: 0, height: 0, color: "black")
+        XCTAssertTrue(identityBorder.isIdentity)
+        XCTAssertTrue(identityBorder.cliArguments.isEmpty)
+
+        // 2. 3D Beveled Frame
+        let frameOp = FrameOperation(width: 15, height: 15, innerBevel: 2, outerBevel: 2, color: "#808080")
+        XCTAssertFalse(frameOp.isIdentity)
+        XCTAssertEqual(frameOp.cliArguments, ["-mattecolor", "#808080", "-frame", "15x15+2+2"])
+        try frameOp.apply(to: wand)
+        // With 15px frame on each side, width increases by 30, height by 30
+        XCTAssertEqual(wand.width, 150)
+        XCTAssertEqual(wand.height, 150)
+
+        // 3. ViewModel Integration
+        let vm = SingleDocumentViewModel()
+        XCTAssertEqual(vm.borderWidth, 0)
+        XCTAssertEqual(vm.borderHeight, 0)
+        XCTAssertFalse(vm.isFrameEnabled)
+
+        vm.borderWidth = 12
+        vm.borderHeight = 12
+        vm.borderColor = "white"
+        vm.isFrameEnabled = true
+        vm.frameWidth = 20
+        vm.frameHeight = 20
+        vm.frameColor = "gold"
+
+        let ops = vm.buildPipelineOperations()
+        XCTAssertTrue(ops.contains(where: {
+            if case .border(let op) = $0 {
+                return op.width == 12 && op.height == 12 && op.color == "white"
+            }
+            return false
+        }))
+        XCTAssertTrue(ops.contains(where: {
+            if case .frame(let op) = $0 {
+                return op.width == 20 && op.height == 20 && op.color == "gold"
+            }
+            return false
+        }))
+
+        vm.resetParameters()
+        XCTAssertEqual(vm.borderWidth, 0)
+        XCTAssertEqual(vm.borderHeight, 0)
+        XCTAssertFalse(vm.isFrameEnabled)
+    }
+
+    @MainActor
+    func testArtisticAndStylizeFilters() throws {
+        let wand = try ImageWand()
+        try wand.createBlank(width: 80, height: 80, background: "green")
+
+        // 1. Oil Paint
+        let oilOp = OilPaintOperation(radius: 3.0)
+        XCTAssertFalse(oilOp.isIdentity)
+        XCTAssertEqual(oilOp.cliArguments, ["-paint", "3.0"])
+        try oilOp.apply(to: wand)
+
+        // 2. Charcoal
+        let charcoalOp = CharcoalOperation(radius: 2.0, sigma: 1.0)
+        XCTAssertFalse(charcoalOp.isIdentity)
+        XCTAssertEqual(charcoalOp.cliArguments, ["-charcoal", "2.0x1.0"])
+        try charcoalOp.apply(to: wand)
+
+        // 3. Sketch
+        let sketchOp = SketchOperation(radius: 2.0, sigma: 1.0, angle: 45.0)
+        XCTAssertFalse(sketchOp.isIdentity)
+        XCTAssertEqual(sketchOp.cliArguments, ["-sketch", "2.0x1.0+45"])
+        try sketchOp.apply(to: wand)
+
+        // 4. Emboss
+        let embossOp = EmbossOperation(radius: 1.5, sigma: 1.0)
+        XCTAssertFalse(embossOp.isIdentity)
+        XCTAssertEqual(embossOp.cliArguments, ["-emboss", "1.5x1.0"])
+        try embossOp.apply(to: wand)
+
+        // 5. Edge Detect
+        let edgeOp = EdgeDetectOperation(radius: 2.0)
+        XCTAssertFalse(edgeOp.isIdentity)
+        XCTAssertEqual(edgeOp.cliArguments, ["-edge", "2.0"])
+        try edgeOp.apply(to: wand)
+
+        // 6. Add Noise
+        let noiseOp = AddNoiseOperation(noiseType: .gaussian, attenuate: 1.5)
+        XCTAssertFalse(noiseOp.isIdentity)
+        XCTAssertEqual(noiseOp.cliArguments, ["-attenuate", "1.50", "+noise", "Gaussian"])
+        try noiseOp.apply(to: wand)
+
+        // 7. ViewModel Integration
+        let vm = SingleDocumentViewModel()
+        vm.oilPaintRadius = 4.0
+        vm.charcoalRadius = 3.0
+        vm.sketchRadius = 2.0
+        vm.embossRadius = 1.0
+        vm.edgeRadius = 2.5
+        vm.noiseAmount = 1.2
+        vm.noiseType = .uniform
+
+        let ops = vm.buildPipelineOperations()
+        XCTAssertTrue(ops.contains(where: { if case .oilPaint(let op) = $0 { return op.radius == 4.0 }; return false }))
+        XCTAssertTrue(ops.contains(where: { if case .charcoal(let op) = $0 { return op.radius == 3.0 }; return false }))
+        XCTAssertTrue(ops.contains(where: { if case .sketch(let op) = $0 { return op.radius == 2.0 }; return false }))
+        XCTAssertTrue(ops.contains(where: { if case .emboss(let op) = $0 { return op.radius == 1.0 }; return false }))
+        XCTAssertTrue(ops.contains(where: { if case .edge(let op) = $0 { return op.radius == 2.5 }; return false }))
+        XCTAssertTrue(ops.contains(where: { if case .addNoise(let op) = $0 { return op.attenuate == 1.2 && op.noiseType == .uniform }; return false }))
+
+        vm.resetParameters()
+        XCTAssertEqual(vm.oilPaintRadius, 0.0)
+        XCTAssertEqual(vm.charcoalRadius, 0.0)
+        XCTAssertEqual(vm.sketchRadius, 0.0)
+        XCTAssertEqual(vm.embossRadius, 0.0)
+        XCTAssertEqual(vm.edgeRadius, 0.0)
+        XCTAssertEqual(vm.noiseAmount, 0.0)
+    }
+
+    func testMontageAndCompareOperations() throws {
+        let wandA = try ImageWand()
+        try wandA.createBlank(width: 50, height: 50, background: "red")
+
+        let wandB = try ImageWand()
+        try wandB.createBlank(width: 50, height: 50, background: "blue")
+
+        // 1. Horizontal Append (Side by side)
+        let horizAppended = try wandA.appended(with: wandB, stackVertical: false)
+        XCTAssertEqual(horizAppended.width, 100)
+        XCTAssertEqual(horizAppended.height, 50)
+
+        // 2. Vertical Append (Stacked)
+        let vertAppended = try wandA.appended(with: wandB, stackVertical: true)
+        XCTAssertEqual(vertAppended.width, 50)
+        XCTAssertEqual(vertAppended.height, 100)
+
+        // 3. Image Compare (Diff)
+        let compareResult = try wandA.compare(with: wandB)
+        XCTAssertNotNil(compareResult.differenceWand)
+        XCTAssertGreaterThan(compareResult.distortion, 0.0)
+
+        // Compare identical images
+        let identicalCompare = try wandA.compare(with: wandA)
+        XCTAssertEqual(identicalCompare.distortion, 0.0, accuracy: 0.001)
+    }
 }
+

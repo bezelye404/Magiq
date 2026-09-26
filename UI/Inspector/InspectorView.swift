@@ -36,6 +36,23 @@ public struct InspectorView: View {
     @Binding var stripMetadata: Bool
     @Binding var targetFormat: String
     @Binding var quality: Int
+    @Binding var targetColorspace: String
+    @Binding var bitDepth: Int
+    @Binding var quantizeColors: Int
+    @Binding var borderWidth: Int
+    @Binding var borderHeight: Int
+    @Binding var borderColor: String
+    @Binding var isFrameEnabled: Bool
+    @Binding var frameWidth: Int
+    @Binding var frameHeight: Int
+    @Binding var frameColor: String
+    @Binding var oilPaintRadius: Double
+    @Binding var charcoalRadius: Double
+    @Binding var sketchRadius: Double
+    @Binding var embossRadius: Double
+    @Binding var edgeRadius: Double
+    @Binding var noiseAmount: Double
+    @Binding var noiseType: MagiqNoiseType
     @Binding var isCropping: Bool
 
     let histogramData: HistogramData?
@@ -81,6 +98,23 @@ public struct InspectorView: View {
         stripMetadata: Binding<Bool>,
         targetFormat: Binding<String>,
         quality: Binding<Int>,
+        targetColorspace: Binding<String> = .constant("sRGB"),
+        bitDepth: Binding<Int> = .constant(8),
+        quantizeColors: Binding<Int> = .constant(0),
+        borderWidth: Binding<Int> = .constant(0),
+        borderHeight: Binding<Int> = .constant(0),
+        borderColor: Binding<String> = .constant("black"),
+        isFrameEnabled: Binding<Bool> = .constant(false),
+        frameWidth: Binding<Int> = .constant(15),
+        frameHeight: Binding<Int> = .constant(15),
+        frameColor: Binding<String> = .constant("#808080"),
+        oilPaintRadius: Binding<Double> = .constant(0.0),
+        charcoalRadius: Binding<Double> = .constant(0.0),
+        sketchRadius: Binding<Double> = .constant(0.0),
+        embossRadius: Binding<Double> = .constant(0.0),
+        edgeRadius: Binding<Double> = .constant(0.0),
+        noiseAmount: Binding<Double> = .constant(0.0),
+        noiseType: Binding<MagiqNoiseType> = .constant(.gaussian),
         isCropping: Binding<Bool>,
         histogramData: HistogramData? = nil,
         metadata: ImageMetadata? = nil,
@@ -119,6 +153,23 @@ public struct InspectorView: View {
         self._stripMetadata = stripMetadata
         self._targetFormat = targetFormat
         self._quality = quality
+        self._targetColorspace = targetColorspace
+        self._bitDepth = bitDepth
+        self._quantizeColors = quantizeColors
+        self._borderWidth = borderWidth
+        self._borderHeight = borderHeight
+        self._borderColor = borderColor
+        self._isFrameEnabled = isFrameEnabled
+        self._frameWidth = frameWidth
+        self._frameHeight = frameHeight
+        self._frameColor = frameColor
+        self._oilPaintRadius = oilPaintRadius
+        self._charcoalRadius = charcoalRadius
+        self._sketchRadius = sketchRadius
+        self._embossRadius = embossRadius
+        self._edgeRadius = edgeRadius
+        self._noiseAmount = noiseAmount
+        self._noiseType = noiseType
         self._isCropping = isCropping
         self.histogramData = histogramData
         self.metadata = metadata
@@ -659,6 +710,291 @@ public struct InspectorView: View {
                         .font(.headline)
                 }
 
+                // MARK: - Border & Frame (Paket B)
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 10) {
+                        // Border Controls
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text("Border Width")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+
+                                if self.borderWidth > 0 || self.borderHeight > 0 {
+                                    Button(action: {
+                                        self.borderWidth = 0
+                                        self.borderHeight = 0
+                                    }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset border to 0")
+                                }
+
+                                Spacer()
+                                Text("\(self.borderWidth) px")
+                                    .font(.caption.monospacedDigit())
+                            }
+                            Slider(
+                                value: Binding(
+                                    get: { Double(self.borderWidth) },
+                                    set: {
+                                        self.borderWidth = Int($0)
+                                        self.borderHeight = Int($0)
+                                    }
+                                ),
+                                in: 0...100,
+                                step: 1
+                            )
+
+                            HStack {
+                                Text("Border Color")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Picker("Border Color", selection: self.$borderColor) {
+                                    Text("Black").tag("black")
+                                    Text("White").tag("white")
+                                    Text("Gray").tag("#808080")
+                                    Text("Silver").tag("#c0c0c0")
+                                    Text("Gold").tag("#d4af37")
+                                    Text("Charcoal").tag("#222222")
+                                }
+                                .labelsHidden()
+                                .pickerStyle(.menu)
+                                .frame(width: 110)
+                            }
+                        }
+
+                        Divider()
+
+                        // 3D Frame Controls
+                        VStack(alignment: .leading, spacing: 6) {
+                            Toggle("3D Beveled Frame", isOn: self.$isFrameEnabled)
+                                .font(.subheadline)
+
+                            if self.isFrameEnabled {
+                                HStack {
+                                    Text("Frame Size")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+
+                                    if self.frameWidth != 15 || self.frameHeight != 15 {
+                                        Button(action: {
+                                            self.frameWidth = 15
+                                            self.frameHeight = 15
+                                        }) {
+                                            Image(systemName: "arrow.counterclockwise")
+                                                .font(.caption2)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .help("Reset frame size to 15px")
+                                    }
+
+                                    Spacer()
+                                    Text("\(self.frameWidth) px")
+                                        .font(.caption.monospacedDigit())
+                                }
+                                Slider(
+                                    value: Binding(
+                                        get: { Double(self.frameWidth) },
+                                        set: {
+                                            self.frameWidth = Int($0)
+                                            self.frameHeight = Int($0)
+                                        }
+                                    ),
+                                    in: 2...60,
+                                    step: 1
+                                )
+
+                                HStack {
+                                    Text("Mat Color")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    Picker("Frame Color", selection: self.$frameColor) {
+                                        Text("Classic Gray").tag("#808080")
+                                        Text("Matte Black").tag("#222222")
+                                        Text("Pure White").tag("white")
+                                        Text("Gold Leaf").tag("#d4af37")
+                                        Text("Warm Wood").tag("#8b5a2b")
+                                    }
+                                    .labelsHidden()
+                                    .pickerStyle(.menu)
+                                    .frame(width: 110)
+                                }
+                            }
+                        }
+                    }
+                    .padding(8)
+                } label: {
+                    Label("Border & Frame", systemImage: "photo.artframe")
+                        .font(.headline)
+                }
+
+                // MARK: - Artistic & Stylize Filters (Paket C)
+                GroupBox {
+                    VStack(alignment: .leading, spacing: 10) {
+                        // Oil Paint
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text("Oil Paint")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                if self.oilPaintRadius > 0.0 {
+                                    Button(action: { self.oilPaintRadius = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset oil paint")
+                                }
+                                Spacer()
+                                Text(String(format: "%.1f", self.oilPaintRadius))
+                                    .font(.caption.monospacedDigit())
+                            }
+                            Slider(value: self.$oilPaintRadius, in: 0...10, step: 0.5)
+                        }
+
+                        // Charcoal
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text("Charcoal")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                if self.charcoalRadius > 0.0 {
+                                    Button(action: { self.charcoalRadius = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset charcoal")
+                                }
+                                Spacer()
+                                Text(String(format: "%.1f", self.charcoalRadius))
+                                    .font(.caption.monospacedDigit())
+                            }
+                            Slider(value: self.$charcoalRadius, in: 0...10, step: 0.5)
+                        }
+
+                        // Sketch
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text("Sketch")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                if self.sketchRadius > 0.0 {
+                                    Button(action: { self.sketchRadius = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset sketch")
+                                }
+                                Spacer()
+                                Text(String(format: "%.1f", self.sketchRadius))
+                                    .font(.caption.monospacedDigit())
+                            }
+                            Slider(value: self.$sketchRadius, in: 0...10, step: 0.5)
+                        }
+
+                        // Emboss
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text("Emboss")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                if self.embossRadius > 0.0 {
+                                    Button(action: { self.embossRadius = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset emboss")
+                                }
+                                Spacer()
+                                Text(String(format: "%.1f", self.embossRadius))
+                                    .font(.caption.monospacedDigit())
+                            }
+                            Slider(value: self.$embossRadius, in: 0...10, step: 0.5)
+                        }
+
+                        // Edge Detect
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text("Edge Detect")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                if self.edgeRadius > 0.0 {
+                                    Button(action: { self.edgeRadius = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset edge detect")
+                                }
+                                Spacer()
+                                Text(String(format: "%.1f", self.edgeRadius))
+                                    .font(.caption.monospacedDigit())
+                            }
+                            Slider(value: self.$edgeRadius, in: 0...10, step: 0.5)
+                        }
+
+                        Divider()
+
+                        // Add Synthetic Noise (Grain)
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text("Add Film Noise")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                if self.noiseAmount > 0.0 {
+                                    Button(action: { self.noiseAmount = 0.0 }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Remove added noise")
+                                }
+                                Spacer()
+                                Text(String(format: "%.1f", self.noiseAmount))
+                                    .font(.caption.monospacedDigit())
+                            }
+                            Slider(value: self.$noiseAmount, in: 0...5, step: 0.2)
+
+                            if self.noiseAmount > 0.0 {
+                                HStack {
+                                    Text("Distribution")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    Picker("Distribution", selection: self.$noiseType) {
+                                        ForEach(MagiqNoiseType.allCases) { type in
+                                            Text(type.rawValue).tag(type)
+                                        }
+                                    }
+                                    .labelsHidden()
+                                    .pickerStyle(.menu)
+                                    .frame(minWidth: 120)
+                                }
+                            }
+                        }
+                    }
+                    .padding(8)
+                } label: {
+                    Label("Stylize & Artistic Filters", systemImage: "paintbrush")
+                        .font(.headline)
+                }
+
                 // MARK: - Feature 7: Watermark & Text Stamp
                 GroupBox {
                     VStack(alignment: .leading, spacing: 10) {
@@ -803,6 +1139,96 @@ public struct InspectorView: View {
                                 }
                                 .padding(.top, 4)
                             }
+                        }
+
+                        Divider()
+
+                        // Color Space
+                        HStack {
+                            Text("Color Space")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            if self.targetColorspace != "sRGB" {
+                                Button(action: { self.targetColorspace = "sRGB" }) {
+                                    Image(systemName: "arrow.counterclockwise")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .help("Reset color space to sRGB")
+                            }
+
+                            Spacer()
+
+                            Picker("Color Space", selection: self.$targetColorspace) {
+                                Text("sRGB (Standard)").tag("sRGB")
+                                Text("CMYK (Print)").tag("CMYK")
+                                Text("Grayscale").tag("Gray")
+                                Text("Display P3").tag("Display P3")
+                                Text("CIELAB").tag("Lab")
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.menu)
+                            .frame(minWidth: 110)
+                        }
+
+                        // Bit Depth
+                        HStack {
+                            Text("Bit Depth")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            if self.bitDepth != 8 {
+                                Button(action: { self.bitDepth = 8 }) {
+                                    Image(systemName: "arrow.counterclockwise")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .help("Reset bit depth to 8-bit")
+                            }
+
+                            Spacer()
+
+                            Picker("Bit Depth", selection: self.$bitDepth) {
+                                Text("8-bit (Standard)").tag(8)
+                                Text("16-bit (HDR / RAW)").tag(16)
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.menu)
+                            .frame(minWidth: 110)
+                        }
+
+                        // Palette Quantization (Quantize)
+                        HStack {
+                            Text("Quantize (Palette)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            if self.quantizeColors > 0 {
+                                Button(action: { self.quantizeColors = 0 }) {
+                                    Image(systemName: "arrow.counterclockwise")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .buttonStyle(.plain)
+                                .help("Disable quantization (full colors)")
+                            }
+
+                            Spacer()
+
+                            Picker("Quantize", selection: self.$quantizeColors) {
+                                Text("Unlimited (Full)").tag(0)
+                                Text("256 Colors").tag(256)
+                                Text("128 Colors").tag(128)
+                                Text("64 Colors").tag(64)
+                                Text("32 Colors").tag(32)
+                                Text("16 Colors").tag(16)
+                            }
+                            .labelsHidden()
+                            .pickerStyle(.menu)
+                            .frame(minWidth: 110)
                         }
 
                         Toggle(isOn: self.$stripMetadata) {
