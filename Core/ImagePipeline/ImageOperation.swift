@@ -332,6 +332,121 @@ public struct WatermarkOperation: ImageOperation, Equatable {
     }
 }
 
+// MARK: - Levels & Gamma Operation
+
+public struct LevelsOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Levels & Gamma" }
+    public var blackPoint: Double
+    public var gamma: Double
+    public var whitePoint: Double
+
+    public init(
+        id: UUID = UUID(),
+        blackPoint: Double = 0.0,
+        gamma: Double = 1.0,
+        whitePoint: Double = 255.0
+    ) {
+        self.id = id
+        self.blackPoint = max(0.0, min(255.0, blackPoint))
+        self.gamma = max(0.1, min(5.0, gamma))
+        self.whitePoint = max(0.0, min(255.0, whitePoint))
+    }
+
+    public var isIdentity: Bool {
+        return self.blackPoint == 0.0 && abs(self.gamma - 1.0) < 0.001 && self.whitePoint == 255.0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        guard !self.isIdentity else { return }
+        try wand.level(blackPoint: self.blackPoint, gamma: self.gamma, whitePoint: self.whitePoint)
+    }
+
+    public var cliArguments: [String] {
+        guard !self.isIdentity else { return [] }
+        let bpPercent = String(format: "%.1f%%", (self.blackPoint / 255.0) * 100.0)
+        let wpPercent = String(format: "%.1f%%", (self.whitePoint / 255.0) * 100.0)
+        let gammaStr = String(format: "%.2f", self.gamma)
+        return ["-level", "\(bpPercent),\(wpPercent),\(gammaStr)"]
+    }
+}
+
+// MARK: - Artistic Tone & Special Effects Operation
+
+public struct ArtisticToneOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Tone & Special Effects" }
+    public var sepia: Double
+    public var negate: Bool
+    public var denoise: Double
+
+    public init(
+        id: UUID = UUID(),
+        sepia: Double = 0.0,
+        negate: Bool = false,
+        denoise: Double = 0.0
+    ) {
+        self.id = id
+        self.sepia = max(0.0, min(100.0, sepia))
+        self.negate = negate
+        self.denoise = max(0.0, min(10.0, denoise))
+    }
+
+    public var isIdentity: Bool {
+        return self.sepia == 0.0 && !self.negate && self.denoise == 0.0
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        if self.negate {
+            try wand.negate()
+        }
+        if self.sepia > 0 {
+            try wand.sepiaTone(thresholdPercent: self.sepia)
+        }
+        if self.denoise > 0 {
+            try wand.despeckle()
+        }
+    }
+
+    public var cliArguments: [String] {
+        var args: [String] = []
+        if self.negate {
+            args.append("-negate")
+        }
+        if self.sepia > 0 {
+            args += ["-sepia-tone", "\(Int(self.sepia))%"]
+        }
+        if self.denoise > 0 {
+            args += ["-despeckle"]
+        }
+        return args
+    }
+}
+
+// MARK: - Auto-Trim Operation
+
+public struct TrimOperation: ImageOperation, Equatable {
+    public let id: UUID
+    public var name: String { "Auto-Trim Borders" }
+    public var fuzzPercent: Double
+
+    public init(id: UUID = UUID(), fuzzPercent: Double = 0.0) {
+        self.id = id
+        self.fuzzPercent = max(0.0, min(50.0, fuzzPercent))
+    }
+
+    public func apply(to wand: ImageWand) throws {
+        try wand.trim(fuzzPercent: self.fuzzPercent)
+    }
+
+    public var cliArguments: [String] {
+        if self.fuzzPercent > 0 {
+            return ["-fuzz", "\(Int(self.fuzzPercent))%", "-trim", "+repage"]
+        }
+        return ["-trim", "+repage"]
+    }
+}
+
 // MARK: - PipelineOperation Enum (For Presets & History Serialization)
 
 public enum PipelineOperation: ImageOperation, Equatable {
@@ -341,6 +456,9 @@ public enum PipelineOperation: ImageOperation, Equatable {
     case flipFlop(FlipFlopOperation)
     case colorAdjust(ColorAdjustOperation)
     case autoLevel(AutoLevelOperation)
+    case levels(LevelsOperation)
+    case artisticTone(ArtisticToneOperation)
+    case trim(TrimOperation)
     case sharpenBlur(SharpenBlurOperation)
     case stripMetadata(StripMetadataOperation)
     case formatConvert(FormatConvertOperation)
@@ -355,6 +473,9 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .flipFlop(let op): return op.id
         case .colorAdjust(let op): return op.id
         case .autoLevel(let op): return op.id
+        case .levels(let op): return op.id
+        case .artisticTone(let op): return op.id
+        case .trim(let op): return op.id
         case .sharpenBlur(let op): return op.id
         case .stripMetadata(let op): return op.id
         case .formatConvert(let op): return op.id
@@ -371,6 +492,9 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .flipFlop(let op): return op.name
         case .colorAdjust(let op): return op.name
         case .autoLevel(let op): return op.name
+        case .levels(let op): return op.name
+        case .artisticTone(let op): return op.name
+        case .trim(let op): return op.name
         case .sharpenBlur(let op): return op.name
         case .stripMetadata(let op): return op.name
         case .formatConvert(let op): return op.name
@@ -387,6 +511,9 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .flipFlop(let op): try op.apply(to: wand)
         case .colorAdjust(let op): try op.apply(to: wand)
         case .autoLevel(let op): try op.apply(to: wand)
+        case .levels(let op): try op.apply(to: wand)
+        case .artisticTone(let op): try op.apply(to: wand)
+        case .trim(let op): try op.apply(to: wand)
         case .sharpenBlur(let op): try op.apply(to: wand)
         case .stripMetadata(let op): try op.apply(to: wand)
         case .formatConvert(let op): try op.apply(to: wand)
@@ -403,6 +530,9 @@ public enum PipelineOperation: ImageOperation, Equatable {
         case .flipFlop(let op): return op.cliArguments
         case .colorAdjust(let op): return op.cliArguments
         case .autoLevel(let op): return op.cliArguments
+        case .levels(let op): return op.cliArguments
+        case .artisticTone(let op): return op.cliArguments
+        case .trim(let op): return op.cliArguments
         case .sharpenBlur(let op): return op.cliArguments
         case .stripMetadata(let op): return op.cliArguments
         case .formatConvert(let op): return op.cliArguments

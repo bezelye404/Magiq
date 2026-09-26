@@ -18,4 +18,8 @@
 
 #include <MagickWand/MagickWand.h>
 
+static inline double MagiqQuantumRange(void) {
+    return (double) QuantumRange;
+}
+
 #endif /* MagickWandBridge_h */

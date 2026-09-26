@@ -27,10 +27,11 @@ public final class ImagePipeline: Sendable {
 
     public func generatePreview(
         from url: URL,
+        pageIndex: Int? = nil,
         boundedTo bounds: MagickGeometry = MagickGeometry(width: 800, height: 800),
         operations: [any ImageOperation] = []
     ) async throws -> NSImage {
-        if operations.isEmpty, let cached = self.cache.image(for: url, geometry: bounds) {
+        if operations.isEmpty, let cached = self.cache.image(for: url, pageIndex: pageIndex, geometry: bounds) {
             return cached
         }
 
@@ -39,7 +40,7 @@ public final class ImagePipeline: Sendable {
 
             return try autoreleasepool {
                 let wand = try ImageWand()
-                try wand.readThumbnail(from: url, maxBounds: bounds)
+                try wand.readThumbnail(from: url, pageIndex: pageIndex, maxBounds: bounds)
 
                 for op in operations {
                     try Task.checkCancellation()
@@ -55,7 +56,7 @@ public final class ImagePipeline: Sendable {
                 }
 
                 if operations.isEmpty {
-                    self.cache.insert(rendered, for: url, geometry: bounds)
+                    self.cache.insert(rendered, for: url, pageIndex: pageIndex, geometry: bounds)
                 }
 
                 return rendered
@@ -67,11 +68,18 @@ public final class ImagePipeline: Sendable {
 
     public func export(
         from sourceURL: URL,
+        pageIndex: Int? = nil,
         to destinationURL: URL,
         operations: [any ImageOperation]
     ) async throws -> MagickCLIResult {
         var args = MagickCLIArguments()
-        args.appendInputPath(sourceURL.path)
+        let inputPath: String
+        if let idx = pageIndex, idx >= 0 {
+            inputPath = "\(sourceURL.path)[\(idx)]"
+        } else {
+            inputPath = sourceURL.path
+        }
+        args.appendInputPath(inputPath)
 
         for op in operations {
             for flag in op.cliArguments {

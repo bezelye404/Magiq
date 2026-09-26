@@ -30,13 +30,13 @@ public final class ThumbnailCache: @unchecked Sendable {
         self.cache.totalCostLimit = max(10, megabytes) * 1024 * 1024
     }
 
-    public func image(for url: URL, geometry: MagickGeometry) -> NSImage? {
-        let key = self.cacheKey(for: url, geometry: geometry)
+    public func image(for url: URL, pageIndex: Int? = nil, geometry: MagickGeometry) -> NSImage? {
+        let key = self.cacheKey(for: url, pageIndex: pageIndex, geometry: geometry)
         return self.cache.object(forKey: key as NSString)
     }
 
-    public func insert(_ image: NSImage, for url: URL, geometry: MagickGeometry) {
-        let key = self.cacheKey(for: url, geometry: geometry)
+    public func insert(_ image: NSImage, for url: URL, pageIndex: Int? = nil, geometry: MagickGeometry) {
+        let key = self.cacheKey(for: url, pageIndex: pageIndex, geometry: geometry)
         let cost = geometry.width * geometry.height * 4
         self.cache.setObject(image, forKey: key as NSString, cost: cost)
     }
@@ -45,7 +45,8 @@ public final class ThumbnailCache: @unchecked Sendable {
         self.cache.removeAllObjects()
     }
 
-    private func cacheKey(for url: URL, geometry: MagickGeometry) -> String {
-        return "\(url.path)#\(geometry.cliString)"
+    private func cacheKey(for url: URL, pageIndex: Int?, geometry: MagickGeometry) -> String {
+        let pageSuffix = pageIndex.map { "[\($0)]" } ?? ""
+        return "\(url.path)\(pageSuffix)#\(geometry.cliString)"
     }
 }

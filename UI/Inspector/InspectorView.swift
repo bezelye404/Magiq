@@ -19,6 +19,14 @@ public struct InspectorView: View {
     @Binding var saturation: Double
     @Binding var autoLevel: Bool
     @Binding var filmProfile: FilmProfile
+    @Binding var blackPoint: Double
+    @Binding var gammaPoint: Double
+    @Binding var whitePoint: Double
+    @Binding var sepia: Double
+    @Binding var negate: Bool
+    @Binding var denoise: Double
+    @Binding var isAutoTrimmed: Bool
+    @Binding var trimFuzz: Double
     @Binding var sharpen: Double
     @Binding var blur: Double
     @Binding var watermarkText: String
@@ -31,6 +39,7 @@ public struct InspectorView: View {
     @Binding var isCropping: Bool
 
     let histogramData: HistogramData?
+    let metadata: ImageMetadata?
     let originalWidth: Int?
     let originalHeight: Int?
     let isProcessing: Bool
@@ -55,6 +64,14 @@ public struct InspectorView: View {
         saturation: Binding<Double>,
         autoLevel: Binding<Bool>,
         filmProfile: Binding<FilmProfile>,
+        blackPoint: Binding<Double> = .constant(0.0),
+        gammaPoint: Binding<Double> = .constant(1.0),
+        whitePoint: Binding<Double> = .constant(255.0),
+        sepia: Binding<Double> = .constant(0.0),
+        negate: Binding<Bool> = .constant(false),
+        denoise: Binding<Double> = .constant(0.0),
+        isAutoTrimmed: Binding<Bool> = .constant(false),
+        trimFuzz: Binding<Double> = .constant(5.0),
         sharpen: Binding<Double>,
         blur: Binding<Double>,
         watermarkText: Binding<String>,
@@ -66,6 +83,7 @@ public struct InspectorView: View {
         quality: Binding<Int>,
         isCropping: Binding<Bool>,
         histogramData: HistogramData? = nil,
+        metadata: ImageMetadata? = nil,
         originalWidth: Int? = nil,
         originalHeight: Int? = nil,
         isProcessing: Bool,
@@ -84,6 +102,14 @@ public struct InspectorView: View {
         self._saturation = saturation
         self._autoLevel = autoLevel
         self._filmProfile = filmProfile
+        self._blackPoint = blackPoint
+        self._gammaPoint = gammaPoint
+        self._whitePoint = whitePoint
+        self._sepia = sepia
+        self._negate = negate
+        self._denoise = denoise
+        self._isAutoTrimmed = isAutoTrimmed
+        self._trimFuzz = trimFuzz
         self._sharpen = sharpen
         self._blur = blur
         self._watermarkText = watermarkText
@@ -95,6 +121,7 @@ public struct InspectorView: View {
         self._quality = quality
         self._isCropping = isCropping
         self.histogramData = histogramData
+        self.metadata = metadata
         self.originalWidth = originalWidth
         self.originalHeight = originalHeight
         self.isProcessing = isProcessing
@@ -174,6 +201,44 @@ public struct InspectorView: View {
                                 }
                             }
                             .padding(.top, 2)
+                        }
+
+                        Divider()
+
+                        // Auto-Trim Borders
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Toggle("Auto-Trim Borders", isOn: self.$isAutoTrimmed)
+                                    .font(.subheadline)
+                                Spacer()
+                                if self.isAutoTrimmed {
+                                    Button(action: {
+                                        self.isAutoTrimmed = false
+                                        self.trimFuzz = 5.0
+                                    }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset auto-trim")
+                                }
+                            }
+
+                            if self.isAutoTrimmed {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack {
+                                        Text("Trim Tolerance (Fuzz)")
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                        Spacer()
+                                        Text("\(Int(self.trimFuzz))%")
+                                            .font(.caption.monospacedDigit())
+                                    }
+                                    Slider(value: self.$trimFuzz, in: 0...30, step: 1)
+                                }
+                                .padding(.leading, 4)
+                            }
                         }
                     }
                     .padding(8)
@@ -396,6 +461,140 @@ public struct InspectorView: View {
                                 .help("Disable auto level")
                             }
                         }
+
+                        Divider()
+
+                        // Input Levels & Gamma
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text("Levels & Input Range")
+                                    .font(.caption.bold())
+                                    .foregroundStyle(.secondary)
+
+                                if self.blackPoint != 0.0 || abs(self.gammaPoint - 1.0) > 0.01 || self.whitePoint != 255.0 {
+                                    Button(action: {
+                                        self.blackPoint = 0.0
+                                        self.gammaPoint = 1.0
+                                        self.whitePoint = 255.0
+                                    }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Reset levels to default")
+                                }
+
+                                Spacer()
+                            }
+
+                            // Black Point
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack {
+                                    Text("Black Point")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    Text("\(Int(self.blackPoint))")
+                                        .font(.caption2.monospacedDigit())
+                                }
+                                Slider(value: self.$blackPoint, in: 0...100, step: 1)
+                            }
+
+                            // Gamma
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack {
+                                    Text("Gamma")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    Text(String(format: "%.2f", self.gammaPoint))
+                                        .font(.caption2.monospacedDigit())
+                                }
+                                Slider(value: self.$gammaPoint, in: 0.2...3.0, step: 0.05)
+                            }
+
+                            // White Point
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack {
+                                    Text("White Point")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                    Spacer()
+                                    Text("\(Int(self.whitePoint))")
+                                        .font(.caption2.monospacedDigit())
+                                }
+                                Slider(value: self.$whitePoint, in: 155...255, step: 1)
+                            }
+                        }
+
+                        Divider()
+
+                        // Special Tone & Effects (Invert, Sepia, Denoise)
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Toggle("Invert Colors (Negate)", isOn: self.$negate)
+                                    .font(.caption)
+                                Spacer()
+                                if self.negate {
+                                    Button(action: { self.negate = false }) {
+                                        Image(systemName: "arrow.counterclockwise")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .buttonStyle(.plain)
+                                    .help("Disable invert")
+                                }
+                            }
+
+                            // Sepia Tone
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack {
+                                    Text("Sepia Tone")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+
+                                    if self.sepia != 0.0 {
+                                        Button(action: { self.sepia = 0.0 }) {
+                                            Image(systemName: "arrow.counterclockwise")
+                                                .font(.caption2)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .help("Reset sepia")
+                                    }
+
+                                    Spacer()
+                                    Text("\(Int(self.sepia))%")
+                                        .font(.caption.monospacedDigit())
+                                }
+                                Slider(value: self.$sepia, in: 0...100, step: 2)
+                            }
+
+                            // Denoise
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack {
+                                    Text("Noise Reduction")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+
+                                    if self.denoise != 0.0 {
+                                        Button(action: { self.denoise = 0.0 }) {
+                                            Image(systemName: "arrow.counterclockwise")
+                                                .font(.caption2)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .help("Reset noise reduction")
+                                    }
+
+                                    Spacer()
+                                    Text(String(format: "%.1f", self.denoise))
+                                        .font(.caption.monospacedDigit())
+                                }
+                                Slider(value: self.$denoise, in: 0...5, step: 0.2)
+                            }
+                        }
                     }
                     .padding(8)
                 } label: {
@@ -524,6 +723,9 @@ public struct InspectorView: View {
                         }
                     }
                 }
+
+                // MARK: - EXIF & Photography Metadata (Paket 2)
+                MetadataInspectorView(metadata: self.metadata, stripMetadata: self.$stripMetadata)
 
                 // MARK: - Format & Feature 3: Target Size Optimizer
                 GroupBox {

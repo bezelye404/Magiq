@@ -164,4 +164,165 @@ final class FeaturesTests: XCTestCase {
         let decoded = try JSONDecoder().decode([PipelineOperation].self, from: encoded)
         XCTAssertEqual(ops, decoded)
     }
+
+    // MARK: - Levels, Artistic Tone & Trim Tests
+
+    func testLevelsAndToneOperations() throws {
+        // 1. Levels Operation
+        let levels = LevelsOperation(blackPoint: 10.0, gamma: 1.2, whitePoint: 240.0)
+        XCTAssertFalse(levels.isIdentity)
+        XCTAssertEqual(levels.name, "Levels & Gamma")
+        XCTAssertFalse(levels.cliArguments.isEmpty)
+
+        let defaultLevels = LevelsOperation()
+        XCTAssertTrue(defaultLevels.isIdentity)
+        XCTAssertTrue(defaultLevels.cliArguments.isEmpty)
+
+        // 2. Artistic Tone Operation
+        let tone = ArtisticToneOperation(sepia: 60.0, negate: true, denoise: 1.5)
+        XCTAssertFalse(tone.isIdentity)
+        XCTAssertEqual(tone.name, "Tone & Special Effects")
+        XCTAssertTrue(tone.cliArguments.contains("-negate"))
+        XCTAssertTrue(tone.cliArguments.contains("-sepia-tone"))
+
+        let defaultTone = ArtisticToneOperation()
+        XCTAssertTrue(defaultTone.isIdentity)
+        XCTAssertTrue(defaultTone.cliArguments.isEmpty)
+
+        // 3. Trim Operation
+        let trim = TrimOperation(fuzzPercent: 10.0)
+        XCTAssertEqual(trim.name, "Auto-Trim Borders")
+        XCTAssertEqual(trim.cliArguments, ["-fuzz", "10%", "-trim", "+repage"])
+
+        // 4. Test apply to actual ImageWand canvas
+        let wand = try ImageWand()
+        try wand.createBlank(width: 80, height: 80, background: "white")
+        try levels.apply(to: wand)
+        try tone.apply(to: wand)
+        XCTAssertEqual(wand.width, 80)
+        XCTAssertEqual(wand.height, 80)
+
+        // 5. Test pipeline serialization with new operations
+        let pipeline: [PipelineOperation] = [
+            .levels(levels),
+            .artisticTone(tone),
+            .trim(trim)
+        ]
+        let data = try JSONEncoder().encode(pipeline)
+        let decoded = try JSONDecoder().decode([PipelineOperation].self, from: data)
+        XCTAssertEqual(pipeline, decoded)
+    }
+
+    @MainActor
+    func testViewModelWithNewOperations() {
+        let vm = SingleDocumentViewModel()
+        vm.blackPoint = 15.0
+        vm.gammaPoint = 1.25
+        vm.whitePoint = 235.0
+        vm.sepia = 45.0
+        vm.negate = true
+        vm.isAutoTrimmed = true
+        vm.trimFuzz = 8.0
+
+        let ops = vm.buildPipelineOperations()
+        XCTAssertTrue(ops.contains { if case .levels = $0 { return true }; return false })
+        XCTAssertTrue(ops.contains { if case .artisticTone = $0 { return true }; return false })
+        XCTAssertTrue(ops.contains { if case .trim = $0 { return true }; return false })
+
+        // Reset
+        vm.resetParameters()
+        XCTAssertEqual(vm.blackPoint, 0.0)
+        XCTAssertEqual(vm.gammaPoint, 1.0)
+        XCTAssertEqual(vm.whitePoint, 255.0)
+        XCTAssertEqual(vm.sepia, 0.0)
+        XCTAssertFalse(vm.negate)
+        XCTAssertFalse(vm.isAutoTrimmed)
+    }
+
+    // MARK: - EXIF & Metadata Inspector Tests
+
+    func testMetadataExtractionAndFormatting() {
+        let sampleProps = [
+            "exif:Make": "Sony",
+            "exif:Model": "ILCE-7RM5",
+            "exif:LensModel": "FE 50mm F1.2 GM",
+            "exif:FNumber": "28/10",
+            "exif:ExposureTime": "1/500",
+            "exif:PhotographicSensitivity": "100",
+            "exif:FocalLength": "50/1",
+            "exif:GPSLatitude": "41/1, 0/1, 23/1"
+        ]
+
+        let meta = ImageMetadata(
+            width: 9504,
+            height: 6336,
+            format: "RAW",
+            colorspace: "Display P3",
+            depth: 16,
+            fileSize: 64 * 1024 * 1024,
+            properties: sampleProps
+        )
+
+        XCTAssertTrue(meta.hasCameraData)
+        XCTAssertTrue(meta.hasGPS)
+        XCTAssertEqual(meta.cameraModel, "Sony ILCE-7RM5")
+        XCTAssertEqual(meta.lensModel, "FE 50mm F1.2 GM")
+        XCTAssertEqual(meta.aperture, "ƒ/2.8")
+        XCTAssertEqual(meta.shutterSpeed, "1/500s")
+        XCTAssertEqual(meta.iso, "ISO 100")
+        XCTAssertEqual(meta.focalLength, "50mm")
+        XCTAssertFalse(meta.formattedSummary.isEmpty)
+        XCTAssertTrue(meta.formattedSummary.contains("Sony ILCE-7RM5"))
+        XCTAssertTrue(meta.formattedSummary.contains("ƒ/2.8"))
+    }
+
+    // MARK: - Multi-Page & Pagination Tests
+
+    @MainActor
+    func testMultiPageNavigationAndWandPagination() throws {
+        let vm = SingleDocumentViewModel()
+        XCTAssertEqual(vm.pageCount, 1)
+        XCTAssertEqual(vm.currentPageIndex, 0)
+        XCTAssertFalse(vm.exportAllPages)
+
+        // Simulate multi-page document loaded
+        vm.pageCount = 5
+        vm.nextPage()
+        XCTAssertEqual(vm.currentPageIndex, 1)
+
+        vm.selectPage(index: 4)
+        XCTAssertEqual(vm.currentPageIndex, 4)
+
+        // Boundary check: cannot go beyond last page
+        vm.nextPage()
+        XCTAssertEqual(vm.currentPageIndex, 4)
+
+        vm.previousPage()
+        XCTAssertEqual(vm.currentPageIndex, 3)
+
+        // Invalid index bounds check
+        vm.selectPage(index: 10)
+        XCTAssertEqual(vm.currentPageIndex, 3)
+
+        vm.selectPage(index: -1)
+        XCTAssertEqual(vm.currentPageIndex, 3)
+
+        // ImageWand ping on non-existent file returns fallback 1
+        let dummyURL = URL(fileURLWithPath: "/nonexistent/test.pdf")
+        let pingCount = ImageWand.pingPageCount(from: dummyURL)
+        XCTAssertEqual(pingCount, 1)
+
+        // ImageWand single image count
+        let wand = try ImageWand()
+        try wand.createBlank(width: 50, height: 50)
+        XCTAssertEqual(wand.imageCount, 1)
+        XCTAssertEqual(wand.currentImageIndex, 0)
+    }
+
+    // MARK: - Quick Look Extension Tests
+
+    func testQuickLookPreviewProviderInstantiation() {
+        let provider = PreviewProvider()
+        XCTAssertNotNil(provider)
+    }
 }

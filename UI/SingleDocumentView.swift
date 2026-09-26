@@ -18,17 +18,69 @@ public struct SingleDocumentView: View {
     }
 
     public var body: some View {
-        CanvasView(
-            image: self.viewModel.previewImage,
-            originalImage: self.viewModel.originalPreviewImage,
-            metadata: self.viewModel.metadata,
-            isLoading: self.viewModel.isRendering,
-            isCropping: self.$viewModel.isCropping,
-            isLoupeActive: self.$viewModel.isLoupeActive,
-            onApplyCrop: { rect in
-                self.viewModel.applyCrop(normalizedRect: rect)
+        ZStack(alignment: .bottom) {
+            CanvasView(
+                image: self.viewModel.previewImage,
+                originalImage: self.viewModel.originalPreviewImage,
+                metadata: self.viewModel.metadata,
+                isLoading: self.viewModel.isRendering,
+                isCropping: self.$viewModel.isCropping,
+                isLoupeActive: self.$viewModel.isLoupeActive,
+                onApplyCrop: { rect in
+                    self.viewModel.applyCrop(normalizedRect: rect)
+                }
+            )
+
+            // Multi-Page Floating Navigation Capsule
+            if self.viewModel.pageCount > 1 {
+                HStack(spacing: 10) {
+                    Button(action: { self.viewModel.previousPage() }) {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 11, weight: .bold))
+                            .frame(width: 22, height: 22)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(self.viewModel.currentPageIndex == 0)
+                    .help("Previous Page")
+
+                    Menu {
+                        ForEach(0..<self.viewModel.pageCount, id: \.self) { idx in
+                            Button("Page \(idx + 1)") {
+                                self.viewModel.selectPage(index: idx)
+                            }
+                        }
+                    } label: {
+                        Text("Page \(self.viewModel.currentPageIndex + 1) of \(self.viewModel.pageCount)")
+                            .font(.system(size: 12, weight: .semibold).monospacedDigit())
+                            .foregroundColor(.primary)
+                    }
+                    .menuStyle(.borderlessButton)
+                    .fixedSize()
+
+                    Button(action: { self.viewModel.nextPage() }) {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 11, weight: .bold))
+                            .frame(width: 22, height: 22)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(self.viewModel.currentPageIndex >= self.viewModel.pageCount - 1)
+                    .help("Next Page")
+                }
+                .padding(.horizontal, 14)
+                .padding(.vertical, 7)
+                .background(.ultraThinMaterial, in: Capsule())
+                .overlay(
+                    Capsule()
+                        .stroke(Color.primary.opacity(0.12), lineWidth: 0.5)
+                )
+                .shadow(color: .black.opacity(0.18), radius: 8, x: 0, y: 3)
+                .padding(.bottom, 20)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
             }
-        )
+        }
+        .animation(.spring(response: 0.35, dampingFraction: 0.8), value: self.viewModel.pageCount)
         .frame(minWidth: 150, maxWidth: .infinity, minHeight: 150, maxHeight: .infinity)
         .onDrop(of: [.fileURL], isTargeted: nil) { providers in
             self.handleDrop(providers: providers)
@@ -46,6 +98,14 @@ public struct SingleDocumentView: View {
                 saturation: self.$viewModel.saturation,
                 autoLevel: self.$viewModel.autoLevel,
                 filmProfile: self.$viewModel.filmProfile,
+                blackPoint: self.$viewModel.blackPoint,
+                gammaPoint: self.$viewModel.gammaPoint,
+                whitePoint: self.$viewModel.whitePoint,
+                sepia: self.$viewModel.sepia,
+                negate: self.$viewModel.negate,
+                denoise: self.$viewModel.denoise,
+                isAutoTrimmed: self.$viewModel.isAutoTrimmed,
+                trimFuzz: self.$viewModel.trimFuzz,
                 sharpen: self.$viewModel.sharpen,
                 blur: self.$viewModel.blur,
                 watermarkText: self.$viewModel.watermarkText,
@@ -57,6 +117,7 @@ public struct SingleDocumentView: View {
                 quality: self.$viewModel.quality,
                 isCropping: self.$viewModel.isCropping,
                 histogramData: self.viewModel.histogramData,
+                metadata: self.viewModel.metadata,
                 originalWidth: self.viewModel.metadata?.width,
                 originalHeight: self.viewModel.metadata?.height,
                 isProcessing: self.viewModel.isRendering,
@@ -154,7 +215,7 @@ public struct SingleDocumentView: View {
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
         panel.allowsMultipleSelection = false
-        panel.allowedContentTypes = [.image]
+        panel.allowedContentTypes = [.image, .pdf]
 
         if panel.runModal() == .OK, let selectedURL = panel.url {
             self.viewModel.loadNewImage(url: selectedURL)
@@ -166,7 +227,8 @@ public struct SingleDocumentView: View {
 
         let panel = NSSavePanel()
         let ext = self.viewModel.targetFormat.lowercased()
-        panel.nameFieldStringValue = "exported-\(sourceURL.deletingPathExtension().lastPathComponent).\(ext)"
+        let pageSuffix = (self.viewModel.pageCount > 1 && !self.viewModel.exportAllPages) ? "-p\(self.viewModel.currentPageIndex + 1)" : ""
+        panel.nameFieldStringValue = "exported-\(sourceURL.deletingPathExtension().lastPathComponent)\(pageSuffix).\(ext)"
 
         if panel.runModal() == .OK, let destinationURL = panel.url {
             self.viewModel.isRendering = true
@@ -174,8 +236,10 @@ public struct SingleDocumentView: View {
                 defer { self.viewModel.isRendering = false }
                 do {
                     let ops: [any ImageOperation] = self.viewModel.buildPipelineOperations().map { $0 }
+                    let pageIdx = (self.viewModel.pageCount > 1 && !self.viewModel.exportAllPages) ? self.viewModel.currentPageIndex : nil
                     _ = try await ImagePipeline.shared.export(
                         from: sourceURL,
+                        pageIndex: pageIdx,
                         to: destinationURL,
                         operations: ops
                     )

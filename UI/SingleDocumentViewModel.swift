@@ -26,6 +26,11 @@ public final class SingleDocumentViewModel: ObservableObject {
     @Published public var showInspector: Bool = true
     @Published public var histogramData: HistogramData?
 
+    // MARK: - Multi-Page & Multi-Frame Document State
+    @Published public var pageCount: Int = 1
+    @Published public var currentPageIndex: Int = 0
+    @Published public var exportAllPages: Bool = false
+
     // MARK: - Crop & Loupe States
     @Published public var isCropping: Bool = false
     @Published public var cropOperation: CropOperation? = nil {
@@ -65,6 +70,36 @@ public final class SingleDocumentViewModel: ObservableObject {
         didSet { self.onParameterChanged() }
     }
     @Published public var filmProfile: FilmProfile = .none {
+        didSet { self.onParameterChanged() }
+    }
+
+    // MARK: - Histogram Levels & Gamma
+    @Published public var blackPoint: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var gammaPoint: Double = 1.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var whitePoint: Double = 255.0 {
+        didSet { self.onParameterChanged() }
+    }
+
+    // MARK: - Artistic Tone & Special Effects
+    @Published public var sepia: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var negate: Bool = false {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var denoise: Double = 0.0 {
+        didSet { self.onParameterChanged() }
+    }
+
+    // MARK: - Auto-Trim
+    @Published public var isAutoTrimmed: Bool = false {
+        didSet { self.onParameterChanged() }
+    }
+    @Published public var trimFuzz: Double = 5.0 {
         didSet { self.onParameterChanged() }
     }
 
@@ -141,6 +176,7 @@ public final class SingleDocumentViewModel: ObservableObject {
             do {
                 let rendered = try await ImagePipeline.shared.generatePreview(
                     from: url,
+                    pageIndex: self.currentPageIndex,
                     boundedTo: MagickGeometry(width: 1400, height: 1400),
                     operations: ops
                 )
@@ -153,6 +189,40 @@ public final class SingleDocumentViewModel: ObservableObject {
                     self.errorMessage = error.localizedDescription
                 }
             }
+        }
+    }
+
+    // MARK: - Multi-Page Navigation
+
+    public func selectPage(index: Int) {
+        guard index >= 0, index < self.pageCount, index != self.currentPageIndex else { return }
+        self.currentPageIndex = index
+
+        // Also refresh original clean preview for comparison slider on current page
+        if let url = self.currentImageURL {
+            Task {
+                if let base = try? await ImagePipeline.shared.generatePreview(
+                    from: url,
+                    pageIndex: index,
+                    boundedTo: MagickGeometry(width: 1400, height: 1400),
+                    operations: []
+                ) {
+                    self.originalPreviewImage = base
+                }
+            }
+        }
+        self.scheduleLivePreview()
+    }
+
+    public func nextPage() {
+        if self.currentPageIndex < self.pageCount - 1 {
+            self.selectPage(index: self.currentPageIndex + 1)
+        }
+    }
+
+    public func previousPage() {
+        if self.currentPageIndex > 0 {
+            self.selectPage(index: self.currentPageIndex - 1)
         }
     }
 
@@ -181,6 +251,10 @@ public final class SingleDocumentViewModel: ObservableObject {
                 let meta = try ImageWand.pingMetadata(from: url)
                 self.metadata = meta
 
+                let pages = ImageWand.pingPageCount(from: url)
+                self.pageCount = max(1, pages)
+                self.currentPageIndex = 0
+
                 self.isBatchUpdating = true
                 self.cropOperation = nil
                 self.isCropping = false
@@ -204,6 +278,7 @@ public final class SingleDocumentViewModel: ObservableObject {
                 // Load initial clean preview
                 let basePreview = try await ImagePipeline.shared.generatePreview(
                     from: url,
+                    pageIndex: 0,
                     boundedTo: MagickGeometry(width: 1400, height: 1400),
                     operations: []
                 )
@@ -281,6 +356,14 @@ public final class SingleDocumentViewModel: ObservableObject {
         self.saturation = 0.0
         self.autoLevel = false
         self.filmProfile = .none
+        self.blackPoint = 0.0
+        self.gammaPoint = 1.0
+        self.whitePoint = 255.0
+        self.sepia = 0.0
+        self.negate = false
+        self.denoise = 0.0
+        self.isAutoTrimmed = false
+        self.trimFuzz = 5.0
         self.sharpen = 0.0
         self.blur = 0.0
         self.watermarkText = ""
@@ -292,6 +375,9 @@ public final class SingleDocumentViewModel: ObservableObject {
                 self.cropOperation = crop
                 self.resizeWidth = crop.width
                 self.resizeHeight = crop.height
+            case .trim(let trim):
+                self.isAutoTrimmed = true
+                self.trimFuzz = trim.fuzzPercent
             case .resize(let resize):
                 self.resizeWidth = resize.width
                 self.resizeHeight = resize.height
@@ -307,6 +393,14 @@ public final class SingleDocumentViewModel: ObservableObject {
                 self.saturation = col.saturation
             case .autoLevel(let auto):
                 self.autoLevel = auto.enabled
+            case .levels(let lev):
+                self.blackPoint = lev.blackPoint
+                self.gammaPoint = lev.gamma
+                self.whitePoint = lev.whitePoint
+            case .artisticTone(let tone):
+                self.sepia = tone.sepia
+                self.negate = tone.negate
+                self.denoise = tone.denoise
             case .colorGrade(let grade):
                 self.filmProfile = grade.profile
             case .sharpenBlur(let sharp):
@@ -342,6 +436,8 @@ public final class SingleDocumentViewModel: ObservableObject {
         self.isBatchUpdating = true
         self.cropOperation = nil
         self.isCropping = false
+        self.isAutoTrimmed = false
+        self.trimFuzz = 5.0
         if let meta = self.metadata {
             self.resizeWidth = meta.width
             self.resizeHeight = meta.height
@@ -353,6 +449,12 @@ public final class SingleDocumentViewModel: ObservableObject {
         self.contrast = 0.0
         self.saturation = 0.0
         self.autoLevel = false
+        self.blackPoint = 0.0
+        self.gammaPoint = 1.0
+        self.whitePoint = 255.0
+        self.sepia = 0.0
+        self.negate = false
+        self.denoise = 0.0
         self.filmProfile = .none
         self.sharpen = 0.0
         self.blur = 0.0
@@ -370,12 +472,17 @@ public final class SingleDocumentViewModel: ObservableObject {
     public func buildPipelineOperations() -> [PipelineOperation] {
         var ops: [PipelineOperation] = []
 
-        // 1. Crop (applied first on raw canvas)
+        // 1. Auto-Trim (applied early on raw canvas)
+        if self.isAutoTrimmed {
+            ops.append(.trim(TrimOperation(fuzzPercent: self.trimFuzz)))
+        }
+
+        // 2. Crop
         if let crop = self.cropOperation {
             ops.append(.crop(crop))
         }
 
-        // 2. Resize
+        // 3. Resize
         if self.resizeWidth > 0 && self.resizeHeight > 0 {
             if let meta = self.metadata {
                 if meta.width != self.resizeWidth || meta.height != self.resizeHeight {
@@ -394,7 +501,7 @@ public final class SingleDocumentViewModel: ObservableObject {
             }
         }
 
-        // 3. Flip & Flop
+        // 4. Flip & Flop
         if self.flipHorizontal || self.flipVertical {
             ops.append(.flipFlop(FlipFlopOperation(
                 horizontal: self.flipHorizontal,
@@ -402,17 +509,17 @@ public final class SingleDocumentViewModel: ObservableObject {
             )))
         }
 
-        // 4. Rotate
+        // 5. Rotate
         if self.rotationDegrees != 0.0 {
             ops.append(.rotate(RotateOperation(degrees: self.rotationDegrees)))
         }
 
-        // 5. Film Simulation Profile
+        // 6. Film Simulation Profile
         if self.filmProfile != .none {
             ops.append(.colorGrade(ColorGradeOperation(profile: self.filmProfile)))
         }
 
-        // 6. Color & Tone Adjustments
+        // 7. Color & Tone Adjustments
         if self.brightness != 0.0 || self.contrast != 0.0 || self.saturation != 0.0 {
             ops.append(.colorAdjust(ColorAdjustOperation(
                 brightness: self.brightness,
@@ -421,12 +528,30 @@ public final class SingleDocumentViewModel: ObservableObject {
             )))
         }
 
-        // 7. Auto Level
+        // 8. Auto Level
         if self.autoLevel {
             ops.append(.autoLevel(AutoLevelOperation(enabled: true)))
         }
 
-        // 8. Sharpen & Blur
+        // 9. Input Levels & Gamma
+        if self.blackPoint > 0.0 || abs(self.gammaPoint - 1.0) > 0.01 || self.whitePoint < 255.0 {
+            ops.append(.levels(LevelsOperation(
+                blackPoint: self.blackPoint,
+                gamma: self.gammaPoint,
+                whitePoint: self.whitePoint
+            )))
+        }
+
+        // 10. Artistic Tone & Special Effects
+        if self.sepia > 0.0 || self.negate || self.denoise > 0.0 {
+            ops.append(.artisticTone(ArtisticToneOperation(
+                sepia: self.sepia,
+                negate: self.negate,
+                denoise: self.denoise
+            )))
+        }
+
+        // 11. Sharpen & Blur
         if self.sharpen > 0.0 || self.blur > 0.0 {
             ops.append(.sharpenBlur(SharpenBlurOperation(
                 sharpen: self.sharpen,
@@ -434,7 +559,7 @@ public final class SingleDocumentViewModel: ObservableObject {
             )))
         }
 
-        // 9. Watermark
+        // 12. Watermark
         if !self.watermarkText.isEmpty {
             ops.append(.watermark(WatermarkOperation(
                 text: self.watermarkText,
@@ -445,12 +570,12 @@ public final class SingleDocumentViewModel: ObservableObject {
             )))
         }
 
-        // 10. Strip Metadata
+        // 13. Strip Metadata
         if self.stripMetadata {
             ops.append(.stripMetadata(StripMetadataOperation(enabled: true)))
         }
 
-        // 11. Format & Quality
+        // 14. Format & Quality
         ops.append(.formatConvert(FormatConvertOperation(format: self.targetFormat, quality: self.quality)))
 
         return ops

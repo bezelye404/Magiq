@@ -70,7 +70,8 @@ public final class ImageWand: Identifiable {
             height: self.height,
             format: self.format ?? "UNKNOWN",
             colorspace: self.colorspace,
-            depth: self.depth
+            depth: self.depth,
+            properties: self.getAllImageProperties()
         )
     }
 
@@ -81,6 +82,7 @@ public final class ImageWand: Identifiable {
         try wand.verifyStatus(status, operation: "MagickPingImage (\(url.lastPathComponent))")
 
         let fileSize = (try? FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber)?.int64Value
+        let properties = wand.getAllImageProperties()
 
         return ImageMetadata(
             width: wand.width,
@@ -88,7 +90,8 @@ public final class ImageWand: Identifiable {
             format: wand.format ?? url.pathExtension.uppercased(),
             colorspace: wand.colorspace,
             depth: wand.depth,
-            fileSize: fileSize
+            fileSize: fileSize,
+            properties: properties
         )
     }
 
@@ -107,11 +110,18 @@ public final class ImageWand: Identifiable {
     }
 
     /// Reads an image with bounded size hints to avoid decoding full-resolution buffers into RAM.
-    public func readThumbnail(from url: URL, maxBounds: MagickGeometry) throws {
+    public func readThumbnail(from url: URL, pageIndex: Int? = nil, maxBounds: MagickGeometry) throws {
         MagickSetSize(self.pointer, size_t(maxBounds.width), size_t(maxBounds.height))
 
-        let status = MagickReadImage(self.pointer, url.path)
-        try self.verifyStatus(status, operation: "MagickReadImage thumbnail")
+        let readPath: String
+        if let idx = pageIndex, idx >= 0 {
+            readPath = "\(url.path)[\(idx)]"
+        } else {
+            readPath = url.path
+        }
+
+        let status = MagickReadImage(self.pointer, readPath)
+        try self.verifyStatus(status, operation: "MagickReadImage thumbnail (\(url.lastPathComponent))")
 
         let currentGeom = self.geometry
         if currentGeom.width > maxBounds.width || currentGeom.height > maxBounds.height {
@@ -123,6 +133,42 @@ public final class ImageWand: Identifiable {
     public func write(to url: URL) throws {
         let status = MagickWriteImage(self.pointer, url.path)
         try self.verifyStatus(status, operation: "MagickWriteImage (\(url.lastPathComponent))")
+    }
+
+    // MARK: - Multi-Page & Multi-Frame Support
+
+    /// Returns the total number of images / pages / frames inside this wand.
+    public var imageCount: Int {
+        Int(MagickGetNumberImages(self.pointer))
+    }
+
+    /// Returns the active image index in the sequence (0-indexed).
+    public var currentImageIndex: Int {
+        Int(MagickGetIteratorIndex(self.pointer))
+    }
+
+    /// Selects the active image / page by 0-based index.
+    public func selectImage(at index: Int) throws {
+        let status = MagickSetIteratorIndex(self.pointer, ssize_t(index))
+        try self.verifyStatus(status, operation: "MagickSetIteratorIndex (\(index))")
+    }
+
+    /// Writes all images / pages in sequence to a single multi-page file (e.g. PDF or TIFF).
+    public func writeAllImages(to url: URL, adjoin: Bool = true) throws {
+        let status = MagickWriteImages(self.pointer, url.path, adjoin ? MagickTrue : MagickFalse)
+        try self.verifyStatus(status, operation: "MagickWriteImages (\(url.lastPathComponent))")
+    }
+
+    /// Inspects the number of pages/frames in a file with zero full-buffer decode using MagickPingImage.
+    public static func pingPageCount(from url: URL) -> Int {
+        do {
+            let wand = try ImageWand()
+            let status = MagickPingImage(wand.pointer, url.path)
+            guard status != MagickFalse else { return 1 }
+            return max(1, wand.imageCount)
+        } catch {
+            return 1
+        }
     }
 
     // MARK: - Transformations
@@ -204,6 +250,92 @@ public final class ImageWand: Identifiable {
     public func strip() throws {
         let status = MagickStripImage(self.pointer)
         try self.verifyStatus(status, operation: "MagickStripImage")
+    }
+
+    /// Adjusts levels with black point (0...255), gamma (0.1...5.0), and white point (0...255).
+    public func level(blackPoint: Double = 0.0, gamma: Double = 1.0, whitePoint: Double = 255.0) throws {
+        let qRange = MagiqQuantumRange()
+        let scaledBlack = (max(0.0, min(255.0, blackPoint)) / 255.0) * qRange
+        let scaledWhite = (max(0.0, min(255.0, whitePoint)) / 255.0) * qRange
+        let clampedGamma = max(0.01, min(10.0, gamma))
+
+        let status = MagickLevelImage(self.pointer, scaledBlack, clampedGamma, scaledWhite)
+        try self.verifyStatus(status, operation: "MagickLevelImage")
+    }
+
+    /// Adjusts gamma level.
+    public func gamma(_ gammaValue: Double) throws {
+        let clamped = max(0.01, min(10.0, gammaValue))
+        let status = MagickGammaImage(self.pointer, clamped)
+        try self.verifyStatus(status, operation: "MagickGammaImage")
+    }
+
+    /// Applies a sepia tone effect with threshold percentage (0...100%).
+    public func sepiaTone(thresholdPercent: Double) throws {
+        guard thresholdPercent > 0 else { return }
+        let qRange = MagiqQuantumRange()
+        let threshold = (max(0.0, min(100.0, thresholdPercent)) / 100.0) * qRange
+        let status = MagickSepiaToneImage(self.pointer, threshold)
+        try self.verifyStatus(status, operation: "MagickSepiaToneImage")
+    }
+
+    /// Inverts pixel color values.
+    public func negate(grayscaleOnly: Bool = false) throws {
+        let status = MagickNegateImage(self.pointer, grayscaleOnly ? MagickTrue : MagickFalse)
+        try self.verifyStatus(status, operation: "MagickNegateImage")
+    }
+
+    /// Reduces high-frequency noise and speckles.
+    public func despeckle() throws {
+        let status = MagickDespeckleImage(self.pointer)
+        try self.verifyStatus(status, operation: "MagickDespeckleImage")
+    }
+
+    /// Reduces noise using wavelet denoise algorithm.
+    public func waveletDenoise(thresholdPercent: Double, softness: Double = 0.0) throws {
+        guard thresholdPercent > 0 else { return }
+        let threshold = (max(0.0, min(100.0, thresholdPercent)) / 100.0) * MagiqQuantumRange()
+        let status = MagickWaveletDenoiseImage(self.pointer, threshold, softness)
+        try self.verifyStatus(status, operation: "MagickWaveletDenoiseImage")
+    }
+
+    /// Auto-trims uniform solid border / background pixels with a given fuzz tolerance percentage (0...100%).
+    public func trim(fuzzPercent: Double = 0.0) throws {
+        let qRange = MagiqQuantumRange()
+        let fuzz = (max(0.0, min(100.0, fuzzPercent)) / 100.0) * qRange
+        let status = MagickTrimImage(self.pointer, fuzz)
+        try self.verifyStatus(status, operation: "MagickTrimImage")
+        MagickResetImagePage(self.pointer, "0x0+0+0")
+    }
+
+    // MARK: - Metadata Inspection
+
+    /// Retrieves a single EXIF/IPTC or ImageMagick image property.
+    public func getImageProperty(_ name: String) -> String? {
+        guard let cString = MagickGetImageProperty(self.pointer, name) else { return nil }
+        defer { MagickRelinquishMemory(cString) }
+        return String(cString: cString)
+    }
+
+    /// Retrieves all image properties matching the given pattern (default wildcard `*`).
+    public func getAllImageProperties(pattern: String = "*") -> [String: String] {
+        var count: size_t = 0
+        guard let keysPtr = MagickGetImageProperties(self.pointer, pattern, &count), count > 0 else {
+            return [:]
+        }
+        defer { MagickRelinquishMemory(keysPtr) }
+
+        var result: [String: String] = [:]
+        for i in 0..<Int(count) {
+            if let keyCStr = keysPtr[i] {
+                let key = String(cString: keyCStr)
+                if let val = self.getImageProperty(key) {
+                    result[key] = val
+                }
+                MagickRelinquishMemory(keyCStr)
+            }
+        }
+        return result
     }
 
     public func annotate(
