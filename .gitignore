@@ -1,4 +1,4 @@
-# macOS System & Metadata
+# macOS
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -9,7 +9,32 @@
 .fseventsd
 .TemporaryItems
 
-# Privacy, Credentials & Keys
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcuserdatad/
+project.xcworkspace/xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM/
+*.dSYM.zip
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Bundled Binaries
+Resources/ImageMagickDistribution/bin/
+Resources/ImageMagickDistribution/lib/
+Resources/ImageMagickDistribution/modules/
+Resources/ImageMagickDistribution/etc/
+
+# Credentials & Secrets
 *.env
 *.env.*
 *.key
@@ -45,7 +70,7 @@ id_ed25519*
 .netrc
 .npmrc
 
-# Logs, Diagnostics & Crash Dumps
+# Logs & Diagnostics
 *.log
 *.crash
 *.ips
@@ -53,32 +78,7 @@ id_ed25519*
 *.trace
 *.spin
 
-# Xcode & User Interface State
-build/
-DerivedData/
-*.xcuserstate
-xcuserdata/
-*.xcuserdatad/
-project.xcworkspace/xcuserdata/
-*.xccheckout
-*.moved-aside
-*.hmap
-*.ipa
-*.dSYM/
-*.dSYM.zip
-*.xcscmblueprint
-
-# Swift Package Manager
-.build/
-.swiftpm/
-
-# Bundled ImageMagick Distribution (generated via Scripts/bundle_imagemagick.sh)
-Resources/ImageMagickDistribution/bin/
-Resources/ImageMagickDistribution/lib/
-Resources/ImageMagickDistribution/modules/
-Resources/ImageMagickDistribution/etc/
-
-# Local Test Media & Scratch Folders
+# Local & Temporary Files
 scratch/
 tmp/
 temp/
@@ -88,7 +88,7 @@ test_images/
 test_data/
 samples/
 
-# IDEs & Editor Clutter
+# Editors & IDEs
 .vscode/
 .idea/
 *.swp
@@ -97,11 +97,10 @@ samples/
 .claude/
 .cursor/
 
-# AI Agent Instructions & Guidance (no place in repository)
+# Agent & Planning Docs
 AGENTS.md
 CLAUDE.md
 GEMINI.md
 .agents/
 FEATURE_MAP.md
 CHECKLIST.md
-
